@@ -32,13 +32,19 @@ def cfunct(regex):
 	value = regex[3]
 	if not 'sep' in head.keys():
 		head['sep'] = ':'
-	value.replace(head['sep'],';')
-	var[regex[1]]['dt'] = {'attrib':le('('+regex[2]+')'),'code':value,'head':head}
+	value = re.sub(head['sep'],';',value)
+	args = {}
+	for item in regex[2].split(','):
+		if len(item.split('=')) == 2:
+			args[item.split('=')[0]] = typeify(item.split('=')[1])
+		else:
+			args[item.split('=')[0]] = ['','']
+	var[regex[1]]['dt'] = {'attrib':args,'code':value,'head':head}
 def null(regex):
 	pass
 def pyparse(regex):
 	exec(regex[1])
-cl = {r'''create[ +\t]+var[ +\t]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t]+([^\n]*)''':[cvar,'Create Var'],r'create[ +\t]+funct[ +\t]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t]*\((.*)\)[ +\t]*\{(.*)\}(\[.*\]){0,1}':[cfunct,'Create Function'],r'//.*//':[null,'Comment'],r'pyparse[ +\t]+(.*)':[pyparse,'Pyparse']}
+cl = {r'''[ +\t\n]*create[ +\t\n]+var[ +\t]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t]+([^\n]*)''':[cvar,'Create Var'],r'[ +\t\n]*create[ +\t\n]+funct[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\((.*)\)[ +\t\n]*\{([^;]*)\}[ +\t\n]*(\[.*\]){0,1}':[cfunct,'Create Function'],r'//.*//':[null,'Comment'],r'[ +\t\n]*pyparse[ +\t]+(.*)':[pyparse,'Pyparse'],r'[ +\t\n]*([a-zA-Z_]+[^@|.\n\t ]*)\((.*)\)'}
 var = {}
 def parse(code):
 	code = code.replace('\\;','\\semi')
@@ -53,4 +59,3 @@ def parse(code):
 				break
 		if not fnd:
 			error('SyntaxError',f'No Such Command, {line}.')
-parse(open('test.bd').read())
