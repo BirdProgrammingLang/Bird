@@ -1,0 +1,3 @@
+pyparse print('hello');
+create funct test(){asdf}[sep=:];
+pyparse print(var)
