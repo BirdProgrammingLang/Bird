@@ -1,0 +1,5 @@
+create funct typeof(item){
+	pyparse `var["data"] = {'type':'string','dt':var['item']['type']}`~
+	return data
+}[global=&sep=~];
+pyparse `print(var)`

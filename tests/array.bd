@@ -1,0 +1,4 @@
+create var t ['test'];
+create funct array_item(arr,cnt){
+	
+}

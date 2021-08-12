@@ -1,0 +1,13 @@
+using('stdio.bd');
+using('math.bd');
+//loops tested: foreach, while//
+create var a 1;
+//while(`@{a} != 3`){
+	writeout(a):
+	create var a math(`@{a}+1`)
+}//
+when(`@{a} == 3`){
+	writeout('yay')
+};
+writeout('test');
+create var a 3

@@ -1,3 +1,6 @@
-pyparse print('hello');
-create funct test(){asdf}[sep=:];
-pyparse print(var)
+using('stdio.bd');
+create funct t(){
+	return "hello"
+};
+create var test `@{t()}`;
+writeout(test)

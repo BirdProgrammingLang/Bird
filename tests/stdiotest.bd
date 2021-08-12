@@ -1,0 +1,4 @@
+using('stdio.bd');
+create var i writein('YAY');
+writeout(i);
+writeout('a\,b')

@@ -1,0 +1,5 @@
+create funct test(){
+	writeout('yay')
+};
+using('stdio.bd');
+test()

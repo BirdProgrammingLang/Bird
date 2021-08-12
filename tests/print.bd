@@ -1,0 +1,3 @@
+create funct writeout(text){
+	pyparse `print('@{text}')`
+}[global=]

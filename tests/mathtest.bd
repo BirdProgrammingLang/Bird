@@ -1,0 +1,3 @@
+using('math.bd');
+using('stdio.bd');
+writeout(math('8/4'))
