@@ -1,5 +1,5 @@
 create funct math(exp){
-	pyparse `data = re.match('(([0-9.]+)\*([0-9.]+))+|(([.0-9]+)\+([0-9.0]+))+|(([.0-9]+)\-([0-9.0]+))+|(([.0-9]+)\/([0-9.0]+))+|(([.0-9]+)%([0-9.0]+))+','@{exp}')
+	pyparse `data = re.match('(([0-9.]+)\*([0-9.]+))+|(([.0-9]+)\+([0-9.0]+))+|(([.0-9]+)\-([0-9.0]+))+|(([.0-9]+)\/([0-9.0]+))+|(([.0-9]+)%([0-9.0]+))+','@{exp}(([0-9.]+)%*([0-9.]+))+|')
 var['data'] = {}
 if data[1]:
 	var['data']['type'] = 'number'
@@ -15,6 +15,9 @@ elif data[10]:
 	var['data']['dt'] = float(data[11])/float(data[12])
 elif data[13]:
 	var['data']['type'] = 'number'
-	var['data']['dt'] = float(data[14])-float(data[15])`~
+	var['data']['dt'] = float(data[14])-float(data[15])
+elif data[16]:
+	var['data']['type'] = 'number'
+	var['data']['dt'] = float(data[17])-float(data[18])`~
 	return data
 }[sep=~&global=]
