@@ -1,0 +1,7 @@
+create funct writeout(text,end='\n',sep=' ',flush='False'){
+	pyparse `print('@{text}',end='@{end}',sep='@{sep}',flush=@{flush})`
+}[global=];
+create funct writein(text=''){
+	pyparse `var['data'] = {'type':'string','dt':input('@{text}')}`!
+	return data
+}[global=&sep=!]
