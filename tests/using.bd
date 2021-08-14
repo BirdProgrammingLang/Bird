@@ -1,17 +1,12 @@
 create funct using(file){
-	if (`@{file} == 'recimp'`){
-		using('ri.bd')
-	}-
-	else{
+	create var libdir array_item(dirsarray,'lib')-
+	create var packagedir array_item(dirsarray,'package')-
 	pyparse `try:
 	parse(open('@{file}').read())
 except FileNotFoundError:
-	parse(open('Bird/lib/@{file}').read())`
-	}
+	try:
+		parse(open('@{libdir}@{file}').read())
+	except FileNotFoundError:
+		parse(open('@{packagedir}@{file}/main.bd').read())`
 }[global=&sep=-];
-create funct test(a){
-	return 'yay'
-}[global=];
-using('recimp');
-writeout(test('a'));
-writeout(test('a'))
+pyparse `print(var)`

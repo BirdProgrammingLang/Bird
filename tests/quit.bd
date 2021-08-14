@@ -1,0 +1,7 @@
+create funct quit(status=0){
+	pyparse `quit(int(@{status}))`
+};
+using('stdio.bd');
+writeout('a');
+quit(1);
+writeout('b')

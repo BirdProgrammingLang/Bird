@@ -1,6 +1,6 @@
 using('stdio.bd');
 using('math.bd');
-//loops tested: foreach, while//
+//loops tested: foreach, while, when//
 create var a 1;
 //while(`@{a} != 3`){
 	writeout(a):

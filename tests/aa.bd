@@ -1,0 +1,2 @@
+create var a aa 'd'$'c'&'b':'x';
+pyparse `print(var)`

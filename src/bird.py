@@ -2,7 +2,7 @@ import re
 from ast import literal_eval as le
 import threading
 import random
-gvar = {'using': {'type': 'funct', 'dt': {'attrib': {'file': ['', '']}, 'code': "\n\tpyparse `try:\n\tparse(open('@{file}').read())\nexcept FileNotFoundError:\n\tparse(open('Bird/lib/@{file}').read())`\n", 'head': {'global': '', 'sep': '-'}}}, 'typeof': {'type': 'funct', 'dt': {'attrib': {'item': ['', '']}, 'code': '\n\tpyparse `var["data"] = {\'type\':\'string\',\'dt\':var[\'item\'][\'type\']}`;\n\treturn data\n', 'head': {'global': '', 'sep': '~'}}}}
+gvar = {'using': {'type': 'funct', 'dt': {'attrib': {'file': ['', '']}, 'code': "\n\tcreate var libdir array_item(dirsarray,'lib');\n\tcreate var packagedir array_item(dirsarray,'package');\n\tpyparse `try:\n\tparse(open('@{file}').read())\nexcept FileNotFoundError:\n\ttry:\n\t\tparse(open('@{libdir}@{file}').read())\n\texcept FileNotFoundError:\n\t\tparse(open('@{packagedir}@{file}/main.bd').read())`\n", 'head': {'sep': '-', 'scb': '\\scb', 'ecb': '\\ecb', 'global': ''}}}, 'typeof': {'type': 'funct', 'dt': {'attrib': {'item': ['', '']}, 'code': '\n\tpyparse `var["data"] = {\'type\':\'string\',\'dt\':var[\'item\'][\'type\']}`;\n\treturn data\n', 'head': {'global': '', 'sep': '~'}}}, 'dirsarray': {'dt': {'bird': {'type': 'string', 'dt': 'Bird/'}, 'lib': {'type': 'string', 'dt': 'Bird/lib/'}, 'package': {'type': 'string', 'dt': 'Bird/package'}}, 'type': 'associative'}, 'array_item': {'type': 'funct', 'dt': {'attrib': {'arr': ['', ''], 'cnt': ['', '']}, 'code': "\n\tcreate var data 'notdefined';\n\tpyparse `if var['cnt']['type'] == 'number':\n\tvar['cnt']['dt'] = int(var['cnt']['dt'])\nvar['data']['dt'] = var['arr']['dt'][var['cnt']['dt']]['dt']`;\n\treturn data\n", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': ''}}}}
 var = {}
 d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{}}
 def error(n,t):
@@ -32,13 +32,6 @@ def typeify(txt,qt=False):
 		ty = 'string'
 		txt = re.sub(r"^[ +\n\t]*`",'',txt,1)
 		txt = re.sub(r"`[ +\n\t]*$",'',txt,1)
-		'''for n,v in var.items():
-			if not v['type'] == 'funct':
-				#error('FormattedStringError','Cannot insert type "funct" into formatted string.')
-				txt = txt.replace('\\@','@|').replace('@{'+n+'}',str(v['dt'])).replace('@|','@')
-		for n,v in gvar.items():
-			if not v['type'] == 'funct':
-				txt = txt.replace('\\@','@|').replace('@{'+n+'}',str(v['dt'])).replace('@|','@')'''
 		for item in re.findall(r'@\{([^}]*)\}',txt,re.DOTALL):
 			if re.match(r'^[ +\t\n]*([a-zA-Z_]+[^@|.\n\t (]*)[ +\t\n]*$',item):
 				dat = re.match(r'^[ +\t\n]*([a-zA-Z_]+[^@|.\n\t (]*)[ +\t\n]*$',item)
@@ -85,6 +78,26 @@ def typeify(txt,qt=False):
 			l.append({'type':typeify(item)[0],'dt':typeify(item)[1]})
 		txt = l
 		ty = 'array'
+	elif re.match(r'^[ +\t\n]*aa[ +\t\n]+(.*)[ +\t\n]*$',txt,re.DOTALL):
+		dt = re.match(r'^[ +\t\n]*aa[ +\t\n]+(.*)[ +\t\n]*$',txt,re.DOTALL)
+		dt = re.split(r'[ +\t\n]*[&+][ +\t\n]*',dt[1])
+		l = {}
+		for item in dt:
+			dat = re.match('(.*)[:$](.*)',item,re.DOTALL)
+			l[typeify(dat[1])[1]] = {'type':typeify(dat[2])[0],'dt':typeify(dat[2])[1]}
+		txt = l
+		ty = 'associative'
+	elif re.match(r'[ \t\n+]*funct[ \t\n+]*\((.*)\)\{(.*)\}[ +\t\n]*(\[.*\]){0,1}',txt,re.DOTALL):
+		it = shfunct(re.match(r'[ \t\n+]*funct[ \t\n+]*\((.*)\)\{(.*)\}[ +\t\n]*(\[.*\]){0,1}',txt,re.DOTALL))
+		txt = it['dt']
+		ty = it['type']
+	elif re.match(r'[ \t\n+]*(true|false|B1|B0)[ \t\n+]*',txt):
+		dt = re.match(r'[ \t\n+]*(true|false|B1|B0)[ \t\n+]*',txt)
+		ty = 'bool'
+		if dt[1] == 'true' or dt[1] == 'B1':
+			txt = True
+		else:
+			txt = False
 	else:
 		if txt in var.keys():
 			ty = var[txt]['type']
@@ -113,17 +126,16 @@ def cvar(regex):
 def cfunct(regex):
 	var[regex[1]] = {}
 	var[regex[1]]['type'] = 'funct'
-	head = {}
+	head = {'sep':':','scb':'\\scb','ecb':'\\ecb'}
 	if regex[4]:
 		for item in regex[4].replace('[','',1)[::-1].replace(']','',1)[::-1].split('&'):
 			item = item.split('=')
 			head[item[0]] = item[1]
 	value = regex[3]
-	if not 'sep' in head.keys():
-		head['sep'] = ':'
 	value = value.replace('\\'+head['sep'],'\\@seper|')
 	value = re.sub(head['sep'],';',value)
 	value = value.replace('\\@seper|',head['sep'])
+	value = value.replace(head['scb'],'{').replace(head['ecb'],'}')
 	args = {}
 	re2 = regex[2].replace('\\,','\\comma')
 	for item in regex[2].split(','):
@@ -187,24 +199,34 @@ def ifstate(regex):
 	if d['lastif'] == d['cnt'] and re.match(r'else[ +]if',regex[1]):
 		d['lastif'] = 0
 		return 0
-	head = {'sep':':'}
+	head = {'sep':':','scb':'\\scb','ecb':'\\ecb'}
 	if regex[4]:
 		for item in regex[4].replace('[','',1)[::-1].replace(']','',1)[::-1].split('&'):
 			item = item.split('=')
 			head[item[0]] = item[1]
+	value = regex[3]
+	value = value.replace('\\'+head['sep'],'\\@seper|')
+	value = re.sub(head['sep'],';',value)
+	value = value.replace('\\@seper|',head['sep'])
+	value = value.replace(head['scb'],'{').replace(head['ecb'],'}')
 	if eval(typeify(regex[2],True)[1]):
-		parse(regex[3].replace(head['sep'],';'))
+		parse(value)
 		d['lastif'] = d['cnt']+1
 	else:
 		d['els'] = True
 def els(regex):
-	head = {'sep':':'}
+	head = {'sep':':','scb':'\\scb','ecb':'\\ecb'}
 	if regex[2]:
 		for item in regex[2].replace('[','',1)[::-1].replace(']','',1)[::-1].split('&'):
 			item = item.split('=')
 			head[item[0]] = item[1]
+	value = regex[1]
+	value = value.replace('\\'+head['sep'],'\\@seper|')
+	value = re.sub(head['sep'],';',value)
+	value = value.replace('\\@seper|',head['sep'])
+	value = value.replace(head['scb'],'{').replace(head['ecb'],'}')
 	if d['els']:
-		parse(regex[1].replace(head['sep'],';'))
+		parse(value)
 def foreach(regex):
 	head = {'sep':':'}
 	if regex[3]:
@@ -258,7 +280,30 @@ def when(regex):
 			parse(reg[2])
 			return 'end'
 	set_interval(when_wrapper,0,l)
-cl = {r'''[ +\t\n]*create[ +\t\n]+var(\[.*\]){0,1}[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t]+([^\n]*)''':[cvar,'Create Var'],r'[ +\t\n]*create[ +\t\n]+funct[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\((.*)\)[ +\t\n]*\{([^;]*)\}[ +\t\n]*(\[.*\]){0,1}':[cfunct,'Create Function'],r'//.*//':[null,'Comment'],r'[ +\t\n]*pyparse[ +\t]+(.*)':[pyparse,'Pyparse'],r'[ +\t\n]*([a-zA-Z_]+[^@|.\n\t (]*)[ +\t\n]*\((.*)\)':[callfunct,'Call Function'],r'[ +\t\n]*return[ +\t\n]*([^\n]*)':[RETURN,'Return'],r'[ +\t\n]*(if|else[ +]if)[ +\t\n]*\((.*)\)[ +\t\n]*\{(.*)\}[ +\t\n]*(\[.*\]){0,1}':[ifstate,'If Statement'],r'[ +\t\n]*else[ +\t\n]*\{(.*)\}[ +\t\n]*(\[.*\]){0,1}':[els,'Else'],r'[ +\t\n]*foreach[ +\t\n]*\((.*)\)[ +\t\n]*\{(.*)\}[ +\t\n]*(\[.*\]){0,1}':[foreach,'Foreach Loop'],r'[ +\t\n]*while[ +\t\n]*\((.*)\)[ +\t\n]*\{(.*)\}[ +\t\n]*(\[.*\]){0,1}':[whileloop,'While Loop'],r'[ +\t\n]*when[ +\t\n]*\((.*)\)[ +\t\n]*\{(.*)\}[ +\t\n]*(\[.*\]){0,1}':[when,'When Loop']}
+def shfunct(regex):
+	it = {'type':'funct','dt':{}}
+	head = {}
+	if regex[3]:
+		for item in regex[3].replace('[','',1)[::-1].replace(']','',1)[::-1].split('&'):
+			item = item.split('=')
+			head[item[0]] = item[1]
+	value = regex[2]
+	if not 'sep' in head.keys():
+		head['sep'] = ':'
+	value = value.replace('\\'+head['sep'],'\\@seper|')
+	value = re.sub(head['sep'],';',value)
+	value = value.replace('\\@seper|',head['sep'])
+	args = {}
+	re2 = regex[1].replace('\\,','\\comma')
+	for item in regex[1].split(','):
+		item.replace('\\comma',',')
+		if len(item.split('=')) == 2:
+			args[item.split('=')[0]] = typeify(item.split('=')[1])
+		else:
+			args[item.split('=')[0]] = ['','']
+	it['dt'] = {'attrib':args,'code':value,'head':head}
+	return it
+cl = {r'''[ +\t\n]*create[ +\t\n]+var(\[.*\]){0,1}[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t]+([^\n]*)''':[cvar,'Create Var'],r'[ +\t\n]*create[ +\t\n]+funct[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\((.*)\)[ +\t\n]*\{([^;]*)\}[ +\t\n]*(\[.*\]){0,1}':[cfunct,'Create Function'],r'//.*//':[null,'Comment'],r'[ +\t\n]*pyparse[ +\t]+(.*)':[pyparse,'Pyparse'],r'[ +\t\n]*([a-zA-Z_]+[^@|.\n\t (]*)[ +\t\n]*\((.*)\)[ +\t\n]*':[callfunct,'Call Function'],r'[ +\t\n]*return[ +\t\n]*([^\n]*)':[RETURN,'Return'],r'[ +\t\n]*(if|else[ +]if)[ +\t\n]*\((.*)\)[ +\t\n]*\{(.*)\}[ +\t\n]*(\[.*\]){0,1}':[ifstate,'If Statement'],r'[ +\t\n]*else[ +\t\n]*\{(.*)\}[ +\t\n]*(\[.*\]){0,1}':[els,'Else'],r'[ +\t\n]*foreach[ +\t\n]*\((.*)\)[ +\t\n]*\{(.*)\}[ +\t\n]*(\[.*\]){0,1}':[foreach,'Foreach Loop'],r'[ +\t\n]*while[ +\t\n]*\((.*)\)[ +\t\n]*\{(.*)\}[ +\t\n]*(\[.*\]){0,1}':[whileloop,'While Loop'],r'[ +\t\n]*when[ +\t\n]*\((.*)\)[ +\t\n]*\{(.*)\}[ +\t\n]*(\[.*\]){0,1}':[when,'When Loop']}
 def parse(code):
 	code = code.replace('\\;','\\semi')
 	code = re.sub(r'//[^/]*//','',code)
