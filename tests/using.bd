@@ -1,12 +1,12 @@
 create funct using(file){
-	create var libdir array_item(dirsarray,'lib')-
-	create var packagedir array_item(dirsarray,'package')-
+	create var libdir array_item(dirsarray,'lib');
+	create var packagedir array_item(dirsarray,'package');
 	pyparse `try:
 	parse(open('@{file}').read())
 except FileNotFoundError:
 	try:
 		parse(open('@{libdir}@{file}').read())
 	except FileNotFoundError:
-		parse(open('@{packagedir}@{file}/main.bd').read())`
-}[global=&sep=-];
+		parse(open('@{packagedir}@{file}/main.bd').read())`;
+}[global=];
 pyparse `print(var)`

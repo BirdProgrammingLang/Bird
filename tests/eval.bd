@@ -1,0 +1,4 @@
+create funct eval(code) {
+	pyparse `parse('''@{code}''')`;
+};
+pyparse 'print(var)';

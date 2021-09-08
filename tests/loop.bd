@@ -2,14 +2,18 @@ using('stdio.bd');
 using('math.bd');
 //loops tested: foreach, while, when//
 create var a 1;
-//while(`@{a} != 3`){
-	writeout(a):
-	create var a math(`@{a}+1`)
+//while(`@{a} <= 3`){
+	writeout(a);
+	create var a math(`@{a}+1`);
 }//
-//when(`@{a} == 3`){
+//when('True'){
 	writeout('yay')
 };//
-writeout('test');
+//writeout('test');//
 create var a 3;
-writeout('yaya');
-writeout('yayaaa')
+//writeout('yaya');
+writeout('yayaaa');//
+//foreach(item of aa 'a'$'b'){
+	writeout(array_item(aa "a"$"b"\,item));
+}
+//

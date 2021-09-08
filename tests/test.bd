@@ -1,6 +1,2 @@
 using('stdio.bd');
-create funct t(){
-	return "hello"
-};
-create var test `@{t()}`;
-writeout(test)
+writeout(dirsarray);

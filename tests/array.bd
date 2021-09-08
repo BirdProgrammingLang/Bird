@@ -1,8 +1,10 @@
 create funct array_item(arr,cnt){
-	create var data 'notdefined':
-	pyparse `if var['cnt']['type'] == 'number'\:
+	create var data 'notdefined';
+	pyparse `if var['cnt']['type'] == 'number':
 	var['cnt']['dt'] = int(var['cnt']['dt'])
-var['data']['dt'] = var['arr']['dt'][var['cnt']['dt']]['dt']`:
-	return data
+var['data']['dt'] = var['arr']['dt'][var['cnt']['dt']]['dt']`;
+	return data;
 };
-pyparse `print(var)`
+//pyparse `print(var)`//
+using('stdio.bd');
+writeout(array_item(aa "a"$"b"\,"a"));

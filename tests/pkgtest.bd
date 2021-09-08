@@ -1,0 +1,3 @@
+using('test');
+using('stdio.bd');
+test();

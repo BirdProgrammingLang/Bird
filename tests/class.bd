@@ -1,0 +1,10 @@
+create class test (instance){
+	create funct t(){
+	writeout('built');
+	};
+	create funct construct(){
+writeout('test');
+	};
+};
+using('stdio.bd');
+test();

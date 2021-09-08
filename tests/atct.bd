@@ -1,0 +1,7 @@
+using('stdio.bd');
+if('1+1==2'){
+	writeout('yay');
+};
+if('2+2==4'){
+	writeout('4');
+};

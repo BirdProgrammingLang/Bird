@@ -1,7 +1,7 @@
 using('stdio.bd');
 create funct test(f){
-	writeout('a'):
-	f('a')
+	writeout('a');
+	f('a');
 };
 test(funct(a){
 	writeout('yy')
