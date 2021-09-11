@@ -1,12 +1,28 @@
 create funct using(file){
 	create var libdir array_item(dirsarray,'lib');
 	create var packagedir array_item(dirsarray,'package');
+	if(exists usingpasswd){
+		create var passwd B1;
+	};
+	else{
+		create var passwd B0;
+	};
 	pyparse `try:
 	parse(open('@{file}').read())
 except FileNotFoundError:
 	try:
 		parse(open('@{libdir}@{file}').read())
 	except FileNotFoundError:
-		parse(open('@{packagedir}@{file}/main.bd').read())`;
+		try:
+			open('@{packagedir}/@{file}/passwd.txt')
+			if eval(var['passwd']['dt']):
+				passwd = base64.b64decode(open('@{packagedir}/@{file}/passwd.txt').read()).decode('utf-8')
+				if var['usingpasswd']['dt'] == passwd:
+					parse(open('@{packagedir}/@{file}/main.bd').read())
+		except:
+			parse(open('@{packagedir}@{file}/main.bd').read())`;
 }[global=];
-pyparse `print(var)`
+//pyparse `print(var)`//
+using('stdio.bd');
+using('test');
+test();

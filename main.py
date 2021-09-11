@@ -1,2 +1,6 @@
+from os import chdir
+chdir('tests/')
 from src.bird import *
-parse(open('tests/'+input('Filename: ')).read())
+fn = input('Filename: ')
+gvar['@fn'] = {'type':'string','dt':fn}
+parse(open(fn).read())

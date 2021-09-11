@@ -1,0 +1,3 @@
+//using('os.bd');
+clear();//
+using('stdio.bd');

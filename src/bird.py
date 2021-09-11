@@ -2,15 +2,25 @@ import re
 from ast import literal_eval as le
 import threading
 import random
-gvar = {'using': {'type': 'funct', 'dt': {'attrib': {'file': ['', '']}, 'code': "\n\tcreate var libdir array_item(dirsarray,'lib');\n\tcreate var packagedir array_item(dirsarray,'package');\n\tpyparse `try:\n\tparse(open('@{file}').read())\nexcept FileNotFoundError:\n\ttry:\n\t\tparse(open('@{libdir}@{file}').read())\n\texcept FileNotFoundError:\n\t\tparse(open('@{packagedir}/@{file}/main.bd').read())`\n", 'head': {'sep': '-', 'scb': '\\scb', 'ecb': '\\ecb', 'global': ''}}}, 'typeof': {'type': 'funct', 'dt': {'attrib': {'item': ['', '']}, 'code': '\n\tpyparse `var["data"] = {\'type\':\'string\',\'dt\':var[\'item\'][\'type\']}`;\n\treturn data\n', 'head': {'global': '', 'sep': '~'}}}, 'dirsarray': {'dt': {'bird': {'type': 'string', 'dt': 'Bird/'}, 'lib': {'type': 'string', 'dt': 'Bird/lib/'}, 'package': {'type': 'string', 'dt': 'Bird/package'}}, 'type': 'associative'}, 'array_item': {'type': 'funct', 'dt': {'attrib': {'arr': ['', ''], 'cnt': ['', '']}, 'code': "\n\tcreate var data 'notdefined';\n\tpyparse `if var['cnt']['type'] == 'number':\n\tvar['cnt']['dt'] = int(var['cnt']['dt'])\nvar['data']['dt'] = var['arr']['dt'][var['cnt']['dt']]['dt']`;\n\treturn data\n", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': ''}}}, 'eval': {'type': 'funct', 'dt': {'attrib': {'code': ['', '']}, 'code': "pyparse `parse('''@{code}''')`", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb'}}}, 'quit': {'type': 'funct', 'dt': {'attrib': {'status': ['number', 0.0]}, 'code': 'pyparse `quit(int(@{status}))`', 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb'}}}}
+import base64
+from pathlib import Path
+import os
+home = str(Path.home())+'/Bird-Lang' #Only for Replit: +'/Bird-Lang'
+gvar = gvar = {'using': {'type': 'funct', 'dt': {'attrib': {'file': ['', '']}, 'code': "\n\tcreate var libdir array_item(dirsarray,'lib');\n\tcreate var packagedir array_item(dirsarray,'package');\n\tpyparse `try:\n\tparse(open('@{file}').read())\nexcept FileNotFoundError:\n\ttry:\n\t\tparse(open('@{libdir}@{file}').read())\n\texcept FileNotFoundError:\n\t\tparse(open('@{packagedir}/@{file}/main.bd').read())`\n", 'head': {'sep': '-', 'scb': '\\scb', 'ecb': '\\ecb', 'global': ''}}}, 'typeof': {'type': 'funct', 'dt': {'attrib': {'item': ['', '']}, 'code': '\n\tpyparse `var["data"] = {\'type\':\'string\',\'dt\':var[\'item\'][\'type\']}`;\n\treturn data\n', 'head': {'global': '', 'sep': '~'}}}, 'dirsarray': {'dt': {'bird': {'type': 'string', 'dt': open(home+'/bddir.txt').read()}, 'lib': {'type': 'string', 'dt': open(home+'/bddir.txt').read()+'/lib/'}, 'package': {'type': 'string', 'dt': open(home+'/bddir.txt').read()+'/package/'}}, 'type': 'associative'}, 'array_item': {'type': 'funct', 'dt': {'attrib': {'arr': ['', ''], 'cnt': ['', '']}, 'code': "\n\tcreate var data 'notdefined';\n\tpyparse `if var['cnt']['type'] == 'number':\n\tvar['cnt']['dt'] = int(var['cnt']['dt'])\nvar['data']['dt'] = var['arr']['dt'][var['cnt']['dt']]['dt']`;\n\treturn data\n", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': ''}}}, 'eval': {'type': 'funct', 'dt': {'attrib': {'code': ['', '']}, 'code': "pyparse `parse('''@{code}''')`", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb'}}}, 'quit': {'type': 'funct', 'dt': {'attrib': {'status': ['number', 0.0]}, 'code': 'pyparse `quit(int(@{status}))`', 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb'}}}}
 var = {}
 classes = {}
 def null(*args):
 	pass
-d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[]}
+d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{}}
 def error(n,t):
-	print(f'{n} triggered at expression {str(d["cnt"])}, "{d["ep"]}": {t}')
-	quit(1)
+	try:
+		parse(d['errh'][n])
+	except:
+		try:
+			parse(d['errh']['Error'])
+		except:
+			print(f'{n} triggered at expression {str(d["cnt"])}, "{d["ep"]}": {t}')
+			quit(1)
 def set_interval(func,sec=0,reg=[]):
     idnt = random.randint(0,9999999999)
     def func_wrapper():
@@ -21,7 +31,7 @@ def set_interval(func,sec=0,reg=[]):
     t.start()
     d['interval'][idnt] = t
     return idnt
-def typeify(txt,qt=False):
+def typeify(txt,qt=False,err=True):
 	if txt.startswith('"') and txt.endswith('"'):
 		ty = 'string'
 		txt = txt.replace('"','')
@@ -36,8 +46,8 @@ def typeify(txt,qt=False):
 		txt = re.sub(r"^[ +\n\t]*`",'',txt,1)
 		txt = re.sub(r"`[ +\n\t]*$",'',txt,1)
 		for item in re.findall(r'@\{([^}]*)\}',txt,re.DOTALL):
-			if re.match(r'^[ +\t\n]*([a-zA-Z_]+[^@|.\n\t (]*)[ +\t\n]*$',item):
-				dat = re.match(r'^[ +\t\n]*([a-zA-Z_]+[^@|\n\t (]*)[ +\t\n]*$',item)
+			if re.match(r'^[ +\t\n]*([a-zA-Z_]+[^|.\n\t (]*)[ +\t\n]*$',item):
+				dat = re.match(r'^[ +\t\n]*([a-zA-Z_]+[^|\n\t (]*)[ +\t\n]*$',item)
 				if dat[1] in var:
 					if var[dat[1]]['type'] == 'funct':
 						pass
@@ -65,13 +75,18 @@ def typeify(txt,qt=False):
 		ty = 'null'
 		txt = ''
 		return [ty,txt]
-	elif re.match(r'^[ \t\n]*([a-zA-Z_]+[^@|\n\t ]*)\((.*)\)[ \t\n]*$',txt):
+	elif re.match(r'^[ \t\n]*([a-zA-Z_]+[^|\n\t ]*)\((.*)\)[ \t\n]*$',txt):
 		oretd = d['retd']
 		d['retd'] = '@keycode42125256strexec|'
 		parse(txt)
 		ret = d['retd']
 		d['retd'] = oretd
 		return ret
+	elif re.match(r'[ +\t\n]*exists[ +\t\n]+(.*)[ +\t\n]*',txt):
+		if typeify(re.match(r'[ +\t\n]*exists[ +\t\n]+(.*)[ +\t\n]*',txt)[1],err=False) == 'VE,UV':
+			return ['bool','False']
+		else:
+			return ['bool','True']
 	elif re.match(r'^[ +\t\n]*(\[.*\])[ +\t\n]*$',txt,re.DOTALL):
 		it = re.match(r'^[ +\t\n]*(\[.*\])[ +\t\n]*$',txt,re.DOTALL)[1]
 		it = it.replace('\\,','\\comma')
@@ -109,7 +124,10 @@ def typeify(txt,qt=False):
 			ty = gvar[txt]['type']
 			txt = gvar[txt]['dt']
 		else:
-			error('VarError',f'Unknown Var "{txt}".')
+			if err:
+				error('VarError',f'Unknown Var "{txt}".')
+			else:
+				return 'VE,UV'
 	return [ty,txt]
 def cvar(regex):
 	head = {}
@@ -264,7 +282,7 @@ def featc(value='',dt=[],tr=''):
 	else:
 		return 'a'
 def foreach(regex):
-	dt = re.match(r'([a-zA-Z_]+[^@|.\n\t ]*)[ +\n\t]+(in|of)[ +\n\t]+(.*)',regex[1])
+	dt = re.match(r'([a-zA-Z_]+[^|.\n\t ]*)[ +\n\t]+(in|of)[ +\n\t]+(.*)',regex[1])
 	d['ecnt'] = 1
 	d['atcdat'] = dt
 	d['atc'] = featc
@@ -333,7 +351,13 @@ def cla(regex):
 	d['ecnt'] = 1
 	d['atcdat'] = regex
 	d['atc'] = claatc
-cl = {r'''[ +\t\n]*create[ +\t\n]+var(\[.*\]){0,1}[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)(.*)''':[cvar,'Create Var'],r'[ +\t\n]*create[ +\t\n]+funct[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\((.*)\)[ +\t\n]*\{[ +\t\n]*':[cfunct,'Create Function'],r'//.*//':[null,'Comment'],r'[ +\t\n]*pyparse[ +\t]+(.*)[ +\t\n]*':[pyparse,'Pyparse'],r'[ +\t\n]*([a-zA-Z_]+[^@|\n\t (]*)[ +\t\n]*\((.*)\)[ +\t\n]*':[callfunct,'Call Function'],r'[ +\t\n]*return[ +\t\n]*([^\n]*)':[RETURN,'Return'],r'[ +\t\n]*(if|else[ +]if)[ +\t\n]*\((.*)\)[ +\t\n]*\{':[ifstate,'If Statement'],r'[ +\t\n]*else[ +\t\n]*\{':[els,'Else'],r'[ +\t\n]*foreach[ +\t\n]*\((.*)\)[ +\t\n]*\{':[foreach,'Foreach Loop'],r'[ +\t\n]*while[ +\t\n]*\((.*)\)[ +\t\n]*\{':[whileloop,'While Loop'],r'[ +\t\n]*when[ +\t\n]*\((.*)\)[ +\t\n]*\{':[when,'When Loop'],"":[null,'WhiteSpace'],r"[ +\t\n]*create[ +\t\n]+class[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\([ +\t\n]*(instance|static)[ +\t\n]*\)[ +\t\n]*\{":[cla,'Class']}
+def errhatc(code='',data=[],tr=''):
+	d['errh'][data[1]] = code
+def errh(regex):
+	d['ecnt'] = 1
+	d['atcdat'] = regex
+	d['atc'] = errhatc
+cl = {r'''[ +\t\n]*create[ +\t\n]+var(\[.*\]){0,1}[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)(.*)''':[cvar,'Create Var'],r'[ +\t\n]*create[ +\t\n]+funct[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\((.*)\)[ +\t\n]*\{[ +\t\n]*':[cfunct,'Create Function'],r'//.*//':[null,'Comment'],r'[ +\t\n]*pyparse[ +\t]+(.*)[ +\t\n]*':[pyparse,'Pyparse'],r'[ +\t\n]*([a-zA-Z_]+[^@|\n\t (]*)[ +\t\n]*\((.*)\)[ +\t\n]*':[callfunct,'Call Function'],r'[ +\t\n]*return[ +\t\n]*([^\n]*)':[RETURN,'Return'],r'[ +\t\n]*(if|else[ +]if)[ +\t\n]*\((.*)\)[ +\t\n]*\{':[ifstate,'If Statement'],r'[ +\t\n]*else[ +\t\n]*\{':[els,'Else'],r'[ +\t\n]*foreach[ +\t\n]*\((.*)\)[ +\t\n]*\{':[foreach,'Foreach Loop'],r'[ +\t\n]*while[ +\t\n]*\((.*)\)[ +\t\n]*\{':[whileloop,'While Loop'],r'[ +\t\n]*when[ +\t\n]*\((.*)\)[ +\t\n]*\{':[when,'When Loop'],"":[null,'WhiteSpace'],r"[ +\t\n]*create[ +\t\n]+class[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\([ +\t\n]*(instance|static)[ +\t\n]*\)[ +\t\n]*\{":[cla,'Class'],r'[ +\t\n]*create ErrorHandler[ +\t\n]*\((.*)\)[ +\t\n]*\{':[errh,"Create Error Handler"]}
 def parse(code):
 	code = code.replace('\\;','\\semi')
 	code = re.sub(r'//[^/]*//','',code)
