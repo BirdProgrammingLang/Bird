@@ -1,13 +1,11 @@
 create funct fread(fn){
 	pyparse `var['data'] = {'type':'string','dt':open("@{fn}").read()}`;
 	return data;
-};
+}[global=];
 create funct fwrite(fn,txt,m='a'){
 	pyparse `d = open('''@{fn}''','''@{m}''')
 d.write('''@{txt}''')
 d.close()`;
 	return true;
-};
-using('stdio.bd');
-fwrite('test.txt','Test','w');
-writeout(fread('test.txt'));
+}[global=];
+pyparse `print(gvar)`;

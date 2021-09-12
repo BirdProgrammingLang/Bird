@@ -1,10 +1,18 @@
 create class test (instance){
+	create var test 'yay';
 	create funct t(){
-	writeout('built');
+		writeout('yeet');
 	};
-	create funct construct(){
-writeout('test');
+	create funct initiate(){
+		writeout('asdfghjkllllllllll');
 	};
 };
+//pyparse `print(d['clsd'])`;//
+//test();//
 using('stdio.bd');
-test();
+//create var yay test;
+writeout(`@{yay.test}`);
+yay.t();//
+//pyparse `print(var["test"])`//
+create var i create test();
+writeout(i.test)
