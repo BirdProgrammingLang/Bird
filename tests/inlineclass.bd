@@ -59,4 +59,5 @@ except FileNotFoundError:
 	return dt;
 	};
 }[global=];
-pyparse `print(gvar)`;
+create var i using('/home/runner/Bird-Lang/Bird/lib/os.bd',B0);
+i.clear();

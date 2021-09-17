@@ -16,7 +16,6 @@ create funct using(file,global=B1){
 		parse(open('@{file}').read())
 except FileNotFoundError:
 	try:
-		open('@{libdir}@{file}')
 		parse(open('@{libdir}@{file}').read())
 	except FileNotFoundError:
 		try:
@@ -29,12 +28,6 @@ except FileNotFoundError:
 			parse(open('@{packagedir}@{file}/main.bd').read())`;
 	};
 	else{
-	if(exists usingpasswd){
-		create var passwd B1;
-	};
-	else{
-		create var passwd B0;
-	};
 	create class dt(static){
 	pyparse `try:
 	if '''@{@fn}''' == '''@{file}''':
@@ -59,4 +52,5 @@ except FileNotFoundError:
 	return dt;
 	};
 }[global=];
-pyparse `print(gvar)`;
+create var i using('stdio.bd',B0);
+i.writeout('yay');

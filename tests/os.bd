@@ -1,3 +1,9 @@
-//using('os.bd');
-clear();//
 using('stdio.bd');
+//writeout(@fn);
+if(`@{@fn} == "os.bd"`){
+	writeout(B1);
+};//
+using('os.bd');
+sys.clear();
+sys.exec('echo hello');
+writeout(sys.name);

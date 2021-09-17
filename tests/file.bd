@@ -8,4 +8,8 @@ d.write('''@{txt}''')
 d.close()`;
 	return true;
 }[global=];
+create funct fdelete(fn){
+	pyparse `import os
+os.remove('''@{fn}''')`;
+}[global=];
 pyparse `print(gvar)`;

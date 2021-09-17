@@ -1,0 +1,7 @@
+create class t(static){
+	create var test 'ya';
+};
+using('stdio.bd');
+writeout(t.test);
+global t.test;
+writeout(test);

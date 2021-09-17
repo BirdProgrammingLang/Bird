@@ -20,4 +20,4 @@ elif data[16]:
 	var['data']['type'] = 'number'
 	var['data']['dt'] = float(data[17])-float(data[18])`;
 	return data;
-}[global=]
+}[global=];

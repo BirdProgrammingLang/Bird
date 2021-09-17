@@ -1,0 +1,9 @@
+using('ri.bd');
+create class fraction(instance){
+	create funct initiate(numerator,denominator){
+		create var fraction.numerator numerator;
+		create var fraction.denominator denominator;
+	};
+};
+create var i create fraction('1','2');
+writeout(i);
