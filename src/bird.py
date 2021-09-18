@@ -11,7 +11,7 @@ gvar = {'using': {'dt': {'attrib': {'file': ['', ''], 'global': ['bool', 'True']
 gvar['dirsarray'] = {'dt': {'bird': {'type': 'string', 'dt': bddir+'/'}, 'lib': {'type': 'string', 'dt': f'{bddir}/lib/'}, 'package': {'type': 'string', 'dt': f'{bddir}/package/'}}, 'type': 'associative'}
 var = {}
 classes = {}
-def null(*args):
+def null(*args,**kwargs):
 	pass
 d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{},'clsd':{}}
 def error(n,t):
@@ -202,7 +202,7 @@ def cvar(regex):
 			else:
 				if dat[i]['type'] == 'class':
 					dat = dat[i]['dt']
-			data[i] = 
+			#data[i] = 
 			cnt += 1
 		
 def fatc(dt='',regex=[],tr=''): #Function ATC
