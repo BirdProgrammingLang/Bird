@@ -23,6 +23,19 @@ def error(n,t):
 		except:
 			print(f'{n} triggered at expression {str(d["cnt"])}, "{d["ep"]}": {t}')
 			quit(1)
+def typedat(dt):
+	typ = dt[0]
+	if typ == 'funct':
+		return {'code':{'type':'string','dt':dt[1]['code']}}
+	elif typ == 'array':
+		return {'item':{'type': 'funct', 'dt': {'attrib': {'cnt': ['', '']}, 'code': f'create var arr {dt[1]};create var data \'notdefined\';pyparse `if var[\'arr\'][\'type\'] == \'associative\' or var[\'arr\'][\'type\'] == \'array\':\n    if var[\'cnt\'][\'type\'] == \'number\':\n        var[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n    var[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']][\'dt\']\nelse:\n\tif var[\'cnt\'][\'type\'] == \'number\':\n\t\tvar[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n\tvar[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']]`;return data', 'head': {}}}}
+	elif typ == 'associative':
+		tl = {'item':{'type': 'funct', 'dt': {'attrib': {'cnt': ['', ''],'arr':['associative',dt[1]]}, 'code': f'create var data \'notdefined\';pyparse `if var[\'arr\'][\'type\'] == \'associative\' or var[\'arr\'][\'type\'] == \'array\':\n    if var[\'cnt\'][\'type\'] == \'number\':\n        var[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n    var[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']][\'dt\']\nelse:\n\tif var[\'cnt\'][\'type\'] == \'number\':\n\t\tvar[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n\tvar[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']]`;return data', 'head': {}}}}
+		for n,v in dt[1].items():
+			tl[n] = v
+		return tl
+	else:
+		return {'item':{'type': 'funct', 'dt': {'attrib': {'cnt': ['', '']}, 'code': f'create var arr "{dt[1]}";create var data \'notdefined\';pyparse `if var[\'arr\'][\'type\'] == \'associative\' or var[\'arr\'][\'type\'] == \'array\':\n    if var[\'cnt\'][\'type\'] == \'number\':\n        var[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n    var[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']][\'dt\']\nelse:\n\tif var[\'cnt\'][\'type\'] == \'number\':\n\t\tvar[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n\tvar[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']]`;return data', 'head': {}}},'length':{'type':'number','dt':len(dt[1])-1}}
 def set_interval(func,sec=0,reg=[]):
     idnt = random.randint(0,9999999999)
     def func_wrapper():
@@ -62,19 +75,13 @@ def typeify(txt,qt=False,err=True):
 							if data[i]['type'] == 'class':
 								data = data[i]['dt']
 						cnt += 1
-					if qt:
-						txt = txt.replace(f'@{{{dat[1]}}}','"'+data+'"')
-					else:
-						txt = txt.replace(f'@{{{dat[1]}}}',data)
+					txt = txt.replace(f'@{{{dat[1]}}}',data)
 				else:
 					if dat[1] in var:
 						if var[dat[1]]['type'] == 'funct':
 							pass
 						else:
-							if qt:
-								txt = txt.replace(f'@{{{dat[1]}}}','"'+str(var[dat[1]]['dt'])+'"')
-							else:
-								txt = txt.replace(f'@{{{dat[1]}}}',str(var[dat[1]]['dt']))
+							txt = txt.replace(f'@{{{dat[1]}}}',str(var[dat[1]]['dt']))
 					else:
 						error('VarError',f'Unknown Var "{dat[1]}".')
 			else:
@@ -94,7 +101,7 @@ def typeify(txt,qt=False,err=True):
 		ty = 'null'
 		txt = ''
 		return [ty,txt]
-	elif re.match(r'^[ \t\n]*([a-zA-Z_]+[^|\n\t ]*)\((.*)\)[ \t\n]*$',txt):
+	elif re.match(r'^[ \t\n]*(.*)\((.*)\)[ \t\n]*$',txt):
 		oretd = d['retd']
 		d['retd'] = '@keycode42125256strexec|'
 		parse(txt)
@@ -124,10 +131,27 @@ def typeify(txt,qt=False,err=True):
 			l[typeify(dat[1])[1]] = {'type':typeify(dat[2])[0],'dt':typeify(dat[2])[1]}
 		txt = l
 		ty = 'associative'
+	elif re.match(r'^[ +\t\n]*{(.*)}[ +\t\n]*$',txt,re.DOTALL):
+		dt = re.match(r'^[ +\t\n]*{(.*)}[ +\t\n]*$',txt,re.DOTALL)
+		dat = dt[1].split(',')
+		dt = re.split(r'[ +\t\n]*[,][ +\t\n]*',dt[1])
+		l = {}
+		for item in dt:
+			dat = re.match('(.*)[:](.*)',item,re.DOTALL)
+			l[typeify(dat[1])[1]] = {'type':typeify(dat[2])[0],'dt':typeify(dat[2])[1]}
+		txt = l
+		ty = 'associative'
 	elif re.match(r'[ \t\n+]*funct[ \t\n+]*\((.*)\)\{(.*)\}[ +\t\n]*(\[.*\]){0,1}',txt,re.DOTALL):
 		it = shfunct(re.match(r'[ \t\n+]*funct[ \t\n+]*\((.*)\)\{(.*)\}[ +\t\n]*(\[.*\]){0,1}',txt,re.DOTALL))
 		txt = it['dt']
 		ty = it['type']
+	elif re.match(r'[ \t\n+]*tostring[ \t\n+]+(.*)[ \t\n+]*',txt,re.DOTALL):
+		dt = re.match(r'[ \t\n+]*tostring[ \t\n+]+(.*)[ \t\n+]*',txt,re.DOTALL)
+		dat = typeify(dt[1])
+		if dat[0] == 'number':
+			return ['string',str(dat[1])]
+		elif dat[0] == 'class':
+			return ['string',base64.b64encode(str(dat[1]).encode('utf_8')).decode('utf-8')]
 	elif re.match(r'^[ \t\n+]*create[ \t\n+]+([a-zA-Z_]+[^@|\n\t (]*)[ \t\n+]*\((.*)\)',txt,re.DOTALL):
 		dat = re.match(r'^[ \t\n+]*create[ \t\n+]+([a-zA-Z_]+[^@|\n\t (]*)[ \t\n+]*\((.*)\)',txt,re.DOTALL)
 		n = dat[1]
@@ -154,9 +178,16 @@ def typeify(txt,qt=False,err=True):
 				if cnt == len(n):
 					ty = dat[i]['type']
 					txt = dat[i]['dt']
+				elif cnt == 1:
+					dt = typeify(i)
+					if dt[0] == 'class':
+						dat = dt[1]
+					else:
+						dat = typedat(dt)
 				else:
-					if dat[i]['type'] == 'class':
-						dat = dat[i]['dt']
+					if i in dat:
+						if dat[i]['type'] == 'class':
+							dat = dat[i]['dt']
 				cnt += 1
 		else:
 			if txt in var.keys():
@@ -208,7 +239,7 @@ def cvar(regex):
 def fatc(dt='',regex=[],tr=''): #Function ATC
 	if dt != '':
 		tr = re.match(r'[ +\t\n]*}[ +\t\n]*(\[.*\]){0,1}',tr)
-		head = {'sep':':','scb':'\\scb','ecb':'\\ecb'}
+		head = {}
 		n = regex[1]
 		if tr[1]:
 			for item in tr[1].replace('[','',1)[::-1].replace(']','',1)[::-1].split('&'):
@@ -231,7 +262,7 @@ def cfunct(regex):
 				n = d['class'][::-1].replace('.','',1)[::-1]'''
 	var[n] = {}
 	var[n]['type'] = 'funct'
-	head = {'sep':':','scb':'\\scb','ecb':'\\ecb'}
+	head = {}
 	args = {}
 	re2 = regex[2].replace('\\,','\\comma')
 	for item in regex[2].split(','):
@@ -262,6 +293,12 @@ def callfunct(regex):
 		for i in n:
 			if cnt == len(n):
 				dat = dat[i]
+			elif cnt == 1:
+				dt = typeify(i)
+				if dt[0] == 'class':
+					dat = dt[1]
+				else:
+					dat = typedat(dt)
 			else:
 				if dat[i]['type'] == 'class':
 					dat = dat[i]['dt']
@@ -353,6 +390,12 @@ def featc(value='',dt=[],tr=''):
 				for i in v[1].keys():
 					var[dt[1]] = {'type':'string','dt':i}
 					parse(value)
+			elif v[0] == 'class':
+				data = re.split(r'[ +\n\t]*,[ +\n\t]*',dt[1])
+				for i,n in v[1].items():
+					var[data[0]] = {'type':'string','dt':i}
+					var[data[1]] = n
+					parse(value)
 	else:
 		return 'a'
 def foreach(regex):
@@ -405,7 +448,7 @@ def shfunct(regex):
 def claatc(code='',data=[],tr=''):
 	if tr != "":
 		tr = re.match(r'[ +\t\n]*}[ +\t\n]*(\[.*\]){0,1}',tr)
-		head = {'sep':':','scb':'\\scb','ecb':'\\ecb'}
+		head = {}
 		if tr[1]:
 			for item in tr[1].replace('[','',1)[::-1].replace(']','',1)[::-1].split('&'):
 				item = item.split('=')
@@ -456,7 +499,7 @@ def globalize(regex):
 			gvar[dat[1]] = var[dat[1]]
 		else:
 			error('VarError',f'Unknown Var "{dat[1]}".')
-cl = {r'''[ +\t\n]*create[ +\t\n]+var(\[.*\]){0,1}[ +\t\n]+([a-zA-Z_]+[^@|\n\t ]*)(.*)''':[cvar,'Create Var'],r'[ +\t\n]*create[ +\t\n]+funct[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\((.*)\)[ +\t\n]*\{[ +\t\n]*':[cfunct,'Create Function'],r'//.*//':[null,'Comment'],r'[ +\t\n]*pyparse[ +\t]+(.*)[ +\t\n]*':[pyparse,'Pyparse'],r'[ +\t\n]*([a-zA-Z_]+[^@|\n\t (]*)[ +\t\n]*\((.*)\)[ +\t\n]*':[callfunct,'Call Function'],r'[ +\t\n]*return[ +\t\n]*([^\n]*)':[RETURN,'Return'],r'[ +\t\n]*(if|else[ +]if)[ +\t\n]*\((.*)\)[ +\t\n]*\{':[ifstate,'If Statement'],r'[ +\t\n]*else[ +\t\n]*\{':[els,'Else'],r'[ +\t\n]*foreach[ +\t\n]*\((.*)\)[ +\t\n]*\{':[foreach,'Foreach Loop'],r'[ +\t\n]*while[ +\t\n]*\((.*)\)[ +\t\n]*\{':[whileloop,'While Loop'],r'[ +\t\n]*when[ +\t\n]*\((.*)\)[ +\t\n]*\{':[when,'When Loop'],"":[null,'WhiteSpace'],r"[ +\t\n]*create[ +\t\n]+class[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\([ +\t\n]*(instance|static)[ +\t\n]*\)[ +\t\n]*\{":[cla,'Class'],r'[ +\t\n]*create ErrorHandler[ +\t\n]*\((.*)\)[ +\t\n]*\{':[errh,"Create Error Handler"],r'[ +\t\n]*global[ +\t\n]*(.*)[ +\t\n]*':[globalize,'Global']}
+cl = {r'''[ +\t\n]*create[ +\t\n]+var(\[.*\]){0,1}[ +\t\n]+([a-zA-Z_]+[^@|\n\t ]*)(.*)''':[cvar,'Create Var'],r'[ +\t\n]*create[ +\t\n]+funct[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\((.*)\)[ +\t\n]*\{[ +\t\n]*':[cfunct,'Create Function'],r'//.*//':[null,'Comment'],r'[ +\t\n]*pyparse[ +\t]+(.*)[ +\t\n]*':[pyparse,'Pyparse'],r'[ +\t\n]*([^@|\n\t (]*)[ +\t\n]*\((.*)\)[ +\t\n]*':[callfunct,'Call Function'],r'[ +\t\n]*return[ +\t\n]*([^\n]*)':[RETURN,'Return'],r'[ +\t\n]*(if|else[ +]if)[ +\t\n]*\((.*)\)[ +\t\n]*\{':[ifstate,'If Statement'],r'[ +\t\n]*else[ +\t\n]*\{':[els,'Else'],r'[ +\t\n]*foreach[ +\t\n]*\((.*)\)[ +\t\n]*\{':[foreach,'Foreach Loop'],r'[ +\t\n]*while[ +\t\n]*\((.*)\)[ +\t\n]*\{':[whileloop,'While Loop'],r'[ +\t\n]*when[ +\t\n]*\((.*)\)[ +\t\n]*\{':[when,'When Loop'],"":[null,'WhiteSpace'],r"[ +\t\n]*create[ +\t\n]+class[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\([ +\t\n]*(instance|static)[ +\t\n]*\)[ +\t\n]*\{":[cla,'Class'],r'[ +\t\n]*create ErrorHandler[ +\t\n]*\((.*)\)[ +\t\n]*\{':[errh,"Create Error Handler"],r'[ +\t\n]*global[ +\t\n]*(.*)[ +\t\n]*':[globalize,'Global']}
 def parse(code):
 	code = code.replace('\\;','\\semi')
 	code = re.sub(r'//(.*)*//','',code,re.DOTALL)

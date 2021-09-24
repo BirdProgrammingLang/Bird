@@ -1,2 +1,3 @@
 using('stdio.bd');
-writeout(dirsarray);
+create var i "yeet".item(1);
+writeout(i);

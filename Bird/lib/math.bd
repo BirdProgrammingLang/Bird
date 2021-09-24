@@ -21,3 +21,8 @@ elif data[16]:
 	var['data']['dt'] = float(data[17])-float(data[18])`;
 	return data;
 }[global=];
+create funct squareroot(number){
+	pyparse `import math
+var['data'] = {'type':'number','dt':math.sqrt(@{number})}`;
+	return data;
+}

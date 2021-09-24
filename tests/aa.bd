@@ -1,2 +1,3 @@
-create var a aa 'd'$'c'&'b':'x';
-pyparse `print(var)`
+create var a {'a':'B'};
+using('stdio.bd');
+writeout(a.a);

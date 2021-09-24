@@ -1,3 +1,4 @@
 using('math.bd');
 using('stdio.bd');
-writeout(math('8/4'))
+writeout(math('8/4'));
+writeout(squareroot(4));

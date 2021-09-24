@@ -1,19 +1,12 @@
 using('stdio.bd');
 using('math.bd');
 //loops tested: foreach, while, when//
-create var a 1;
-//while(`@{a} <= 3`){
-	writeout(a);
-	create var a math(`@{a}+1`);
-}//
-//when('True'){
-	writeout('yay')
-};//
-//writeout('test');//
-create var a 3;
-//writeout('yaya');
-writeout('yayaaa');//
-//foreach(item of aa 'a'$'b'){
-	writeout(array_item(aa "a"$"b"\,item));
-}
-//
+create class test(static){
+	create funct yay(){
+		writeout('a');
+	};
+};
+foreach(n,item of test){
+	writeout(n);
+	item();
+};
