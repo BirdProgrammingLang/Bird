@@ -51,7 +51,37 @@ def set_interval(func,sec=0,reg=[]):
     return idnt
 def typeify(txt,qt=False,err=True):
 	txt = re.match(r'^[ +\n\t]*(.*)[ +\n\t]*$',txt,re.DOTALL)[1]
-	if txt.startswith('"') and txt.endswith('"'):
+	if re.match(r'^[ +\n\t]*(.*)[ +\n\t]*===[ +\n\t]*(.*)[ +\n\t]*$',txt):
+		cv = re.split(r'[ +\n\t]*===[ +\n\t]*',txt)
+		if typeify(cv[0])[0] == typeify(cv[1])[0]:
+			return ['bool',str(typeify(cv[0])[1] == typeify(cv[1])[1])]
+		else:
+			return ['bool','False']
+	elif re.match(r'^[ +\n\t]*(.*)[ +\n\t]*!==[ +\n\t]*(.*)[ +\n\t]*$',txt):
+		cv = re.split(r'[ +\n\t]*!==[ +\n\t]*',txt)
+		if typeify(cv[0])[0] == typeify(cv[1])[0]:
+			return ['bool',str(typeify(cv[0])[1] != typeify(cv[1])[1])]
+		else:
+			return ['bool','False']
+	elif re.match(r'^[ +\n\t]*(.*)[ +\n\t]*>=[ +\n\t]*(.*)[ +\n\t]*$',txt):
+		cv = re.split(r'[ +\n\t]*>=[ +\n\t]*',txt)
+		return ['bool',str(str(typeify(cv[0])[1]) >= str(typeify(cv[1])[1]))]
+	elif re.match(r'^[ +\n\t]*(.*)[ +\n\t]*<=[ +\n\t]*(.*)[ +\n\t]*$',txt):
+		cv = re.split(r'[ +\n\t]*<=[ +\n\t]*',txt)
+		return ['bool',str(str(typeify(cv[0])[1]) <= str(typeify(cv[1])[1]))]
+	elif re.match(r'^[ +\n\t]*(.*)[ +\n\t]*>[ +\n\t]*(.*)[ +\n\t]*$',txt):
+		cv = re.split(r'[ +\n\t]*>[ +\n\t]*',txt)
+		return ['bool',str(str(typeify(cv[0])[1]) > str(typeify(cv[1])[1]))]
+	elif re.match(r'^[ +\n\t]*(.*)[ +\n\t]*<[ +\n\t]*(.*)[ +\n\t]*$',txt):
+		cv = re.split(r'[ +\n\t]*<[ +\n\t]*',txt)
+		return ['bool',str(str(typeify(cv[0])[1]) < str(typeify(cv[1])[1]))]
+	elif re.match(r'^[ +\n\t]*(.*)[ +\n\t]*==[ +\n\t]*(.*)[ +\n\t]*$',txt):
+		cv = re.split(r'[ +\n\t]*==[ +\n\t]*',txt)
+		return ['bool',str(str(typeify(cv[0])[1]) == str(typeify(cv[1])[1]))]
+	elif re.match(r'^[ +\n\t]*(.*)[ +\n\t]*!=[ +\n\t]*(.*)[ +\n\t]*$',txt):
+		cv = re.split(r'[ +\n\t]*!=[ +\n\t]*',txt)
+		return ['bool',str(str(typeify(cv[0])[1]) != str(typeify(cv[1])[1]))]
+	elif txt.startswith('"') and txt.endswith('"'):
 		ty = 'string'
 		txt = txt.replace('"','')
 		return [ty,txt]
@@ -96,8 +126,10 @@ def typeify(txt,qt=False,err=True):
 						txt = txt.replace(f'@{{{item}}}',str(d["retd"][1]))
 					d['retd'] = oret
 		return [ty,txt]
-	elif re.match(r"^[0-9.]+$",txt):
+	elif re.match(r"^[ +\n\t]*[0-9.]+[ +\n\t]*$",txt):
 		txt = float(txt)
+		if str(txt).endswith('.0'):
+			txt = int(txt)
 		ty = 'number'
 		return [ty,txt]
 	elif re.match(r'^[ \t\n]*$',txt):
@@ -144,10 +176,10 @@ def typeify(txt,qt=False,err=True):
 			l[typeify(dat[1])[1]] = {'type':typeify(dat[2])[0],'dt':typeify(dat[2])[1]}
 		txt = l
 		ty = 'associative'
-	elif re.match(r'[ \t\n+]*funct[ \t\n+]*\((.*)\)\{(.*)\}[ +\t\n]*(\[.*\]){0,1}',txt,re.DOTALL):
+		'''elif re.match(r'[ \t\n+]*funct[ \t\n+]*\((.*)\)\{(.*)\}[ +\t\n]*(\[.*\]){0,1}',txt,re.DOTALL):
 		it = shfunct(re.match(r'[ \t\n+]*funct[ \t\n+]*\((.*)\)\{(.*)\}[ +\t\n]*(\[.*\]){0,1}',txt,re.DOTALL))
 		txt = it['dt']
-		ty = it['type']
+		ty = it['type']'''
 	elif re.match(r'[ \t\n+]*tostring[ \t\n+]+(.*)[ \t\n+]*',txt,re.DOTALL):
 		dt = re.match(r'[ \t\n+]*tostring[ \t\n+]+(.*)[ \t\n+]*',txt,re.DOTALL)
 		dat = typeify(dt[1])
@@ -345,12 +377,55 @@ def callfunct(regex):
 	var = ov
 def RETURN(regex):
 	d['retd'] = typeify(regex[1])
+def checkifs(cond):
+	def test(d):
+		'''if re.match(re.compile('^[ ]*[^\n=]+[ ]*==[ ]*[^\n=]+[ ]*$'),d):
+			cv = re.split('[ ]*==[ ]*',d)
+			return typeify(cv[0])[1] == typeify(cv[1])[1]
+		elif re.match(r'^[ +\n\t]*(.+)[ +\n\t]*$',d):
+			dt = re.match(r'^[ +\n\t]*(.+)[ +\n\t]*$',d)
+			if eval(typeify(dt[1])[1]):
+				return True
+		elif d == "":
+			return False
+		else:
+			raise SyntaxError(f'Invalid If-Statement, "{d}".')'''
+		dt = typeify(d)
+		if dt[0] == 'bool':
+			return eval(str(dt[1]))
+		else:
+			if dt[1] != '':
+				return True
+			else:
+				return False
+	import re
+	cond = re.split('[ ]*&&[ ]*',cond)
+	for c in cond:
+		if re.match(r'^[ \t\n+]*![ \t\n+]*',c):
+			c = re.sub(r'^[ \t\n+]*![ \t\n+]*','',c)
+			ret = False
+			n = True
+		else:
+			ret = True
+			n = False
+		if len(re.split('[ ]*\|\|[ ]*',c)) != 1:
+			t = False
+			for cnd in re.split('[ ]*\|\|[ ]*',c):
+				if test(cnd):
+					t = True
+					break
+			if not t:
+				return n
+		else:
+			if not test(c):
+				return n
+	return ret
 def ifatc(dt='',data=[],tr=''):
 	if dt != '':
 		d['atcd'] = ''
 		d['atc'] = null
 		d['atcdat'] = []
-		if eval(typeify(data[0],True)[1]):
+		if checkifs(data[0]):
 			parse(dt)
 			d['lastif'] = d['cnt']+1
 		else:

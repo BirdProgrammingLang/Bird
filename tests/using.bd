@@ -1,7 +1,8 @@
 create funct using(file,global=B1,compile=B1){
 	create var libdir array_item(dirsarray,'lib');
 	create var packagedir array_item(dirsarray,'package');
-	if(`Path('.bdusingcompile/@{file}.cbd').is_file()`){
+	pyparse `var['pathdt'] = {'type':'bool','dt':Path('.bdusingcompile/@{file}.cbd').is_file()}`;
+	if(pathdt){
 		pyparse `var['dt'] = {'type':'class','dt':le(base64.b64decode(open(".bdusingcompile/@{file}.cbd").read().encode('utf-8')).decode('utf-8'))}`;
 	};
 	else{
@@ -52,5 +53,5 @@ except FileNotFoundError:
 	};
 }[global=];
 //pyparse `print(gvar)`;//
-create var i using('stdio.bd');
-writeout('a');
+create var i using('stdio.bd',B0);
+i.writeout('a');
