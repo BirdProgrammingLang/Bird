@@ -1,0 +1,13 @@
+create funct encode(encoding){
+	create var string "yeet";
+	if (`"@{encoding}" == 'binary'`){
+	pyparse `import binascii
+global dta
+dta = bin(int(binascii.hexlify('''@{string}'''.encode('utf-8', 'surrogatepass')), 16))[2:].zfill(8 * ((len(bin(int(binascii.hexlify('''@{string}'''.encode('utf-8', 'surrogatepass')), 16))[2:]) + 7) // 8))
+dt = ' '.join([dta[i:i+8] for i in range(0, len(dta), 8)])
+del dta
+var['data'] = {'type':'binary','dt':dt}`;
+	return data;
+	};
+};
+pyparse `print(var['encode'])`
