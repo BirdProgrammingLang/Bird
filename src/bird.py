@@ -7,7 +7,8 @@ from pathlib import Path
 import os
 home = str(Path.home())+'/Bird-Lang' #Only for Replit: +'/Bird-Lang'
 bddir = open(home+'/bddir.txt').read()
-gvar = {'using': {'dt': {'attrib': {'file': ['', ''], 'global': ['bool', 'True']}, 'code': "create var libdir array_item(dirsarray,'lib');create var packagedir array_item(dirsarray,'package');if (global){;if(exists usingpasswd){;create var passwd B1;};else{;create var passwd B0;};pyparse `try:\n\tif '''@{@fn}''' == '''@{file}''':\n\t\traise FileNotFoundError('')\n\telse:\n\t\topen('@{file}')\n\t\tparse(open('@{file}').read())\nexcept FileNotFoundError:\n\ttry:\n\t\topen('@{libdir}@{file}')\n\t\tparse(open('@{libdir}@{file}').read())\n\texcept FileNotFoundError:\n\t\ttry:\n\t\t\topen('@{packagedir}/@{file}/passwd.txt')\n\t\t\tif eval(var['passwd']['dt']):\n\t\t\t\tpasswd = base64.b64decode(open('@{packagedir}/@{file}/passwd.txt').read()).decode('utf-8')\n\t\t\t\tif var['usingpasswd']['dt'] == passwd:\n\t\t\t\t\tparse(open('@{packagedir}/@{file}/main.bd').read())\n\t\texcept:\n\t\t\tparse(open('@{packagedir}@{file}/main.bd').read())`;};else{;if(exists usingpasswd){;create var passwd B1;};else{;create var passwd B0;};create class dt(static){;pyparse `try:\n\tif '''@{@fn}''' == '''@{file}''':\n\t\traise FileNotFoundError('')\n\telse:\n\t\topen('@{file}')\n\t\tparse(open('@{file}').read())\nexcept FileNotFoundError:\n\ttry:\n\t\topen('@{libdir}@{file}')\n\t\tparse(open('@{libdir}@{file}').read())\n\texcept FileNotFoundError:\n\t\ttry:\n\t\t\topen('@{packagedir}/@{file}/passwd.txt')\n\t\t\tif eval(var['passwd']['dt']):\n\t\t\t\tpasswd = base64.b64decode(open('@{packagedir}/@{file}/passwd.txt').read()).decode('utf-8')\n\t\t\t\tif var['usingpasswd']['dt'] == passwd:\n\t\t\t\t\tparse(open('@{packagedir}/@{file}/main.bd').read())\n\t\texcept:\n\t\t\tparse(open('@{packagedir}@{file}/main.bd').read())`;};return dt;}", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': ''}}, 'type': 'funct'}, 'typeof': {'type': 'funct', 'dt': {'attrib': {'item': ['', '']}, 'code': '\n\tpyparse `var["data"] = {\'type\':\'string\',\'dt\':var[\'item\'][\'type\']}`;\n\treturn data\n', 'head': {'global': '', 'sep': '~'}}}, 'array_item': {'type': 'funct', 'dt': {'attrib': {'arr': ['', ''], 'cnt': ['', '']}, 'code': "\n\tcreate var data 'notdefined';\n\tpyparse `if var['cnt']['type'] == 'number':\n\tvar['cnt']['dt'] = int(var['cnt']['dt'])\nvar['data']['dt'] = var['arr']['dt'][var['cnt']['dt']]['dt']`;\n\treturn data\n", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': ''}}}, 'eval': {'type': 'funct', 'dt': {'attrib': {'code': ['', '']}, 'code': "pyparse `parse('''@{code}''')`", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb'}}}, 'quit': {'type': 'funct', 'dt': {'attrib': {'status': ['number', 0.0]}, 'code': 'pyparse `quit(int(@{status}))`', 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb'}}}, 'dirsarray': {'dt': {'bird': {'type': 'string', 'dt': '/home/runner/Bird-Lang/Bird/'}, 'lib': {'type': 'string', 'dt': '/home/runner/Bird-Lang/Bird/lib/'}, 'package': {'type': 'string', 'dt': '/home/runner/Bird-Lang/Bird/package/'}}, 'type': 'associative'}, 'fread': {'dt': {'attrib': {'fn': ['', '']}, 'code': 'pyparse `var[\'data\'] = {\'type\':\'string\',\'dt\':open("@{fn}").read()}`;return data', 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': ''}}, 'type': 'funct'}, 'fwrite': {'dt': {'attrib': {'fn': ['', ''], 'txt': ['', ''], 'm': ['string', 'a']}, 'code': "pyparse `d = open('''@{fn}''','''@{m}''')\nd.write('''@{txt}''')\nd.close()`;return true", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': ''}}, 'type': 'funct'}, 'fdelete': {'dt': {'attrib': {'fn': ['', '']}, 'code': "pyparse `import os\nos.remove('''@{fn}''')`", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': ''}}, 'type': 'funct'}}
+temp = []
+gvar = {'using':{'dt': {'attrib': {'file': ['', ''], 'global': ['bool', 'True', {}], 'compile': ['bool', 'False', {}]}, 'code': "create var libdir array_item(dirsarray,'lib');create var packagedir array_item(dirsarray,'package');pyparse `var['pathdt'] = {'type':'bool','dt':Path('./.bdusingcompile/@{file}.cbd').is_file(),'headers':{}}`;if(pathdt){;create var dt = fread(`./.bdusingcompile/@{file}.cbd`);pyparse `var['dt']['type'] = 'binary'`;create var dt = dt.decode();};else{;if(exists usingpasswd){;create var passwd B1;};else{;create var passwd B0;};create class dt(static){;pyparse `try:\n\tif '''@{@fn}''' == '''@{file}''':\n\t\traise FileNotFoundError('')\n\telse:\n\t\topen('@{file}')\n\t\tparse(open('@{file}').read())\nexcept FileNotFoundError:\n\ttry:\n\t\topen('@{libdir}@{file}')\n\t\tparse(open('@{libdir}@{file}').read())\n\texcept FileNotFoundError:\n\t\ttry:\n\t\t\topen('@{packagedir}/@{file}/passwd.txt')\n\t\t\tif eval(var['passwd']['dt']):\n\t\t\t\tpasswd = base64.b64decode(open('@{packagedir}/@{file}/passwd.txt').read()).decode('utf-8')\n\t\t\t\tif var['usingpasswd']['dt'] == passwd:\n\t\t\t\t\tparse(open('@{packagedir}/@{file}/main.bd').read())\n\t\texcept:\n\t\t\tparse(open('@{packagedir}@{file}/main.bd').read())`;};};if(compile){;if(pathdt){;fwrite(`.bdusingcompile/@{file}.cbd`,tostring dt,'w');};else{;pyparse `os.mkdir('.bdusingcompile')`;fwrite(`.bdusingcompile/@{file}.cbd`,tostring dt,'w');};};if(global){;foreach(n,item of dt){;pyparse `gvar['@{n}'] = var['item']`;};};else{;return dt;}", 'head': {'global': ''}}, 'type': 'funct', 'headers': {}}, 'typeof': {'type': 'funct', 'dt': {'attrib': {'item': ['', '']}, 'code': '\n\tpyparse `var["data"] = {\'type\':\'string\',\'dt\':var[\'item\'][\'type\']}`;\n\treturn data\n', 'head': {'global': '', 'sep': '~'}}}, 'array_item': {'type': 'funct', 'dt': {'attrib': {'arr': ['', ''], 'cnt': ['', '']}, 'code': "\n\tcreate var data 'notdefined';\n\tpyparse `if var['cnt']['type'] == 'number':\n\tvar['cnt']['dt'] = int(var['cnt']['dt'])\nvar['data']['dt'] = var['arr']['dt'][var['cnt']['dt']]['dt']`;\n\treturn data\n", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': ''}}}, 'eval': {'type': 'funct', 'dt': {'attrib': {'code': ['', '']}, 'code': "pyparse `parse('''@{code}''')`", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb'}}}, 'quit': {'type': 'funct', 'dt': {'attrib': {'status': ['number', 0.0]}, 'code': 'pyparse `quit(int(@{status}))`', 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb'}}}, 'dirsarray': {'dt': {'bird': {'type': 'string', 'dt': '/home/runner/Bird-Lang/Bird/'}, 'lib': {'type': 'string', 'dt': '/home/runner/Bird-Lang/Bird/lib/'}, 'package': {'type': 'string', 'dt': '/home/runner/Bird-Lang/Bird/package/'}}, 'type': 'associative'}, 'fread': {'dt': {'attrib': {'fn': ['', '']}, 'code': 'pyparse `var[\'data\'] = {\'type\':\'string\',\'dt\':open("@{fn}").read()}`;return data', 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': ''}}, 'type': 'funct'}, 'fwrite': {'dt': {'attrib': {'fn': ['', ''], 'txt': ['', ''], 'm': ['string', 'a']}, 'code': 'pyparse `d = open("""@{fn}""","""@{m}""")\nd.write("""@{txt}""")\nd.close()`;return true', 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': ''}}, 'type': 'funct'}, 'fdelete': {'dt': {'attrib': {'fn': ['', '']}, 'code': "pyparse `import os\nos.remove('''@{fn}''')`", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': ''}}, 'type': 'funct'}}
 gvar['dirsarray'] = {'dt': {'bird': {'type': 'string', 'dt': bddir+'/'}, 'lib': {'type': 'string', 'dt': f'{bddir}/lib/'}, 'package': {'type': 'string', 'dt': f'{bddir}/package/'}}, 'type': 'associative'}
 var = {}
 classes = {}
@@ -23,6 +24,13 @@ def error(n,t):
 		except:
 			print(f'{n} triggered at expression {str(d["cnt"])}, "{d["ep"]}": {t}')
 			quit(1)
+def binary_encode(txt):
+	import binascii
+	global dta
+	dta = bin(int(binascii.hexlify(txt.encode('utf-8', 'surrogatepass')), 16))[2:].zfill(8 * ((len(bin(int(binascii.hexlify(txt.encode('utf-8', 'surrogatepass')), 16))[2:]) + 7) // 8))
+	dt = ' '.join([dta[i:i+8] for i in range(0, len(dta), 8)])
+	del dta
+	return dt
 def typedat(dt):
 	typ = dt[0]
 	if typ == 'funct':
@@ -35,10 +43,20 @@ def typedat(dt):
 			tl[n] = v
 		return tl
 	else:
-		tl = {'item':{'type': 'funct', 'dt': {'attrib': {'cnt': ['', '']}, 'code': f'create var arr "{dt[1]}";create var data \'notdefined\';pyparse `if var[\'arr\'][\'type\'] == \'associative\' or var[\'arr\'][\'type\'] == \'array\':\n    if var[\'cnt\'][\'type\'] == \'number\':\n        var[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n    var[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']][\'dt\']\nelse:\n\tif var[\'cnt\'][\'type\'] == \'number\':\n\t\tvar[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n\tvar[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']]`;return data', 'head': {}}},'length':{'type':'number','dt':len(dt[1])-1},'encode':{'type': 'funct', 'dt': {'attrib': {'encoding': ['', '']}, 'code': 'create var string "'+dt[1]+'";if (`"@{encoding}" == \'binary\'`){;pyparse `import binascii\nglobal dta\ndta = bin(int(binascii.hexlify(\'\'\'@{string}\'\'\'.encode(\'utf-8\', \'surrogatepass\')), 16))[2:].zfill(8 * ((len(bin(int(binascii.hexlify(\'\'\'@{string}\'\'\'.encode(\'utf-8\', \'surrogatepass\')), 16))[2:]) + 7) // 8))\ndt = \' \'.join([dta[i:i+8] for i in range(0, len(dta), 8)])\ndel dta\nvar[\'data\'] = {\'type\':\'binary\',\'dt\':dt}`;return data;}', 'head': {}}},'replace':{'type': 'funct', 'dt': {'attrib': {'old': ['', ''], 'new': ['', ''], 'cnt': ['string', '*']}, 'code': 'create var data "'+dt[1]+'";if (`"@{cnt}" == \'*\'`){;pyparse `var[\'data\'][\'dt\'] = var[\'data\'][\'dt\'].replace(\'\'\'@{old}\'\'\',\'\'\'@{new}\'\'\')`;};else{;pyparse `var[\'data\'][\'dt\'] = var[\'data\'][\'dt\'].replace(\'\'\'@{old}\'\'\',\'\'\'@{new}\'\'\',int(@{cnt}))`;};return data', 'head': {}}}}
+		tl = {'item':{'type': 'funct', 'dt': {'attrib': {'cnt': ['', '']}, 'code': f'create var arr "{dt[1]}";create var data \'notdefined\';pyparse `if var[\'arr\'][\'type\'] == \'associative\' or var[\'arr\'][\'type\'] == \'array\':\n    if var[\'cnt\'][\'type\'] == \'number\':\n        var[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n    var[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']][\'dt\']\nelse:\n\tif var[\'cnt\'][\'type\'] == \'number\':\n\t\tvar[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n\tvar[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']]`;return data', 'head': {}}},'length':{'type':'number','dt':len(dt[1])-1},'encode':{'type': 'funct', 'dt': {'attrib': {'encoding': ['', '']}, 'code': 'create var string "'+dt[1]+'";if (`"@{encoding}" == \'binary\'`){;pyparse `import binascii\nglobal dta\ndta = bin(int(binascii.hexlify(\'\'\'@{string}\'\'\'.encode(\'utf-8\', \'surrogatepass\')), 16))[2:].zfill(8 * ((len(bin(int(binascii.hexlify(\'\'\'@{string}\'\'\'.encode(\'utf-8\', \'surrogatepass\')), 16))[2:]) + 7) // 8))\ndt = \' \'.join([dta[i:i+8] for i in range(0, len(dta), 8)])\ndel dta\nvar[\'data\'] = {\'type\':\'binary\',\'dt\':dt}`;return data;}', 'head': {}}},'replace':{'type': 'funct', 'dt': {'attrib': {'old': ['', ''], 'new': ['', ''], 'cnt': ['string', '*']}, 'code': 'create var data "'+dt[1]+'";if (cnt == \'*\'){;pyparse `var[\'data\'][\'dt\'] = var[\'data\'][\'dt\'].replace(\'\'\'@{old}\'\'\',\'\'\'@{new}\'\'\')`;};else{;pyparse `var[\'data\'][\'dt\'] = var[\'data\'][\'dt\'].replace(\'\'\'@{old}\'\'\',\'\'\'@{new}\'\'\',int(@{cnt}))`;};return data', 'head': {}}},'group':{'type': 'funct', 'dt': {'attrib': {'data': ['', '']}, 'code': "create var o `"+dt[1]+"`;pyparse `var['dat'] = {'type':'string','dt':'''@{o}'''+'''@{data}'''}`;return dat", 'head': {}}}}
 		if typ == 'binary':
 			tl['decode'] = {'type': 'funct', 'dt': {'attrib': {'': ['', '']}, 'code': 'create var binary "'+dt[1]+'";pyparse `def text_to_bits(text, encoding=\'utf-8\', errors=\'surrogatepass\'):\n    bits = bin(int(binascii.hexlify(text.encode(encoding, errors)), 16))[2:]\n    return bits.zfill(8 * ((len(bits) + 7) // 8))\ndef text_from_bits(bits, encoding=\'utf-8\', errors=\'surrogatepass\'):\n\timport binascii\n\ti = int(bits.replace(\' \',\'\'), 2)\n\thex_string = \'%x\' % i\n\tn = len(hex_string)\n\treturn binascii.unhexlify(hex_string.zfill(n + (n & 1))).decode(encoding, errors)\nvar[\'data\'] = {\'type\':\'string\',\'dt\':text_from_bits(\'@{binary}\')}`;return data', 'head': {}}}
 		return tl
+def clsrec(data,vd,appl):
+	if len(data) == 1:
+		return vd
+	else:
+		ndata = data
+		data = str(data)
+		ndata.pop(0)
+		dat = clsrec(ndata,vd,appl[le(data)[0]])
+		appl[le(data)[0]]['dt'][ndata[0]] = dat
+		return appl
 def set_interval(func,sec=0,reg=[]):
     idnt = random.randint(0,9999999999)
     def func_wrapper():
@@ -51,45 +69,71 @@ def set_interval(func,sec=0,reg=[]):
     return idnt
 def typeify(txt,qt=False,err=True):
 	txt = re.match(r'^[ +\n\t]*(.*)[ +\n\t]*$',txt,re.DOTALL)[1]
+	h = {}
 	if re.match(r'^[ +\n\t]*(.*)[ +\n\t]*===[ +\n\t]*(.*)[ +\n\t]*$',txt):
 		cv = re.split(r'[ +\n\t]*===[ +\n\t]*',txt)
 		if typeify(cv[0])[0] == typeify(cv[1])[0]:
-			return ['bool',str(typeify(cv[0])[1] == typeify(cv[1])[1])]
+			return ['bool',str(typeify(cv[0])[1] == typeify(cv[1])[1]),{}]
 		else:
-			return ['bool','False']
+			return ['bool','False',{}]
 	elif re.match(r'^[ +\n\t]*(.*)[ +\n\t]*!==[ +\n\t]*(.*)[ +\n\t]*$',txt):
 		cv = re.split(r'[ +\n\t]*!==[ +\n\t]*',txt)
 		if typeify(cv[0])[0] == typeify(cv[1])[0]:
-			return ['bool',str(typeify(cv[0])[1] != typeify(cv[1])[1])]
+			return ['bool',str(typeify(cv[0])[1] != typeify(cv[1])[1]),{}]
 		else:
-			return ['bool','False']
+			return ['bool','False',{}]
 	elif re.match(r'^[ +\n\t]*(.*)[ +\n\t]*>=[ +\n\t]*(.*)[ +\n\t]*$',txt):
 		cv = re.split(r'[ +\n\t]*>=[ +\n\t]*',txt)
-		return ['bool',str(str(typeify(cv[0])[1]) >= str(typeify(cv[1])[1]))]
+		return ['bool',str(str(typeify(cv[0])[1]) >= str(typeify(cv[1])[1])),{}]
 	elif re.match(r'^[ +\n\t]*(.*)[ +\n\t]*<=[ +\n\t]*(.*)[ +\n\t]*$',txt):
 		cv = re.split(r'[ +\n\t]*<=[ +\n\t]*',txt)
-		return ['bool',str(str(typeify(cv[0])[1]) <= str(typeify(cv[1])[1]))]
+		return ['bool',str(str(typeify(cv[0])[1]) <= str(typeify(cv[1])[1])),{}]
 	elif re.match(r'^[ +\n\t]*(.*)[ +\n\t]*>[ +\n\t]*(.*)[ +\n\t]*$',txt):
 		cv = re.split(r'[ +\n\t]*>[ +\n\t]*',txt)
-		return ['bool',str(str(typeify(cv[0])[1]) > str(typeify(cv[1])[1]))]
+		return ['bool',str(str(typeify(cv[0])[1]) > str(typeify(cv[1])[1])),{}]
 	elif re.match(r'^[ +\n\t]*(.*)[ +\n\t]*<[ +\n\t]*(.*)[ +\n\t]*$',txt):
 		cv = re.split(r'[ +\n\t]*<[ +\n\t]*',txt)
-		return ['bool',str(str(typeify(cv[0])[1]) < str(typeify(cv[1])[1]))]
+		return ['bool',str(str(typeify(cv[0])[1]) < str(typeify(cv[1])[1])),{}]
 	elif re.match(r'^[ +\n\t]*(.*)[ +\n\t]*==[ +\n\t]*(.*)[ +\n\t]*$',txt):
 		cv = re.split(r'[ +\n\t]*==[ +\n\t]*',txt)
-		return ['bool',str(str(typeify(cv[0])[1]) == str(typeify(cv[1])[1]))]
+		return ['bool',str(str(typeify(cv[0])[1]) == str(typeify(cv[1])[1])),{}]
 	elif re.match(r'^[ +\n\t]*(.*)[ +\n\t]*!=[ +\n\t]*(.*)[ +\n\t]*$',txt):
 		cv = re.split(r'[ +\n\t]*!=[ +\n\t]*',txt)
-		return ['bool',str(str(typeify(cv[0])[1]) != str(typeify(cv[1])[1]))]
-	elif txt.startswith('"') and txt.endswith('"'):
+		return ['bool',str(str(typeify(cv[0])[1]) != str(typeify(cv[1])[1])),{}]
+	elif re.match(r'^[ +\n\t]*"(.*)"[ +\n\t]*(\:[ +\n\t]*[@]+){0,1}[ +\n\t]*$',txt,re.DOTALL):
+		hd = re.match(r'^[ +\n\t]*"(.*)"[ +\n\t]*(\:[ +\n\t]*[@]+){0,1}[ +\n\t]*$',txt,re.DOTALL)
+		txt = hd[1]
+		hd = hd[2]
+		if hd == None:
+			h = []
+		else:
+			hd = re.sub(r'[ +\n\t]*\:[ +\n\t]*','',hd,1)
+			h = []
+			for char in hd:
+				h.append(char)
+		txt = re.sub(r'^[ +\n\t]*"','',txt,1)
+		txt = re.sub(r'"[ +\n\t]*$','',txt,1)
+		if not '@' in h:
+			txt = bytes(txt, "utf-8").decode("unicode_escape")
 		ty = 'string'
-		txt = txt.replace('"','')
-		return [ty,txt]
-	elif re.match(r"^[ +\n\t]*'(.*)'[ +\n\t]*$",txt,re.DOTALL):
+		return [ty,txt,{}]
+	elif re.match(r"^[ +\n\t]*'(.*)'[ +\n\t]*(\:[ +\n\t]*[@]+){0,1}[ +\n\t]*$",txt,re.DOTALL):
+		hd = re.match(r"^[ +\n\t]*'(.*)'[ +\n\t]*(\:[ +\n\t]*[@]+){0,1}[ +\n\t]*$",txt,re.DOTALL)
+		txt = hd[1]
+		hd = hd[2]
+		if hd == None:
+			h = []
+		else:
+			hd = re.sub(r'[ +\n\t]*\:[ +\n\t]*','',hd,1)
+			h = []
+			for char in hd:
+				h.append(char)
 		ty = 'string'
 		txt = re.sub(r"^[ +\n\t]*'",'',txt,1)
 		txt = re.sub(r"'[ +\n\t]*$",'',txt,1)
-		return [ty,txt]
+		if not '@' in h:
+			txt = bytes(txt, "utf-8").decode("unicode_escape")
+		return [ty,txt,{}]
 	elif re.match(r"^[ +\n\t]*`(.*)`[ +\n\t]*$",txt,re.DOTALL):
 		ty = 'string'
 		txt = re.sub(r"^[ +\n\t]*`",'',txt,1)
@@ -113,6 +157,8 @@ def typeify(txt,qt=False,err=True):
 					if dat[1] in var:
 						if var[dat[1]]['type'] == 'funct':
 							pass
+						elif var[dat[1]]['type'] == 'class':
+							txt = txt.replace(f'@{{{dat[1]}}}',str(var[dat[1]]['dt']['$value']['dt']))
 						else:
 							txt = txt.replace(f'@{{{dat[1]}}}',str(var[dat[1]]['dt']))
 					else:
@@ -125,17 +171,36 @@ def typeify(txt,qt=False,err=True):
 					else:
 						txt = txt.replace(f'@{{{item}}}',str(d["retd"][1]))
 					d['retd'] = oret
-		return [ty,txt]
+		return [ty,txt,{}]
 	elif re.match(r"^[ +\n\t]*[0-9.]+[ +\n\t]*$",txt):
 		txt = float(txt)
 		if str(txt).endswith('.0'):
 			txt = int(txt)
 		ty = 'number'
-		return [ty,txt]
+		return [ty,txt,{}]
 	elif re.match(r'^[ \t\n]*$',txt):
 		ty = 'null'
 		txt = ''
-		return [ty,txt]
+		return [ty,txt,{}]
+	elif re.match(r'^[ \t\n+]*create[ \t\n+]+([a-zA-Z_]+[^@|\n\t (]*)[ \t\n+]*\((.*)\)',txt,re.DOTALL):
+		dat = re.match(r'^[ \t\n+]*create[ \t\n+]+([a-zA-Z_]+[^@|\n\t (]*)[ \t\n+]*\((.*)\)',txt,re.DOTALL)
+		n = dat[1]
+		arg = dat[2]
+		dt = var[n]
+		gvar[n] = {'type':'class','dt':le(base64.b64decode(var[n]['dt']).decode('utf-8')),'headers':{}}
+		var[n] = gvar[n]
+		if 'this' in gvar:
+			ot = gvar['this']
+		else:
+			ot = False
+		gvar['this'] = var[n]
+		parse(f'{n}.initiate({arg});')
+		if ot:
+			gvar['this'] = ot
+		ty = 'class'
+		txt = var[n]['dt']
+		var[n] = dt
+		gvar[n] = dt
 	elif re.match(r'^[ \t\n]*(.*)\((.*)\)[ \t\n]*$',txt):
 		oretd = d['retd']
 		d['retd'] = '@keycode42125256strexec|'
@@ -145,9 +210,9 @@ def typeify(txt,qt=False,err=True):
 		return ret
 	elif re.match(r'[ +\t\n]*exists[ +\t\n]+(.*)[ +\t\n]*',txt):
 		if typeify(re.match(r'[ +\t\n]*exists[ +\t\n]+(.*)[ +\t\n]*',txt)[1],err=False) == 'VE,UV':
-			return ['bool','False']
+			return ['bool','False',{}]
 		else:
-			return ['bool','True']
+			return ['bool','True',{}]
 	elif re.match(r'^[ +\t\n]*(\[.*\])[ +\t\n]*$',txt,re.DOTALL):
 		it = re.match(r'^[ +\t\n]*(\[.*\])[ +\t\n]*$',txt,re.DOTALL)[1]
 		it = it.replace('\\,','\\comma')
@@ -185,18 +250,10 @@ def typeify(txt,qt=False,err=True):
 		dat = typeify(dt[1])
 		if dat[0] == 'number':
 			return ['string',str(dat[1])]
-		elif dat[0] == 'class':
-			return ['string',base64.b64encode(str(dat[1]).encode('utf_8')).decode('utf-8')]
-	elif re.match(r'^[ \t\n+]*create[ \t\n+]+([a-zA-Z_]+[^@|\n\t (]*)[ \t\n+]*\((.*)\)',txt,re.DOTALL):
-		dat = re.match(r'^[ \t\n+]*create[ \t\n+]+([a-zA-Z_]+[^@|\n\t (]*)[ \t\n+]*\((.*)\)',txt,re.DOTALL)
-		n = dat[1]
-		arg = dat[2]
-		dt = var[n]
-		var[n]['dt'] = le(base64.b64decode(var[n]['dt']).decode('utf-8'))
-		parse(f'{n}.initiate({arg});')
-		ty = 'class'
-		txt = var[n]['dt']
-		var[n] = dt
+		elif dat[0] == 'class' or dat[0] == 'funct':
+			return ['binary',binary_encode(str(dat[1])),{}]
+		else:
+			return ['string',str(dat[1]),{}]
 	elif re.match(r'[ \t\n+]*(true|false|B1|B0)[ \t\n+]*',txt):
 		dt = re.match(r'[ \t\n+]*(true|false|B1|B0)[ \t\n+]*',txt)
 		ty = 'bool'
@@ -236,8 +293,9 @@ def typeify(txt,qt=False,err=True):
 					error('VarError',f'Unknown Var "{txt}".')
 				else:
 					return 'VE,UV'
-	return [ty,txt]
+	return [ty,txt,h]
 def cvar(regex):
+	global var
 	head = {}
 	n = regex[2]
 	'''if d['class'] != "":
@@ -249,15 +307,20 @@ def cvar(regex):
 	txt = regex[3]
 	typ = typeify(txt)
 	if d['class'] == '':
-		var[n] = {}
-		var[n]['dt'] = typ[1]
-		var[n]['type'] = typ[0]
-		if 'global' in head.keys():
-			gvar[n] = {}
-			gvar[n]['dt'] = typ[1]
-			gvar[n]['type'] = typ[0]
+		if n.split('.')[0] == n:
+			var[n] = {}
+			var[n]['dt'] = typ[1]
+			var[n]['type'] = typ[0]
+			var[n]['headers'] = typ[2]
+			if 'global' in head.keys():
+				gvar[n] = {}
+				gvar[n]['dt'] = typ[1]
+				gvar[n]['type'] = typ[0]
+				gvar[n]['headers'] = typ[2]
+		else:
+			var = clsrec(n.split('.'),{'type':typ[0],'dt':typ[1]},var)
 	else:
-		n = txt.split('.')
+		n = n.split('.')
 		dat = var
 		cnt = 1
 		data = {}
@@ -270,7 +333,6 @@ def cvar(regex):
 					dat = dat[i]['dt']
 			#data[i] = 
 			cnt += 1
-		
 def fatc(dt='',regex=[],tr=''): #Function ATC
 	if dt != '':
 		tr = re.match(r'[ +\t\n]*}[ +\t\n]*(\[.*\]){0,1}',tr)
@@ -283,7 +345,7 @@ def fatc(dt='',regex=[],tr=''): #Function ATC
 		if d['class'] == '':
 			var[n]['dt'] = {'attrib':regex[2],'code':dt,'head':head}
 			if 'global' in head.keys():
-				gvar[n] = {'dt':{'attrib':regex[2],'code':dt,'head':head},'type':'funct'}
+				gvar[n] = {'dt':{'attrib':regex[2],'code':dt,'head':head},'type':'funct','headers':{}}
 		else:
 			d['clsd'][d['class']][n] = {'type':'funct','dt':{'attrib':regex[2],'code':dt,'head':head}}
 	else:
@@ -361,13 +423,13 @@ def callfunct(regex):
 			attl[cnt]
 		except IndexError:
 			break
-		nvar[i] = {'type':attl[cnt][0],'dt':attl[cnt][1]}
+		nvar[i] = {'type':attl[cnt][0],'dt':attl[cnt][1],'headers':attl[cnt][2]}
 		cnt += 1
 	ncnt = 0
 	for item,v in dat['attrib'].items():
 		if ncnt >= cnt:
 			if v != ['','']:
-				nvar[item] = {'type':v[0],'dt':v[1]}
+				nvar[item] = {'type':v[0],'dt':v[1],'headers':v[2]}
 		ncnt += 1
 	d['funct'] = True
 	ov = var
@@ -452,7 +514,7 @@ def featc(value='',dt=[],tr=''):
 			v = typeify(dt[3])
 			if v[0] == 'number':
 				for n in range(0,int(v[1])):
-					var[dt[1]] = {'type':'number','dt':n}
+					var[dt[1]] = {'type':'number','dt':n,'headers':{}}
 					parse(value)
 			elif v[0] == 'array':
 				for i in v[1]:
@@ -460,18 +522,18 @@ def featc(value='',dt=[],tr=''):
 					parse(value)
 			else:
 				for i in v[1]:
-					var[dt[1]] = {'type':'string','dt':i}
+					var[dt[1]] = {'type':'string','dt':i,'headers':{}}
 					parse(value)
 		else:
 			v = typeify(dt[3])
 			if v[0] == 'associative':
 				for i in v[1].keys():
-					var[dt[1]] = {'type':'string','dt':i}
+					var[dt[1]] = {'type':'string','dt':i,'headers':{}}
 					parse(value)
 			elif v[0] == 'class':
 				data = re.split(r'[ +\n\t]*,[ +\n\t]*',dt[1])
 				for i,n in v[1].items():
-					var[data[0]] = {'type':'string','dt':i}
+					var[data[0]] = {'type':'string','dt':i,'headers':{}}
 					var[data[1]] = n
 					parse(value)
 	else:
@@ -533,17 +595,17 @@ def claatc(code='',data=[],tr=''):
 				head[item[0]] = item[1]
 		typ = data[2]
 		if typ == 'instance':
-			var[data[1]] = {'type':'class','dt':f'<class {data[1]} instance class>'}
+			var[data[1]] = {'type':'class','dt':f'<class {data[1]} instance class>','headers':{}}
 		else:
-			var[data[1]] = {'type':'class','dt':f'<class {data[1]} static class>'}
+			var[data[1]] = {'type':'class','dt':f'<class {data[1]} static class>','headers':{}}
 		ocls = d['class']
 		d['class'] = data[1]+'.'
 		d['clsd'][d['class']] = {}
 		parse(code)
 		if typ == 'static':
-			var[data[1]] = {'type':'class','dt':d['clsd'][d['class']]}
+			var[data[1]]['dt'] = d['clsd'][d['class']]
 		else:
-			var[data[1]] = {'type':'class','dt':base64.b64encode(str.encode(str(d['clsd'][d['class']])))}
+			var[data[1]]['dt'] = base64.b64encode(str.encode(str(d['clsd'][d['class']])))
 		del d['clsd'][d['class']]
 		d['class'] = ocls
 	else:
@@ -577,7 +639,7 @@ def globalize(regex):
 			gvar[dat[1]] = var[dat[1]]
 		else:
 			error('VarError',f'Unknown Var "{dat[1]}".')
-cl = {r'''[ +\t\n]*create[ +\t\n]+var(\[.*\]){0,1}[ +\t\n]+([a-zA-Z_]+[^@|\n\t ]*)(.*)''':[cvar,'Create Var'],r'[ +\t\n]*create[ +\t\n]+funct[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\((.*)\)[ +\t\n]*\{[ +\t\n]*':[cfunct,'Create Function'],r'//.*//':[null,'Comment'],r'[ +\t\n]*pyparse[ +\t]+(.*)[ +\t\n]*':[pyparse,'Pyparse'],r'[ +\t\n]*([^@|\n\t (]*)[ +\t\n]*\((.*)\)[ +\t\n]*':[callfunct,'Call Function'],r'[ +\t\n]*return[ +\t\n]*([^\n]*)':[RETURN,'Return'],r'[ +\t\n]*(if|else[ +]if)[ +\t\n]*\((.*)\)[ +\t\n]*\{':[ifstate,'If Statement'],r'[ +\t\n]*else[ +\t\n]*\{':[els,'Else'],r'[ +\t\n]*foreach[ +\t\n]*\((.*)\)[ +\t\n]*\{':[foreach,'Foreach Loop'],r'[ +\t\n]*while[ +\t\n]*\((.*)\)[ +\t\n]*\{':[whileloop,'While Loop'],r'[ +\t\n]*when[ +\t\n]*\((.*)\)[ +\t\n]*\{':[when,'When Loop'],"":[null,'WhiteSpace'],r"[ +\t\n]*create[ +\t\n]+class[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\([ +\t\n]*(instance|static)[ +\t\n]*\)[ +\t\n]*\{":[cla,'Class'],r'[ +\t\n]*create ErrorHandler[ +\t\n]*\((.*)\)[ +\t\n]*\{':[errh,"Create Error Handler"],r'[ +\t\n]*global[ +\t\n]*(.*)[ +\t\n]*':[globalize,'Global']}
+cl = {r'''[ +\t\n]*create[ +\t\n]+var(\[.*\]){0,1}[ +\t\n]+([a-zA-Z_]+[^@|\n\t ]*)[ +\t\n]*[=]{0,1}[ +\t\n]*(.*)''':[cvar,'Create Var'],r'[ +\t\n]*create[ +\t\n]+funct[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\((.*)\)[ +\t\n]*\{[ +\t\n]*':[cfunct,'Create Function'],r'//.*//':[null,'Comment'],r'[ +\t\n]*pyparse[ +\t]+(.*)[ +\t\n]*':[pyparse,'Pyparse'],r'[ +\t\n]*([^@|\n\t (]*)[ +\t\n]*\((.*)\)[ +\t\n]*':[callfunct,'Call Function'],r'[ +\t\n]*return[ +\t\n]*([^\n]*)':[RETURN,'Return'],r'[ +\t\n]*(if|else[ +]if)[ +\t\n]*\((.*)\)[ +\t\n]*\{':[ifstate,'If Statement'],r'[ +\t\n]*else[ +\t\n]*\{':[els,'Else'],r'[ +\t\n]*foreach[ +\t\n]*\((.*)\)[ +\t\n]*\{':[foreach,'Foreach Loop'],r'[ +\t\n]*while[ +\t\n]*\((.*)\)[ +\t\n]*\{':[whileloop,'While Loop'],r'[ +\t\n]*when[ +\t\n]*\((.*)\)[ +\t\n]*\{':[when,'When Loop'],"":[null,'WhiteSpace'],r"[ +\t\n]*create[ +\t\n]+class[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\([ +\t\n]*(instance|static)[ +\t\n]*\)[ +\t\n]*\{":[cla,'Class'],r'[ +\t\n]*create ErrorHandler[ +\t\n]*\((.*)\)[ +\t\n]*\{':[errh,"Create Error Handler"],r'[ +\t\n]*global[ +\t\n]*(.*)[ +\t\n]*':[globalize,'Global']}
 def parse(code):
 	code = code.replace('\\;','\\semi')
 	code = re.sub(r'\/\/[^/]*\/\/','',code,re.DOTALL)
@@ -608,6 +670,9 @@ def parse(code):
 							break
 					if not fnd:
 						error('SyntaxError',f'No Such Command, {line}.')
+					if not d['funct']:
+						for item in temp:
+							del var[item]
 			else:
 				d['break'] = False
 				break

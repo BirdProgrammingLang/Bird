@@ -1,9 +1,10 @@
-create funct using(file,global=B1,compile=B1){
+create funct using(file,global=B1,compile=B0){
 	create var libdir array_item(dirsarray,'lib');
 	create var packagedir array_item(dirsarray,'package');
-	pyparse `var['pathdt'] = {'type':'bool','dt':Path('.bdusingcompile/@{file}.cbd').is_file()}`;
-	if(pathdt){
-		pyparse `var['dt'] = {'type':'class','dt':le(base64.b64decode(open(".bdusingcompile/@{file}.cbd").read().encode('utf-8')).decode('utf-8'))}`;
+	pyparse `var['pathdt'] = {'type':'bool','dt':Path('./.bdusingcompile/@{file}.cbd').is_file(),'headers':{}}`;
+	if(pathdt){		create var dt = fread(`./.bdusingcompile/@{file}.cbd`);
+		pyparse `var['dt']['type'] = 'binary'`;
+		create var dt = dt.decode();
 	};
 	else{
 	if(exists usingpasswd){
@@ -35,7 +36,7 @@ except FileNotFoundError:
 	};
 	};
 	if(compile){
-		if(`Path('.bdusingcompile').is_dir()`){
+		if(pathdt){
 			fwrite(`.bdusingcompile/@{file}.cbd`,tostring dt,'w');
 		};
 		else{
@@ -52,6 +53,6 @@ except FileNotFoundError:
 	return dt;
 	};
 }[global=];
-//pyparse `print(gvar)`;//
-create var i using('stdio.bd',B0);
-i.writeout('a');
+//pyparse `print(gvar['using'])`;//
+using('stdio.bd');
+writeout('y');

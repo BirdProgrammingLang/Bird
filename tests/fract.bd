@@ -1,9 +1,15 @@
-using('ri.bd');
+using('stdio.bd');
 create class fraction(instance){
 	create funct initiate(numerator,denominator){
-		create var fraction.numerator numerator;
-		create var fraction.denominator denominator;
+		create var this.numerator numerator;
+		create var this.denominator denominator;
+	};
+	create funct add(fr){
+		
 	};
 };
+create funct t(cv){
+	writeout(cv.numerator);
+};
 create var i create fraction('1','2');
-writeout(i);
+t(i);

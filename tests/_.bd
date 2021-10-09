@@ -1,0 +1,4 @@
+create funct test(test='yay'){
+	pyparse `print('yay')`;
+};
+pyparse `print(var['test'])`

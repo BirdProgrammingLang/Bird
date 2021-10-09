@@ -1,0 +1,16 @@
+using('stdio.bd');
+create funct group(data){
+	create var o `test`;
+	if (exists dat){
+		pyparse `global odat
+odat = var['dat']`;
+	};
+	else{
+		pyparse `global odat
+odat = {'type':'temporary','dt':'tmp'}`
+	};
+	pyparse `var['dat'] = {'type':'string','dt':'''@{o}'''+'''@{data}'''}`;
+	return dat;
+	pyparse `var['dat'] = odat`;
+};
+group('test');

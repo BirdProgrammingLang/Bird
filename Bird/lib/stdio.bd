@@ -1,5 +1,5 @@
-create funct writeout(text,end='\n',sep=' ',flush='False'){
-	pyparse `print('''@{text}''',end='@{end}',sep='@{sep}',flush=@{flush})`;
+create funct writeout(text,end='\n':@,sep=' ',flush='False'){
+	pyparse `print(r'''@{text}''',end='@{end}',sep=r'@{sep}',flush=@{flush})`;
 };
 create funct writein(text=''){
 	pyparse `var['data'] = {'type':'string','dt':input('@{text}')}`;

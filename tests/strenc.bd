@@ -1,5 +1,6 @@
-using('string_encoding.bd');
+//using('string_encoding.bd');//
 using('stdio.bd');
-create var dt binary_encode('Hello World!');
+//create var dt binary_encode('Hello World!');
 writeout(dt);
-writeout(binary_decode(dt));
+writeout(binary_decode(dt));//
+writeout('\ttest\n\tv\nyeet');

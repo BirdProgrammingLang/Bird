@@ -1,18 +1,8 @@
-create class test (instance){
-	create var test 'yay';
+create class test (static){
+	create var test.test 'yay';
 	create funct t(){
 		writeout('yeet');
 	};
-	create funct initiate(){
-		writeout('asdfghjkllllllllll');
-	};
 };
-//pyparse `print(d['clsd'])`;//
-//test();//
 using('stdio.bd');
-//create var yay test;
-writeout(`@{yay.test}`);
-yay.t();//
-//pyparse `print(var["test"])`//
-create var i create test();
-writeout(i.test)
+writeout(test.test)

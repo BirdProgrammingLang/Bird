@@ -1,16 +1,2 @@
-using('stdio.bd');
-//create var i "yeet".encode('binary');
-create var i i.decode();
-writeout(i);
-create funct replace(old,new,cnt='*'){
-	create var data "test";
-	if (`"@{cnt}" == '*'`){
-		pyparse `var['data']['dt'] = var['data']['dt'].replace('''@{old}''','''@{new}''')`;
-	};
-	else{
-		pyparse `var['data']['dt'] = var['data']['dt'].replace('''@{old}''','''@{new}''',int(@{cnt}))`;
-	};
-	return data;
-};
-pyparse `print(var['replace'])`;//
-writeout('yeet'.replace('e'\,'a'));
+create var test = 'i';
+pyparse `print(var['test'])`;
