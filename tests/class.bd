@@ -1,5 +1,5 @@
 create class test (static){
-	create var test.test 'yay';
+	create var test 'yay';
 	create funct t(){
 		writeout('yeet');
 	};

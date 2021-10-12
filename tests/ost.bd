@@ -4,6 +4,4 @@ if(`@{@fn} == "os.bd"`){
 	writeout(B1);
 };//
 using('os.bd');
-clear();
-exec('echo hello');
-writeout(name);
+sys.clear();

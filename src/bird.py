@@ -67,7 +67,7 @@ def set_interval(func,sec=0,reg=[]):
     t.start()
     d['interval'][idnt] = t
     return idnt
-def typeify(txt,qt=False,err=True):
+def typeify(txt,qt=False,err=True,ignore=False):
 	txt = re.match(r'^[ +\n\t]*(.*)[ +\n\t]*$',txt,re.DOTALL)[1]
 	h = {}
 	if re.match(r'^[ +\n\t]*(.*)[ +\n\t]*===[ +\n\t]*(.*)[ +\n\t]*$',txt):
@@ -115,6 +115,8 @@ def typeify(txt,qt=False,err=True):
 		txt = re.sub(r'"[ +\n\t]*$','',txt,1)
 		if not '@' in h:
 			txt = bytes(txt, "utf-8").decode("unicode_escape")
+		if '"""' in txt:
+			error('CharError','""" not allowed in string.')
 		ty = 'string'
 		return [ty,txt,{}]
 	elif re.match(r"^[ +\n\t]*'(.*)'[ +\n\t]*(\:[ +\n\t]*[@]+){0,1}[ +\n\t]*$",txt,re.DOTALL):
@@ -133,6 +135,8 @@ def typeify(txt,qt=False,err=True):
 		txt = re.sub(r"'[ +\n\t]*$",'',txt,1)
 		if not '@' in h:
 			txt = bytes(txt, "utf-8").decode("unicode_escape")
+		if '"""' in txt:
+			error('CharError','""" not allowed in string.')
 		return [ty,txt,{}]
 	elif re.match(r"^[ +\n\t]*`(.*)`[ +\n\t]*$",txt,re.DOTALL):
 		ty = 'string'
@@ -171,6 +175,8 @@ def typeify(txt,qt=False,err=True):
 					else:
 						txt = txt.replace(f'@{{{item}}}',str(d["retd"][1]))
 					d['retd'] = oret
+		if '"""' in txt and not ignore:
+			error('CharError','""" not allowed in string.')
 		return [ty,txt,{}]
 	elif re.match(r"^[ +\n\t]*[0-9.]+[ +\n\t]*$",txt):
 		txt = float(txt)
@@ -180,8 +186,11 @@ def typeify(txt,qt=False,err=True):
 		return [ty,txt,{}]
 	elif re.match(r'^[ \t\n]*$',txt):
 		ty = 'null'
-		txt = ''
+		txt = 'null'
 		return [ty,txt,{}]
+	elif re.match(r'^[ \t\n+]*null[ \t\n+]*$',txt,re.DOTALL):
+		ty = 'null'
+		txt = 'null'
 	elif re.match(r'^[ \t\n+]*create[ \t\n+]+([a-zA-Z_]+[^@|\n\t (]*)[ \t\n+]*\((.*)\)',txt,re.DOTALL):
 		dat = re.match(r'^[ \t\n+]*create[ \t\n+]+([a-zA-Z_]+[^@|\n\t (]*)[ \t\n+]*\((.*)\)',txt,re.DOTALL)
 		n = dat[1]
@@ -377,7 +386,7 @@ def cfunct(regex):
 		gvar[regex[1]]['dt'] = {'attrib':args,'code':value,'head':head}
 		gvar[regex[1]]['type'] = 'funct'''
 def pyparse(regex):
-	exec(typeify(regex[1])[1])
+	exec(typeify(regex[1],ignore=True)[1])
 def callfunct(regex):
 	global var
 	fn = regex[1]
@@ -437,6 +446,72 @@ def callfunct(regex):
 	parse(dat['code'])
 	d['funct'] = False
 	var = ov
+def cfaatc(codedat='',data=[],tr=''):
+	global var
+	regex = data[0]
+	data = data[1]
+	fn = regex[1]
+	args = regex[2]
+	if '.' in fn:
+		txt = fn
+		n = txt.split('.')
+		dat = var
+		cnt = 1
+		for i in n:
+			if cnt == len(n):
+				dat = dat[i]
+			elif cnt == 1:
+				dt = typeify(i)
+				if dt[0] == 'class':
+					dat = dt[1]
+				else:
+					dat = typedat(dt)
+			else:
+				if dat[i]['type'] == 'class':
+					dat = dat[i]['dt']
+			cnt += 1
+	else:
+		dat = var[fn]
+	if not dat['type'] == 'funct':
+		#error
+		pass
+	for i,n in dat['dt'].items():
+		dat[i] = n
+	att = {}
+	for i,n in dat['dt']['attrib'].items():
+		att[i] = n
+	cnt = 0
+	nvar = gvar
+	attl = []
+	args = args.replace('\\,','\\comma')
+	for item in args.split(','):
+		item = item.replace('\\comma',',')
+		item = typeify(item)
+		attl.append(item)
+	attl.append(['funct',{'attrib': {'': ['', '']}, 'code': codedat},{}])
+	for i,n in att.items():
+		try:
+			attl[cnt]
+		except IndexError:
+			break
+		nvar[i] = {'type':attl[cnt][0],'dt':attl[cnt][1],'headers':attl[cnt][2]}
+		cnt += 1
+	ncnt = 0
+	for item,v in dat['attrib'].items():
+		if ncnt >= cnt:
+			if v != ['','']:
+				nvar[item] = {'type':v[0],'dt':v[1],'headers':v[2]}
+		ncnt += 1
+	d['funct'] = True
+	ov = var
+	var = nvar
+	parse(dat['code'])
+	d['funct'] = False
+	var = ov
+def callfuncta(regex):
+	d['ecnt'] = 1
+	d['atcdat'] = [regex,[]]
+	d['atc'] = cfaatc
 def RETURN(regex):
 	d['retd'] = typeify(regex[1])
 def checkifs(cond):
@@ -639,7 +714,7 @@ def globalize(regex):
 			gvar[dat[1]] = var[dat[1]]
 		else:
 			error('VarError',f'Unknown Var "{dat[1]}".')
-cl = {r'''[ +\t\n]*create[ +\t\n]+var(\[.*\]){0,1}[ +\t\n]+([a-zA-Z_]+[^@|\n\t ]*)[ +\t\n]*[=]{0,1}[ +\t\n]*(.*)''':[cvar,'Create Var'],r'[ +\t\n]*create[ +\t\n]+funct[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\((.*)\)[ +\t\n]*\{[ +\t\n]*':[cfunct,'Create Function'],r'//.*//':[null,'Comment'],r'[ +\t\n]*pyparse[ +\t]+(.*)[ +\t\n]*':[pyparse,'Pyparse'],r'[ +\t\n]*([^@|\n\t (]*)[ +\t\n]*\((.*)\)[ +\t\n]*':[callfunct,'Call Function'],r'[ +\t\n]*return[ +\t\n]*([^\n]*)':[RETURN,'Return'],r'[ +\t\n]*(if|else[ +]if)[ +\t\n]*\((.*)\)[ +\t\n]*\{':[ifstate,'If Statement'],r'[ +\t\n]*else[ +\t\n]*\{':[els,'Else'],r'[ +\t\n]*foreach[ +\t\n]*\((.*)\)[ +\t\n]*\{':[foreach,'Foreach Loop'],r'[ +\t\n]*while[ +\t\n]*\((.*)\)[ +\t\n]*\{':[whileloop,'While Loop'],r'[ +\t\n]*when[ +\t\n]*\((.*)\)[ +\t\n]*\{':[when,'When Loop'],"":[null,'WhiteSpace'],r"[ +\t\n]*create[ +\t\n]+class[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\([ +\t\n]*(instance|static)[ +\t\n]*\)[ +\t\n]*\{":[cla,'Class'],r'[ +\t\n]*create ErrorHandler[ +\t\n]*\((.*)\)[ +\t\n]*\{':[errh,"Create Error Handler"],r'[ +\t\n]*global[ +\t\n]*(.*)[ +\t\n]*':[globalize,'Global']}
+cl = {r'''[ +\t\n]*create[ +\t\n]+var(\[.*\]){0,1}[ +\t\n]+([a-zA-Z_]+[^@|\n\t ]*)[ +\t\n]*[=]{0,1}[ +\t\n]*(.*)''':[cvar,'Create Var'],r'[ +\t\n]*create[ +\t\n]+funct[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\((.*)\)[ +\t\n]*\{[ +\t\n]*':[cfunct,'Create Function'],r'//.*//':[null,'Comment'],r'[ +\t\n]*pyparse[ +\t]+(.*)[ +\t\n]*':[pyparse,'Pyparse'],r'[ +\t\n]*([^@|\n\t (]*)[ +\t\n]*\((.*)\)[ +\t\n]*':[callfunct,'Call Function'],r'[ +\t\n]*return[ +\t\n]*([^\n]*)':[RETURN,'Return'],r'[ +\t\n]*(if|else[ +]if)[ +\t\n]*\((.*)\)[ +\t\n]*\{':[ifstate,'If Statement'],r'[ +\t\n]*else[ +\t\n]*\{':[els,'Else'],r'[ +\t\n]*foreach[ +\t\n]*\((.*)\)[ +\t\n]*\{':[foreach,'Foreach Loop'],r'[ +\t\n]*while[ +\t\n]*\((.*)\)[ +\t\n]*\{':[whileloop,'While Loop'],r'[ +\t\n]*when[ +\t\n]*\((.*)\)[ +\t\n]*\{':[when,'When Loop'],"":[null,'WhiteSpace'],r"[ +\t\n]*create[ +\t\n]+class[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\([ +\t\n]*(instance|static)[ +\t\n]*\)[ +\t\n]*\{":[cla,'Class'],r'[ +\t\n]*create ErrorHandler[ +\t\n]*\((.*)\)[ +\t\n]*\{':[errh,"Create Error Handler"],r'[ +\t\n]*global[ +\t\n]*(.*)[ +\t\n]*':[globalize,'Global'],r'[ +\t\n]*([^@|\n\t (]*)[ +\t\n]*\((.*)\)[ +\t\n]*\{[ +\t\n]*':[callfuncta,'Call Function With Attach']}
 def parse(code):
 	code = code.replace('\\;','\\semi')
 	code = re.sub(r'\/\/[^/]*\/\/','',code,re.DOTALL)

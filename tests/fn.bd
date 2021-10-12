@@ -1,10 +1,4 @@
-create funct test(a){
-	if (`@{a} == 'b'`)\scb
-		writeout('yay')
-	\ecb:
-	else\scb
-	writeout('a')
-	\ecb
+create funct test(){
+	print('hi');
 };
-using('stdio.bd');
-test('b')
+pyparse `print(var['test'])`

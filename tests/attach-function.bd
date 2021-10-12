@@ -1,0 +1,7 @@
+using('stdio.bd');
+create funct test(test,fn){
+	fn();
+};
+test('YAY'){
+	writeout('YEET');
+};

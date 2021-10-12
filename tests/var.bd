@@ -1,6 +1,1 @@
-create class test(static){
-	
-};
-create var test.yay = 'uno';
-create var tes = 'yay';
-pyparse `print(var['test']['dt']['yay'])`
+create var test = null;
