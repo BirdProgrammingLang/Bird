@@ -1,7 +1,10 @@
 from os import chdir
-chdir('tests/')
 from src.bird import *
 fn = input('Filename: ')
+gvar['@fn'] = {'type':'string','dt':"autoexec.bd"}
+parse(open('Bird/pref/autoexec.bd').read())
+d['cnt'] = 0
+chdir('tests/')
 gvar['@fn'] = {'type':'string','dt':fn}
 parse(open(fn).read())
 '''gvar['@fn'] = {'type':'string','dt':''}
