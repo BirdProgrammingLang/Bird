@@ -522,11 +522,20 @@ def cfaatc(codedat='',data=[],tr=''):
 			if v != ['','']:
 				nvar[item] = {'type':v[0],'dt':v[1],'headers':v[2]}
 		ncnt += 1
+	odf = d['funct']
+	ocnt = d['cnt']
+	ofn = d['fn']
+	d['tb'].append('Expression '+str(d['cnt'])+': '+regex[0]+'\n'+codedat+'\n}')
+	d['fn'] = regex[1]
+	d['cnt'] = 1
 	d['funct'] = True
 	ov = var
 	var = nvar
 	parse(dat['code'])
-	d['funct'] = False
+	d['funct'] = odf
+	d['cnt'] = ocnt
+	del d['tb'][len(d['tb'])-1]
+	d['fn'] = ofn
 	var = ov
 def callfuncta(regex):
 	d['ecnt'] = 1
