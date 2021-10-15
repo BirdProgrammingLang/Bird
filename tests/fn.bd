@@ -1,4 +1,6 @@
 create funct test(){
-	print('hi');
+	writeout('hi');
+	ngeijkl;
+	return 'yay';
 };
-pyparse `print(var['test'])`
+writeout(test());

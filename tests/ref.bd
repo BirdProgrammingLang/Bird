@@ -4,4 +4,4 @@ create var test = '_yay';
 create funct t(data){
 	writeout(data);
 };
-t(typeof(yay));
+t(yay);

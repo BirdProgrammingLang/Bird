@@ -4,6 +4,7 @@ import threading
 import random
 import base64
 from pathlib import Path
+import sys
 import os
 home = str(Path.home())+'/Bird-Lang' #Only for Replit: +'/Bird-Lang'
 bddir = open(home+'/bddir.txt').read()
@@ -14,7 +15,7 @@ var = {}
 classes = {}
 def null(*args,**kwargs):
 	pass
-d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{},'clsd':{}}
+d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{},'clsd':{},'fn':'@main','tb':[]}
 def error(n,t):
 	try:
 		parse(d['errh'][n])
@@ -22,8 +23,10 @@ def error(n,t):
 		try:
 			parse(d['errh']['Error'])
 		except:
-			print(f'{n} triggered at expression {str(d["cnt"])}, "{d["ep"]}": {t}')
-			quit(1)
+			print(f'{n} triggered at expression {str(d["cnt"])}, function "{d["fn"]}", command "{d["ep"]}": {t}\nTraceback:')
+			for item in d['tb']:
+				print('\t'+str(item))
+			sys.exit(1)
 def binary_encode(txt):
 	import binascii
 	global dta
@@ -448,11 +451,20 @@ def callfunct(regex):
 			if v != ['','']:
 				nvar[item] = {'type':v[0],'dt':v[1],'headers':v[2]}
 		ncnt += 1
+	odf = d['funct']
+	ocnt = d['cnt']
+	ofn = d['fn']
+	d['tb'].append('Expression '+str(d['cnt'])+': '+d["ep"])
+	d['fn'] = regex[1]
+	d['cnt'] = 1
 	d['funct'] = True
 	ov = var
 	var = nvar
 	parse(dat['code'])
-	d['funct'] = False
+	d['funct'] = odf
+	d['cnt'] = ocnt
+	del d['tb'][len(d['tb'])-1]
+	d['fn'] = ofn
 	var = ov
 def cfaatc(codedat='',data=[],tr=''):
 	global var
@@ -521,7 +533,11 @@ def callfuncta(regex):
 	d['atcdat'] = [regex,[]]
 	d['atc'] = cfaatc
 def RETURN(regex):
-	d['retd'] = typeify(regex[1])
+	if d['funct']:
+		d['retd'] = typeify(regex[1])
+	else:
+		error('ScopeError','Cannot use return outside of functions')
+	return 'close'
 def checkifs(cond):
 	def test(d):
 		'''if re.match(re.compile('^[ ]*[^\n=]+[ ]*==[ ]*[^\n=]+[ ]*$'),d):
@@ -736,7 +752,6 @@ def parse(code):
 			if not d['break']:
 				if d['run']:
 					d['ep'] = line
-					d['cnt'] += 1
 					line = line.replace('\\semi',';')
 					for n,v in gvar.items():
 						if not n in var:
@@ -749,6 +764,8 @@ def parse(code):
 							if nels and not funct[1] == 'Else':
 								d['els'] = False
 							dat = funct[0](re.match('^'+reg+'$',line,re.DOTALL))
+							if dat == 'close':
+								return 'end'
 							fnd = True
 							break
 					if not fnd:
@@ -756,6 +773,7 @@ def parse(code):
 					if not d['funct']:
 						for item in temp:
 							del var[item]
+				d['cnt'] += 1
 			else:
 				d['break'] = False
 				break
