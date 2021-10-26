@@ -1,10 +1,28 @@
-create funct array_item(arr,cnt){
+//create funct array_item(arr,cnt){
 	create var data 'notdefined';
 	pyparse `if var['cnt']['type'] == 'number':
 	var['cnt']['dt'] = int(var['cnt']['dt'])
 var['data']['dt'] = var['arr']['dt'][var['cnt']['dt']]['dt']`;
 	return data;
-};
+};//
 //pyparse `print(var)`//
-using('stdio.bd');
-writeout(array_item(aa "a"$"b"\,"a"));
+//using('stdio.bd');
+writeout(array_item(aa "a"$"b"\,"a"));//
+create funct set_array_item(data,il,array){
+	pyparse `def arrrec(data,vd,appl):
+	if len(data) == 1:
+		appl['dt'][data[0]['dt']]['dt'] = vd
+		return appl
+	else:
+		ndata = data
+		data = str(data)
+		ndata.pop(0)
+		dat = arrrec(ndata,vd,appl[le(data)[0]])
+		appl[le(data)[0]]['dt'][ndata[0]] = dat
+		return appl
+var['array'] = arrrec(@{il},var['data'],var['array'])
+`;
+return array;
+};
+create var array = set_array_item("yay",[0],['test']);
+writeout(array.item(0));

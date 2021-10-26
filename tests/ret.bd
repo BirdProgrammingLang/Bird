@@ -1,6 +1,6 @@
 using('stdio.bd');
 create funct test(){
-	return 1
+	writeout('a');
 };
 create var dat test();
 writeout(dat)

@@ -1,0 +1,6 @@
+create var[debug_sethead=test] t = 'yay';
+create var &te = t;
+create funct test(t){
+pyparse `print(var['t'])`;
+};
+test(te);

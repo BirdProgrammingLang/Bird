@@ -1,0 +1,15 @@
+//create funct allow(p){
+	create var f = '';
+	if(p == 'pyparse'){
+		pyparse	`if 'req_pyparse' in var['f']['dt']['head']:
+	var['f']['dt']['head']['pyparse'] = 'true'
+`;
+	};
+	return f;
+}[pyparse=true];
+pyparse `print(var['allow'])`;//
+create funct t(){
+	pyparse `print('yeet')`;
+}[req_pyparse=];
+create var t = t.allow('pyparse');
+t()

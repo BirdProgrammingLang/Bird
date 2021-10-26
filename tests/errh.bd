@@ -2,4 +2,3 @@ create ErrorHandler (Error){
 	writeout('Test');
 };
 using('stdio.bd');
-writeout(kjeflw)

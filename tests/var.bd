@@ -1,1 +1,2 @@
 create var test = null;
+writeout(typeof(test));

@@ -3,6 +3,8 @@ create class test (static){
 	create funct t(){
 		writeout('yeet');
 	};
+	create class _(static){
+		create var te = 'yay';
+	};
 };
-using('stdio.bd');
 writeout(test.test)

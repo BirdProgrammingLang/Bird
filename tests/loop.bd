@@ -1,7 +1,7 @@
 using('stdio.bd');
 using('math.bd');
 //loops tested: foreach, while, when//
-create class test(static){
+//create class test(static){
 	create funct yay(){
 		writeout('a');
 	};
@@ -9,4 +9,9 @@ create class test(static){
 foreach(n,item of test){
 	writeout(n);
 	item();
+};//
+create var n = 0;
+while(n<5){
+	writeout(n);
+	create var n = math(`@{n}+1`);
 };

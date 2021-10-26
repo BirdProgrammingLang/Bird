@@ -52,7 +52,8 @@ except FileNotFoundError:
 	else{
 	return dt;
 	};
-}[global=];
-//pyparse `print(gvar['using'])`;//
-using('stdio.bd');
-writeout('y');
+}[global=&pyparse=true];
+create funct output(){
+pyparse `print(gvar['using'])`;
+}[pyparse=true];
+output()

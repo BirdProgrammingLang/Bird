@@ -1,3 +1,5 @@
+//Notice! Shorthand functions have not worked since the ATC update, and were taken out of the parser in the if statement update.
+Use Push Functions instead.//
 using('stdio.bd');
 create funct test(f){
 	writeout('a');

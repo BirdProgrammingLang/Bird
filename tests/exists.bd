@@ -1,4 +1,4 @@
 create var t 'yay';
-create var test exists t;
+create var test exists ty;
 using('stdio.bd');
 writeout(test);
