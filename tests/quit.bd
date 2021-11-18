@@ -1,4 +1,5 @@
 create funct quit(status=0){
 	pyparse `quit(int(@{status}))`;
-};
-pyparse `print(var)`
+}[req_pyparse=];
+create var quit = quit.allow('pyparse');
+quit(0)

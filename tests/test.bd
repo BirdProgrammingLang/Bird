@@ -1,2 +1,2 @@
-create var test = 'i';
-pyparse `print(var['test'])`;
+using('stdio.bd');
+writeout(@fn);

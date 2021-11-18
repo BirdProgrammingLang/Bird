@@ -12,6 +12,17 @@ foreach(n,item of test){
 };//
 create var n = 0;
 while(n<5){
-	writeout(n);
 	create var n = math(`@{n}+1`);
+	writeout(n);
 };
+//Proposed:
+until(n<5){
+	create var n = math(`@{n}+1`);
+	writeout(n);
+	Output:
+1.0
+2.0
+3.0
+4.0
+};
+//

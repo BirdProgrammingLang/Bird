@@ -1,8 +1,10 @@
 create funct using(file,global=B1,compile=B0){
 	create var libdir array_item(dirsarray,'lib');
 	create var packagedir array_item(dirsarray,'package');
+	create var ld = B0;
 	pyparse `var['pathdt'] = {'type':'bool','dt':Path('./.bdusingcompile/@{file}.cbd').is_file(),'headers':{}}`;
-	if(pathdt){		create var dt = fread(`./.bdusingcompile/@{file}.cbd`);
+	if(pathdt){		
+		create var dt = fread(`./.bdusingcompile/@{file}.cbd`);
 		pyparse `var['dt']['type'] = 'binary'`;
 		create var dt = dt.decode();
 	};
@@ -23,6 +25,7 @@ create funct using(file,global=B1,compile=B0){
 except FileNotFoundError:
 	try:
 		open('@{libdir}@{file}')
+		var['ld'] = {'type':'bool','dt':'True','headers':{}}
 		parse(open('@{libdir}@{file}').read())
 	except FileNotFoundError:
 		try:
@@ -44,6 +47,14 @@ except FileNotFoundError:
 			fwrite(`.bdusingcompile/@{file}.cbd`,tostring dt,'w');
 		};
 	};
+	if (ld){
+	foreach(n,f of dt){
+		pyparse	`
+if 'req_pyparse' in var['dt']['dt'][var['n']['dt']]['dt']['head']:
+	var['dt']['dt'][var['n']['dt']]['dt']['head']['pyparse'] = 'true'
+`;
+	};
+	};
 	if(global){
 		foreach(n,item of dt){
 			pyparse `gvar['@{n}'] = var['item']`;
@@ -52,8 +63,9 @@ except FileNotFoundError:
 	else{
 	return dt;
 	};
-}[global=&pyparse=true];
+}[global=];
 create funct output(){
 pyparse `print(gvar['using'])`;
-}[pyparse=true];
+}[req_pyparse=true];
+create var output = output.allow('pyparse');
 output()

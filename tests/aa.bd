@@ -1,3 +1,6 @@
-create var a {'a':'B'};
-using('stdio.bd');
-writeout(a.a);
+create funct output(d){
+	using('stdio.bd');
+	writeout(d.item(1));
+}[req_pyparse=true];
+create var output = output.allow('pyparse');
+output(['z',['b','c']]);

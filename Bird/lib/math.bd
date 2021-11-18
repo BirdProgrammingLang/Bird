@@ -26,4 +26,4 @@ create funct squareroot(number){
 	pyparse `import math
 var['data'] = {'type':'number','dt':math.sqrt(@{number})}`;
 	return data;
-}[pyparse=true]
+}[req_pyparse=true]

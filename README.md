@@ -13,4 +13,4 @@ To install on Windows, download the exe from [here](https://github.com/mathstar1
 ### Windows
 On Windows, the installer automatically adds the directory to PATH, so all you have to do is run `bird [filename]` from any directory.
 ### Linux and MacOS
-To run Bird files on these operating systems, run `python bird.py [filename]` or `python3 bird.py [filename]` in the `src` directory of the extracted installation files.
+To run Bird files on these operating systems, run `python bird.py [filename]` or `python3 bird.py [filename]`.

@@ -3,4 +3,6 @@ using('stdio.bd');
 //create var dt binary_encode('Hello World!');
 writeout(dt);
 writeout(binary_decode(dt));//
-writeout('\ttest\n\tv\nyeet');
+//Use string.encode('binary').//
+writeout('test'.encode('binary'));
+//writeout('\ttest\n\tv\nyeet');//

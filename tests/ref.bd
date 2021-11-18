@@ -1,3 +1,4 @@
+using('stdio.bd');
 create var test = 'data';
 create var &yay = test;
 create var test = '_yay';

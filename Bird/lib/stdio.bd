@@ -1,8 +1,8 @@
 create funct writeout(text,end='\n':@,sep=' ',flush='False'){
 	pyparse `text = r'''@{text}'''.replace(r"\'\'\'","'''")
 print(text,end='@{end}',sep=r'@{sep}',flush=@{flush})`;
-}[pyparse=true];
+}[req_pyparse=true];
 create funct writein(text=''){
 	pyparse `var['data'] = {'type':'string','dt':input('@{text}'),'headers':{}}`;
 	return data;
-}[global=&pyparse=true]
+}[global=&req_pyparse=];

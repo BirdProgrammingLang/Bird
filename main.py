@@ -1,11 +1,15 @@
 from os import chdir
-from src.bird import *
+from pathlib import Path
+from src.bird import parse,gvar,d
+global gvar
 fn = input('Filename: ')
-gvar['@fn'] = {'type':'string','dt':"autoexec.bd"}
-parse(open('Bird/pref/autoexec.bd').read())
+home = str(Path.home())+'/Bird-Lang' #Only for Replit: +'/Bird-Lang'
+bddir = open(home+'/bddir.txt').read()
+gvar['@fn'] = {'type':'string','dt':Path(fn).absolute(),'headers':{}}
+with open(bddir+'/pref/autoexec.bd') as data:
+	parse(data.read())
 d['cnt'] = 0
 chdir('tests/')
-gvar['@fn'] = {'type':'string','dt':fn}
 parse(open(fn).read())
 '''gvar['@fn'] = {'type':'string','dt':''}
 var['dt'] = {'type':'class','dt':{'z':{'type':'string','dt':'v'}}}
