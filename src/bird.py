@@ -103,7 +103,7 @@ def binary_encode(txt):
 def typedat(dt):
 	typ = dt[0]
 	if typ == 'funct':
-		return {'code':{'type':'string','dt':dt[1]['code']},'allow':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'p': ['', '']}, 'code': "pyparse `var['f'] = {'type':'"+dt[0]+"','dt':"+str(dt[1])+",'headers':"+str(dt[2])+"}`;if(p == 'pyparse'){;pyparse\t`if 'req_pyparse' in var['f']['dt']['head']:\n\tvar['f']['dt']['head']['pyparse'] = 'true'\n`;};return f", 'head': {'pyparse': 'true'}}}}
+		return {'code':{'type':'string','dt':dt[1]['code']},'allow':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'p': ['', '']}, 'code': "pyparse 'var['f'] = {'type':'"+dt[0]+"','dt':"+str(dt[1])+",'headers':"+str(dt[2])+"}';if(p == 'pyparse'){;pyparse\t`if 'req_pyparse' in var['f']['dt']['head']:\n\tvar['f']['dt']['head']['pyparse'] = 'true'\n`;};return f", 'head': {'pyparse': 'true'}}}}
 	elif typ == 'array':
 		return {'item':{'type': 'funct', 'dt': {'attrib': {'cnt': ['', '']}, 'code': f'create var arr {dt[1]};create var data \'notdefined\';pyparse `if var[\'arr\'][\'type\'] == \'associative\' or var[\'arr\'][\'type\'] == \'array\':\n    if var[\'cnt\'][\'type\'] == \'number\':\n        var[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n    var[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']][\'dt\']\nelse:\n\tif var[\'cnt\'][\'type\'] == \'number\':\n\t\tvar[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n\tvar[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']]`;return data', 'head': {'pyparse': 'true'}}},'length':{'type':'number','dt':len(dt[1])-1}}
 	elif typ == 'associative':
@@ -126,6 +126,28 @@ def clsrec(data,vd,appl):
 		dat = clsrec(ndata,vd,appl[le(data)[0]])
 		appl[le(data)[0]]['dt'][ndata[0]] = dat
 		return appl
+def mathify(code):
+	dat = re.findall(r'[*/+\-%^]',code)
+	for item in dat:
+		if re.match(r'[ +\n\t]*\*[ +\n\t]*',item):
+			data = code.split(item)
+			code = code.replace(re.split(r'[*/+\-%^]',data[0])[0]+item+re.split(r'[*/+\-%^]',data[1])[0],str(float(typeify(re.split(r'[*/+\-%^]',data[0])[0])[1]) * float(typeify(re.split(r'[*/+\-%^]',data[1])[0])[1])),1)
+		elif re.match(r'[ +\n\t]*/[ +\n\t]*',item):
+			data = code.split(item)
+			code = code.replace(re.split(r'[*/+\-%^]',data[0])[0]+item+re.split(r'[*/+\-%^]',data[1])[0],str(float(typeify(re.split(r'[*/+\-%^]',data[0])[0])[1]) / float(typeify(re.split(r'[*/+\-%^]',data[1])[0])[1])),1)
+		elif re.match(r'[ +\n\t]*\+[ +\n\t]*',item):
+			data = code.split(item)
+			code = code.replace(re.split(r'[*/+\-%^]',data[0])[0]+item+re.split(r'[*/+\-%^]',data[1])[0],str(float(typeify(re.split(r'[*/+\-%^]',data[0])[0])[1]) + float(typeify(re.split(r'[*/+\-%^]',data[1])[0])[1])),1)
+		elif re.match(r'[ +\n\t]*\-[ +\n\t]*',item):
+			data = code.split(item)
+			code = code.replace(re.split(r'[*/+\-%^]',data[0])[0]+item+re.split(r'[*/+\-%^]',data[1])[0],str(float(typeify(re.split(r'[*/+\-%^]',data[0])[0])[1]) - float(typeify(re.split(r'[*/+\-%^]',data[1])[0])[1])),1)
+		elif re.match(r'[ +\n\t]*%[ +\n\t]*',item):
+			data = code.split(item)
+			code = code.replace(re.split(r'[*/+\-%^]',data[0])[0]+item+re.split(r'[*/+\-%^]',data[1])[0],str(float(typeify(re.split(r'[*/+\-%^]',data[0])[0])[1]) % float(typeify(re.split(r'[*/+\-%^]',data[1])[0])[1])),1)
+		elif re.match(r'[ +\n\t]*^[ +\n\t]*',item):
+			data = code.split(item)
+			code = code.replace(re.split(r'[*/+\-%^]',data[0])[0]+item+re.split(r'[*/+\-%^]',data[1])[0],str(float(typeify(re.split(r'[*/+\-%^]',data[0])[0])[1]) ** float(typeify(re.split(r'[*/+\-%^]',data[1])[0])[1])),1)
+	return code
 def set_interval(func,sec=0,reg=[]):
     idnt = random.randint(0,9999999999)
     def func_wrapper():
@@ -278,7 +300,7 @@ def typeify(txt,qt=False,err=True,ignore=False):
 		txt = var[n]['dt']
 		var[n] = dt
 		gvar[n] = dt
-	elif re.match(r'^[ \t\n]*(.*)\((.*)\)[ \t\n]*$',txt):
+	elif re.match(r'^[ \t\n]*(.+)\((.*)\)[ \t\n]*$',txt):
 		oretd = d['retd']
 		d['retd'] = ['null','null',{}]
 		parse(txt)
@@ -342,6 +364,8 @@ def typeify(txt,qt=False,err=True,ignore=False):
 			txt = 'True'
 		else:
 			txt = 'False'
+	elif re.match(r'^[ \t\n+]*(.+)([ +\n\t]*[*/\-+%^][ +\n\t]*(.+))+[ \t\n+]*$',txt,re.DOTALL):
+		return typeify(str(mathify(txt)))
 	else:
 		if '.' in txt:
 			n = txt.split('.')
@@ -363,6 +387,8 @@ def typeify(txt,qt=False,err=True,ignore=False):
 							dat = dat[i]['dt']
 				cnt += 1
 		else:
+			otxt = txt
+			txt = re.sub(r'[ +\n\t]*','',txt)
 			if txt in var.keys():
 				ty = var[txt]['type']
 				h = var[txt]['headers']
@@ -373,8 +399,8 @@ def typeify(txt,qt=False,err=True,ignore=False):
 				txt = gvar[txt]['dt']
 			else:
 				if err:
-					raise SyntaxError('')
-					error('VarError',f'Unknown Var "{txt}".')
+					#raise SyntaxError('')
+					error('VarError',f'Unknown Var "{otxt}".')
 				else:
 					return 'VE,UV'
 			if ty == 'reference':

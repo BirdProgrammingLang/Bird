@@ -1,0 +1,9 @@
+create var test = 4;
+create funct pi(){
+	create var data = 1;
+	pyparse `import math
+var['data']['dt'] = math.pi`
+return data;
+}[req_pyparse=true];
+create var pi = pi.allow('pyparse');
+writeout(pi());

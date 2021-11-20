@@ -3,8 +3,13 @@ Use Push Functions instead.//
 using('stdio.bd');
 create funct test(f){
 	writeout('a');
-	f('a');
+	f();
 };
-test(funct(a){
+// This is incorrect://
+test(funct(){
 	writeout('yy')
-})
+});
+// Use this instead://
+test(){
+	writeout('yy');
+}

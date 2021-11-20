@@ -2,6 +2,7 @@ from os import chdir
 from pathlib import Path
 from src.bird import parse,gvar,d
 global gvar
+print('Bird Programming Language \nCopyright (C) 2021')
 fn = input('Filename: ')
 home = str(Path.home())+'/Bird-Lang' #Only for Replit: +'/Bird-Lang'
 bddir = open(home+'/bddir.txt').read()
