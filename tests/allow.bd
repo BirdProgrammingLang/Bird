@@ -1,0 +1,7 @@
+create funct test(){
+	pyparse `print('tshdfjsds')`;
+}[req_pyparse=];
+allow test: pyparse;
+test();
+deny test: pyparse;
+test();

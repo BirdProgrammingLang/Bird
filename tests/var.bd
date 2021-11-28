@@ -1,2 +1,2 @@
-create var test = null;
-writeout(typeof(test));
+var test = streval(`'yay'`);
+writeout(test)
