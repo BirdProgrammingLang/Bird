@@ -7,6 +7,10 @@ fn = input('Filename: ')
 home = str(Path.home())+'/Bird-Lang' #Only for Replit: +'/Bird-Lang'
 bddir = open(home+'/bddir.txt').read()
 gvar['@fn'] = {'type':'string','dt':Path(fn).absolute(),'headers':{}}
+gvar['@version'] = {'type':'string','dt':d['version'],'headers':{}}
+gvar['@v'] = {'type':'string','dt':d['version'],'headers':{}}
+gvar['@cf'] = {'type':'string','dt':'@main','headers':{}}
+gvar['@license'] = {'type':'string','dt':open('LICENSE').read(),'headers':{}}
 with open(bddir+'/pref/autoexec.bd') as data:
 	parse(data.read())
 d['cnt'] = 0

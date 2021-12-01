@@ -81,7 +81,7 @@ var = gvar
 classes = {}
 def null(*args,**kwargs):
 	pass
-d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{},'clsd':{},'fn':'@main','tb':[],'pyparse':False}
+d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{},'clsd':{},'fn':'@main','tb':[],'pyparse':False,'version':'1.0.0'}
 def error(n,t):
 	try:
 		parse(d['errh'][n])
@@ -572,6 +572,7 @@ def callfunct(regex):
 	ofn = d['fn']
 	d['tb'].append('Expression '+str(d['cnt'])+': '+d["ep"])
 	d['fn'] = regex[1]
+	gvar['@cf']['dt'] = d['fn']
 	d['cnt'] = 1
 	d['funct'] = True
 	ov = var
@@ -585,6 +586,7 @@ def callfunct(regex):
 	d['cnt'] = ocnt
 	del d['tb'][len(d['tb'])-1]
 	d['fn'] = ofn
+	gvar['@cf']['dt'] = d['fn']
 	d['pyparse'] = opyp
 	var = ov
 def cfaatc(codedat='',data=[],tr=''):
@@ -648,6 +650,7 @@ def cfaatc(codedat='',data=[],tr=''):
 	ofn = d['fn']
 	d['tb'].append('Expression '+str(d['cnt'])+': '+regex[0]+'\n'+codedat+'\n}')
 	d['fn'] = regex[1]
+	gvar['@cf']['dt'] = d['fn']
 	d['cnt'] = 1
 	d['funct'] = True
 	ov = var
@@ -661,6 +664,7 @@ def cfaatc(codedat='',data=[],tr=''):
 	d['cnt'] = ocnt
 	del d['tb'][len(d['tb'])-1]
 	d['fn'] = ofn
+	gvar['@cf']['dt'] = d['fn']
 	d['pyparse'] = opyp
 	var = ov
 def callfuncta(regex):

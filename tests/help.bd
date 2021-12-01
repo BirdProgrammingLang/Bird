@@ -1,0 +1,11 @@
+create funct help(){
+writeout('Welcome to the Bird Help Engine!');
+var br = B0;
+while (br == B0){
+var item = writein('help ');
+if(item == 'br'){
+	var br = B1;
+};
+};
+};
+help();

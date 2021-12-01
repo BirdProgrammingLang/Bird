@@ -63,9 +63,19 @@ if 'req_pyparse' in var['dt']['dt'][var['n']['dt']]['dt']['head']:
 	else{
 	return dt;
 	};
-}[global=];
-create funct output(){
+}[global=&req_pyparse=];
+//create funct output(){
 pyparse `print(gvar['using'])`;
 }[req_pyparse=true];
 create var output = output.allow('pyparse');
-output()
+output()//
+create funct gd(dt){
+	pyparse `print(var['dt']['dt']['head'])`;
+}[req_pyparse=];
+allow gd:pyparse;
+allow using:pyparse;
+using('stdio.bd');
+gd(writeout);
+writeout('test');
+gd(writeout);
+writeout('yy');

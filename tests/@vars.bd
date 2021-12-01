@@ -1,0 +1,1 @@
+create funct test(){writeout(@cf);};test();
