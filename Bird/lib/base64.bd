@@ -1,0 +1,8 @@
+create funct encode(txt){
+	pyparse `var["data"] = {"type":'string','dt':base64.b64encode(b"@{txt}").decode('utf-8')}`;
+	return data;
+}[global=&req_pyparse=true];
+create funct decode(txt){
+	pyparse `var["data"] = {"type":'string','dt':base64.b64decode(b"@{txt}").decode('utf-8')}`;
+	return data;
+}[global=&req_pyparse=true];

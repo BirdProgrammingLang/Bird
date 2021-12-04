@@ -1,0 +1,13 @@
+create class sys(static){
+	create funct exec(txt){
+		pyparse `os.system('''@{txt}''')`;
+	}[global=&req_pyparse=true];
+	pyparse `var['sys']['dt']['dt'] = {'type':'string','dt':os.name}`;
+	create var[global=] name dt;
+	create funct clear(){
+	pyparse `if os.name == 'nt':
+	os.system('cls')
+else:
+	os.system('clear')`;
+}[global=&req_pyparse=true];
+};

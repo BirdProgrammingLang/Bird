@@ -1,0 +1,7 @@
+create funct tempstorage(name,cdat){
+	create var i = using('stdio.bd',false);
+	create var bddir = dirsarray.item('bird');
+	create var tempdir = bddir.group('data/temp/');
+	create var tempdir = tempdir.group(name);
+	fwrite(tempdir.group('.tmp'),cdat);
+}[global=&req_pyparse=true];
