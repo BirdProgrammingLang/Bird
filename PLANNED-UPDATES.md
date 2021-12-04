@@ -1,0 +1,1 @@
+No longer require bddir.txt.

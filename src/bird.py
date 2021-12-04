@@ -1,14 +1,12 @@
+from os import chdir
+import sys
+from pathlib import Path
 import re
 from ast import literal_eval as le
 import threading
 import random
 import base64
-from pathlib import Path
-import sys
 import os
-home = str(Path.home())+'/Bird-Lang' #Only for Replit: +'/Bird-Lang'
-bddir = open(home+'/bddir.txt').read()
-temp = []
 def ap(text):
 	atc = False
 	txt = []
@@ -24,15 +22,15 @@ def ap(text):
 			text += char
 		elif char == ')' and atc:
 			atc = False
-			text += char
-		if char == '[' and not atc:
+			text += ')'
+		elif char == '[' and not atc:
 			atct = '['
 			atc = True
 			text += char
 		elif char == ']' and atc:
 			atc = False
 			text += char
-		if char == '{' and not atc:
+		elif char == '{' and not atc:
 			atct = '{'
 			atc = True
 			text += char
@@ -75,13 +73,22 @@ def ap(text):
 			text += char
 		cnt += 1
 	return text
-gvar = {'using':{'dt': {'attrib': {'file': ['', ''], 'global': ['bool', 'True', {}], 'compile': ['bool', 'False', {}]}, 'code': "create var libdir array_item(dirsarray,'lib');create var packagedir array_item(dirsarray,'package');create var ld = B0;pyparse `var['pathdt'] = {'type':'bool','dt':Path('./.bdusingcompile/@{file}.cbd').is_file(),'headers':{}}`;if(pathdt){;create var dt = fread(`./.bdusingcompile/@{file}.cbd`);pyparse `var['dt']['type'] = 'binary'`;create var dt = dt.decode();};else{;if(exists usingpasswd){;create var passwd B1;};else{;create var passwd B0;};create class dt(static){;pyparse `try:\n\tif '''@{@fn}''' == '''@{file}''':\n\t\traise FileNotFoundError('')\n\telse:\n\t\topen('@{file}')\n\t\tparse(open('@{file}').read())\nexcept FileNotFoundError:\n\ttry:\n\t\topen('@{libdir}@{file}')\n\t\tvar['ld'] = {'type':'bool','dt':'True','headers':{}}\n\t\tparse(open('@{libdir}@{file}').read())\n\texcept FileNotFoundError:\n\t\ttry:\n\t\t\topen('@{packagedir}/@{file}/passwd.txt')\n\t\t\tif eval(var['passwd']['dt']):\n\t\t\t\tpasswd = base64.b64decode(open('@{packagedir}/@{file}/passwd.txt').read()).decode('utf-8')\n\t\t\t\tif var['usingpasswd']['dt'] == passwd:\n\t\t\t\t\tparse(open('@{packagedir}/@{file}/main.bd').read())\n\t\texcept:\n\t\t\tparse(open('@{packagedir}@{file}/main.bd').read())`;};};if(compile){;if(pathdt){;fwrite(`.bdusingcompile/@{file}.cbd`,tostring dt,'w');};else{;pyparse `os.mkdir('.bdusingcompile')`;fwrite(`.bdusingcompile/@{file}.cbd`,tostring dt,'w');};};if (ld){;foreach(n,f of dt){;pyparse\t`\nif 'req_pyparse' in var['dt']['dt'][var['n']['dt']]['dt']['head']:\n\tvar['dt']['dt'][var['n']['dt']]['dt']['head']['pyparse'] = 'true'\n`;};};if(global){;foreach(n,item of dt){;pyparse `gvar['@{n}'] = var['item']`;};};else{;return dt;}", 'head': {'global': '','pyparse':'true'}}, 'type': 'funct', 'headers': {}}, 'array_item': {'type': 'funct', 'dt': {'attrib': {'arr': ['', ''], 'cnt': ['', '']}, 'code': "\n\tcreate var data 'notdefined';\n\tpyparse `if var['cnt']['type'] == 'number':\n\tvar['cnt']['dt'] = int(var['cnt']['dt'])\nvar['data']['dt'] = var['arr']['dt'][var['cnt']['dt']]['dt']`;\n\treturn data\n", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': '','pyparse':'true'}}}, 'eval': {'type': 'funct', 'dt': {'attrib': {'code': ['', '']}, 'code': "pyparse `parse('''@{code}''')`", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb','pyparse':'true'}}}, 'quit': {'type': 'funct', 'dt': {'attrib': {'status': ['number', 0.0]}, 'code': 'pyparse `quit(int(@{status}))`', 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb'}}}, 'dirsarray': {'dt': {'bird': {'type': 'string', 'dt': '/home/runner/Bird-Lang/Bird/'}, 'lib': {'type': 'string', 'dt': '/home/runner/Bird-Lang/Bird/lib/'}, 'package': {'type': 'string', 'dt': '/home/runner/Bird-Lang/Bird/package/'}}, 'type': 'associative'}, 'fread': {'dt': {'attrib': {'fn': ['', '']}, 'code': 'pyparse `var[\'data\'] = {\'type\':\'string\',\'dt\':open("@{fn}").read()}`;return data', 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': '', 'pyparse': 'true'}}, 'type': 'funct'}, 'fwrite': {'dt': {'attrib': {'fn': ['', ''], 'txt': ['', ''], 'm': ['string', 'a']}, 'code': 'pyparse `d = open("""@{fn}""","""@{m}""")\nd.write("""@{txt}""")\nd.close()`;return true', 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': '', 'pyparse': 'true'}}, 'type': 'funct'}, 'fdelete': {'dt': {'attrib': {'fn': ['', '']}, 'code': "pyparse `import os\nos.remove('''@{fn}''')`", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': '', 'pyparse': 'true'}}, 'type': 'funct'},'typeof':{'dt': {'attrib': {'item': ['', '']}, 'code': 'pyparse `var["data"] = {\'type\':\'string\',\'dt\':var[\'item\'][\'type\']}`;return data', 'head': {'global': '', 'pyparse': 'true'}}, 'type': 'funct', 'headers': {}}}
-gvar['dirsarray'] = {'dt': {'bird': {'type': 'string', 'dt': bddir+'/'}, 'lib': {'type': 'string', 'dt': f'{bddir}/lib/'}, 'package': {'type': 'string', 'dt': f'{bddir}/package/'}}, 'type': 'associative','headers':{}}
-var = gvar
-classes = {}
+def su(home=str(Path.home())):
+	global bddir
+	global temp
+	global gvar
+	global var
+	global classes
+	global d
+	bddir = open(home+'/bddir.txt').read()
+	temp = []
+	gvar = {'using':{'dt': {'attrib': {'file': ['', ''], 'global': ['bool', 'True', {}], 'compile': ['bool', 'False', {}]}, 'code': "create var libdir array_item(dirsarray,'lib');create var packagedir array_item(dirsarray,'package');create var ld = B0;pyparse `var['pathdt'] = {'type':'bool','dt':Path('./.bdusingcompile/@{file}.cbd').is_file(),'headers':{}}`;if(pathdt){;create var dt = fread(`./.bdusingcompile/@{file}.cbd`);pyparse `var['dt']['type'] = 'binary'`;create var dt = dt.decode();};else{;if(exists usingpasswd){;create var passwd B1;};else{;create var passwd B0;};create class dt(static){;pyparse `try:\n\tif '''@{@fn}''' == '''@{file}''':\n\t\traise FileNotFoundError('')\n\telse:\n\t\topen('@{file}')\n\t\tparse(open('@{file}').read())\nexcept FileNotFoundError:\n\ttry:\n\t\topen('@{libdir}@{file}')\n\t\tvar['ld'] = {'type':'bool','dt':'True','headers':{}}\n\t\tparse(open('@{libdir}@{file}').read())\n\texcept FileNotFoundError:\n\t\ttry:\n\t\t\topen('@{packagedir}/@{file}/passwd.txt')\n\t\t\tif eval(var['passwd']['dt']):\n\t\t\t\tpasswd = base64.b64decode(open('@{packagedir}/@{file}/passwd.txt').read()).decode('utf-8')\n\t\t\t\tif var['usingpasswd']['dt'] == passwd:\n\t\t\t\t\tparse(open('@{packagedir}/@{file}/main.bd').read())\n\t\texcept:\n\t\t\tparse(open('@{packagedir}@{file}/main.bd').read())`;};};if(compile){;if(pathdt){;fwrite(`.bdusingcompile/@{file}.cbd`,tostring dt,'w');};else{;pyparse `os.mkdir('.bdusingcompile')`;fwrite(`.bdusingcompile/@{file}.cbd`,tostring dt,'w');};};if (ld){;foreach(n,f of dt){;pyparse\t`\nif 'req_pyparse' in var['dt']['dt'][var['n']['dt']]['dt']['head']:\n\tvar['dt']['dt'][var['n']['dt']]['dt']['head']['pyparse'] = 'true'\n`;};};if(global){;foreach(n,item of dt){;pyparse `gvar['@{n}'] = var['item']`;};};else{;return dt;}", 'head': {'global': '','pyparse':'true'}}, 'type': 'funct', 'headers': {}}, 'array_item': {'type': 'funct', 'dt': {'attrib': {'arr': ['', ''], 'cnt': ['', '']}, 'code': "\n\tcreate var data 'notdefined';\n\tpyparse `if var['cnt']['type'] == 'number':\n\tvar['cnt']['dt'] = int(var['cnt']['dt'])\nvar['data']['dt'] = var['arr']['dt'][var['cnt']['dt']]['dt']`;\n\treturn data\n", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': '','pyparse':'true'}}}, 'eval': {'type': 'funct', 'dt': {'attrib': {'code': ['', '']}, 'code': "pyparse `parse('''@{code}''')`", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb','pyparse':'true'}}}, 'quit': {'type': 'funct', 'dt': {'attrib': {'status': ['number', 0.0]}, 'code': 'pyparse `quit(int(@{status}))`', 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb'}}}, 'dirsarray': {'dt': {'bird': {'type': 'string', 'dt': '/home/runner/Bird-Lang/Bird/'}, 'lib': {'type': 'string', 'dt': '/home/runner/Bird-Lang/Bird/lib/'}, 'package': {'type': 'string', 'dt': '/home/runner/Bird-Lang/Bird/package/'}}, 'type': 'associative'}, 'fread': {'dt': {'attrib': {'fn': ['', '']}, 'code': 'pyparse `var[\'data\'] = {\'type\':\'string\',\'dt\':open("@{fn}").read()}`;return data', 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': '', 'pyparse': 'true'}}, 'type': 'funct'}, 'fwrite': {'dt': {'attrib': {'fn': ['', ''], 'txt': ['', ''], 'm': ['string', 'a']}, 'code': 'pyparse `d = open("""@{fn}""","""@{m}""")\nd.write("""@{txt}""")\nd.close()`;return true', 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': '', 'pyparse': 'true'}}, 'type': 'funct'}, 'fdelete': {'dt': {'attrib': {'fn': ['', '']}, 'code': "pyparse `import os\nos.remove('''@{fn}''')`", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': '', 'pyparse': 'true'}}, 'type': 'funct'},'typeof':{'dt': {'attrib': {'item': ['', '']}, 'code': 'pyparse `var["data"] = {\'type\':\'string\',\'dt\':var[\'item\'][\'type\'],\'headers\':{}}`;return data', 'head': {'global': '', 'req_pyparse': 'true', 'pyparse': 'true'}}, 'type': 'funct', 'headers': {}}}
+	gvar['dirsarray'] = {'dt': {'bird': {'type': 'string', 'dt': bddir+'/'}, 'lib': {'type': 'string', 'dt': f'{bddir}/lib/'}, 'package': {'type': 'string', 'dt': f'{bddir}/package/'}}, 'type': 'associative','headers':{}}
+	var = gvar
+	classes = {}
+	d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{},'clsd':{},'fn':'@main','tb':[],'pyparse':False,'version':'1.1.0 Pre-Release'}
 def null(*args,**kwargs):
 	pass
-d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{},'clsd':{},'fn':'@main','tb':[],'pyparse':False,'version':'1.0.0'}
 def error(n,t):
 	try:
 		parse(d['errh'][n])
@@ -106,9 +113,11 @@ def binary_encode(txt):
 def typedat(dt):
 	typ = dt[0]
 	if typ == 'funct':
-		return {'code':{'type':'string','dt':dt[1]['code']},'allow':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'p': ['', '']}, 'code': "pyparse 'var['f'] = {'type':'"+dt[0]+"','dt':"+str(dt[1])+",'headers':"+str(dt[2])+"}';if(p == 'pyparse'){;pyparse\t`if 'req_pyparse' in var['f']['dt']['head']:\n\tvar['f']['dt']['head']['pyparse'] = 'true'\n`;};return f", 'head': {'pyparse': 'true'}}}}
+		dat = str(dt[1]).replace(';','\;')
+		return {'code':{'type':'string','dt':dt[1]['code']},'allow':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'p': ['', '']}, 'code': "pyparse 'var['f'] = {'type':'"+dt[0]+"','dt':"+dat+",'headers':"+str(dt[2])+"}';if(p == 'pyparse'){;pyparse\t`if 'req_pyparse' in var['f']['dt']['head']:\n\tvar['f']['dt']['head']['pyparse'] = 'true'\n`;};return f", 'head': {'pyparse': 'true'}}}}
 	elif typ == 'array':
-		return {'item':{'type': 'funct', 'dt': {'attrib': {'cnt': ['', '']}, 'code': f'create var arr {dt[1]};create var data \'notdefined\';pyparse `if var[\'arr\'][\'type\'] == \'associative\' or var[\'arr\'][\'type\'] == \'array\':\n    if var[\'cnt\'][\'type\'] == \'number\':\n        var[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n    var[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']][\'dt\']\nelse:\n\tif var[\'cnt\'][\'type\'] == \'number\':\n\t\tvar[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n\tvar[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']]`;return data', 'head': {'pyparse': 'true'}}},'length':{'type':'number','dt':len(dt[1])-1}}
+		dat = dt[1].replace(";","\\;")
+		return {'item':{'type': 'funct', 'dt': {'attrib': {'cnt': ['', '']}, 'code': f'create var arr {dat};create var data \'notdefined\';pyparse `if var[\'arr\'][\'type\'] == \'associative\' or var[\'arr\'][\'type\'] == \'array\':\n    if var[\'cnt\'][\'type\'] == \'number\':\n        var[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n    var[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']][\'dt\']\nelse:\n\tif var[\'cnt\'][\'type\'] == \'number\':\n\t\tvar[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n\tvar[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']]`;return data', 'head': {'pyparse': 'true'}}},'length':{'type':'number','dt':len(dt[1])-1}}
 	elif typ == 'associative':
 		tl = {'item':{'type': 'funct', 'dt': {'attrib': {'cnt': ['', ''],'arr':['associative',dt[1]]}, 'code': f'create var data \'notdefined\';pyparse `if var[\'arr\'][\'type\'] == \'associative\' or var[\'arr\'][\'type\'] == \'array\':\n    if var[\'cnt\'][\'type\'] == \'number\':\n        var[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n    var[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']][\'dt\']\nelse:\n\tif var[\'cnt\'][\'type\'] == \'number\':\n\t\tvar[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n\tvar[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']]`;return data', 'head': {'pyparse': 'true'}}}}
 		for n,v in dt[1].items():
@@ -303,7 +312,7 @@ def typeify(txt,qt=False,err=True,ignore=False):
 		txt = var[n]['dt']
 		var[n] = dt
 		gvar[n] = dt
-	elif re.match(r'^[ \t\n]*(.+)\((.*)\)[ \t\n]*$',txt):
+	elif re.match(r'^[ \t\n]*([^\n\t ]+)\((.*)\)[ \t\n]*$',txt):
 		oretd = d['retd']
 		d['retd'] = ['null','null',{}]
 		parse(txt)
@@ -394,7 +403,11 @@ def typeify(txt,qt=False,err=True,ignore=False):
 			txt = re.sub(r'[ +\n\t]*','',txt)
 			if txt in var.keys():
 				ty = var[txt]['type']
-				h = var[txt]['headers']
+				try:
+					h = var[txt]['headers']
+				except KeyError:
+					var[txt]['headers'] = {'had_no_headers':True}
+					h = {'had_no_headers':True}
 				txt = var[txt]['dt']
 			elif txt in gvar.keys():
 				ty = gvar[txt]['type']
@@ -424,8 +437,8 @@ def cvar(regex):
 			head[item[0]] = item[1]
 	txt = regex[4]
 	typ = typeify(txt)
-	if 'debug_sethead' in head.keys():
-		typ[2] = {'sethead':head['debug_sethead']}
+	'''if 'debug_sethead' in head.keys():
+		typ[2] = {'sethead':head['debug_sethead']}'''
 	if re.match(r'^[ \t\n+]*&',n):
 		typ[0] = 'reference'
 		n = re.sub(r'^[ \t\n+]*&','',n,1)
@@ -467,8 +480,8 @@ def fatc(dt='',regex=[],tr=''): #Function ATC
 			for item in tr[1].replace('[','',1)[::-1].replace(']','',1)[::-1].split('&'):
 				item = item.split('=')
 				head[item[0]] = item[1]
-		'''if 'pyparse' in head:
-			error('CreationError','Illegal header, pyparse.')'''
+		if 'pyparse' in head:
+			error('CreationError','Illegal header, pyparse.')
 		if d['class'] == '':
 			var[n]['dt'] = {'attrib':regex[2],'code':dt,'head':head}
 			var[n]['headers']  = {}
@@ -537,8 +550,7 @@ def callfunct(regex):
 		except KeyError:
 			error('VarError',f'Unknown var, "{fn}".')
 	if not dat['type'] == 'funct':
-		#error
-		pass
+		error('TypeError',f'Cannot call uncallable type: "{dat["type"]}".')
 	for i,n in dat['dt'].items():
 		dat[i] = n
 	att = {}
@@ -579,8 +591,14 @@ def callfunct(regex):
 	var = nvar
 	opyp = d['pyparse']
 	if 'pyparse' in dat['head']:
+		hp = dat['head']['pyparse']
 		if dat['head']['pyparse'] == 'true':
 			d['pyparse'] = True
+		else:
+			d['pyparse'] = False
+	else:
+		d['pyparse'] = False
+		hp = 'false'
 	parse(dat['code'])
 	d['funct'] = odf
 	d['cnt'] = ocnt
@@ -589,6 +607,10 @@ def callfunct(regex):
 	gvar['@cf']['dt'] = d['fn']
 	d['pyparse'] = opyp
 	var = ov
+	try:
+		var[fn]['dt']['head']['pyparse'] = hp
+	except:
+		pass
 def cfaatc(codedat='',data=[],tr=''):
 	global var
 	regex = data[0]
@@ -892,7 +914,11 @@ def deny(regex):
 		if 'req_pyparse' in nd['dt']['head']:
 			if 'pyparse' in nd['dt']['head']:
 				del var[n]['dt']['head']['pyparse']
-cl = {r'[ +\t\n]*(create[ +\t\n]+|)var(\[.*\]){0,1}[ +\t\n]*([a-zA-Z_&]+[^@|\n\t ]*)[ +\t\n]*[=]{0,1}[ +\t\n]*(.*)''':[cvar,'Create Var'],r'[ +\t\n]*create[ +\t\n]+funct[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\((.*)\)[ +\t\n]*\{[ +\t\n]*':[cfunct,'Create Function'],r'//.*//':[null,'Comment'],r'[ +\t\n]*pyparse[ +\t]+(.*)[ +\t\n]*':[pyparse,'Pyparse'],r'[ +\t\n]*([^@|\n\t (]*)[ +\t\n]*\((.*)\)[ +\t\n]*':[callfunct,'Call Function'],r'[ +\t\n]*return[ +\t\n]*([^\n]*)':[RETURN,'Return'],r'[ +\t\n]*(if|else[ +]if)[ +\t\n]*\((.*)\)[ +\t\n]*\{':[ifstate,'If Statement'],r'[ +\t\n]*else[ +\t\n]*\{':[els,'Else'],r'[ +\t\n]*foreach[ +\t\n]*\((.*)\)[ +\t\n]*\{':[foreach,'Foreach Loop'],r'[ +\t\n]*while[ +\t\n]*\((.*)\)[ +\t\n]*\{':[whileloop,'While Loop'],r'[ +\t\n]*when[ +\t\n]*\((.*)\)[ +\t\n]*\{':[when,'When Loop'],"":[null,'WhiteSpace'],r"[ +\t\n]*create[ +\t\n]+class[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\([ +\t\n]*(instance|static)[ +\t\n]*\)[ +\t\n]*\{":[cla,'Class'],r'[ +\t\n]*create ErrorHandler[ +\t\n]*\((.*)\)[ +\t\n]*\{':[errh,"Create Error Handler"],r'[ +\t\n]*global[ +\t\n]*(.*)[ +\t\n]*':[globalize,'Global'],r'[ +\t\n]*([^@|\n\t (]*)[ +\t\n]*\((.*)\)[ +\t\n]*\{[ +\t\n]*':[callfuncta,'Call Function With Attach'],r'[ +\t\n]*allow[ +\t\n]+([^ ]+)[ +\t\n]*:[ +\t\n]*([^ ]+)[ +\t\n]*':[allow,'Allow'],r'[ +\t\n]*deny[ +\t\n]+([^ ]+)[ +\t\n]*:[ +\t\n]*([^ ]+)[ +\t\n]*':[deny,'Deny']}
+def rsc(regex):
+	n = regex[1]
+	nd = var[n]
+	nd['dt'] = nd['dt'].replace(';','\;')
+cl = {r'[ +\t\n]*(create[ +\t\n]+|)var(\[.*\]){0,1}[ +\t\n]*([a-zA-Z_&]+[^@|\n\t ]*)[ +\t\n]*[=]{0,1}[ +\t\n]*(.*)''':[cvar,'Create Var'],r'[ +\t\n]*create[ +\t\n]+funct[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\((.*)\)[ +\t\n]*\{[ +\t\n]*':[cfunct,'Create Function'],r'//.*//':[null,'Comment'],r'[ +\t\n]*pyparse[ +\t]+(.*)[ +\t\n]*':[pyparse,'Pyparse'],r'[ +\t\n]*([^@|\n\t (]*)[ +\t\n]*\((.*)\)[ +\t\n]*':[callfunct,'Call Function'],r'[ +\t\n]*return[ +\t\n]*([^\n]*)':[RETURN,'Return'],r'[ +\t\n]*(if|else[ +]if)[ +\t\n]*\((.*)\)[ +\t\n]*\{':[ifstate,'If Statement'],r'[ +\t\n]*else[ +\t\n]*\{':[els,'Else'],r'[ +\t\n]*foreach[ +\t\n]*\((.*)\)[ +\t\n]*\{':[foreach,'Foreach Loop'],r'[ +\t\n]*while[ +\t\n]*\((.*)\)[ +\t\n]*\{':[whileloop,'While Loop'],r'[ +\t\n]*when[ +\t\n]*\((.*)\)[ +\t\n]*\{':[when,'When Loop'],"":[null,'WhiteSpace'],r"[ +\t\n]*create[ +\t\n]+class[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\([ +\t\n]*(instance|static)[ +\t\n]*\)[ +\t\n]*\{":[cla,'Class'],r'[ +\t\n]*create ErrorHandler[ +\t\n]*\((.*)\)[ +\t\n]*\{':[errh,"Create Error Handler"],r'[ +\t\n]*global[ +\t\n]*(.*)[ +\t\n]*':[globalize,'Global'],r'[ +\t\n]*([^@|\n\t (]*)[ +\t\n]*\((.*)\)[ +\t\n]*\{[ +\t\n]*':[callfuncta,'Call Function With Attach'],r'[ +\t\n]*allow[ +\t\n]+([^ ]+)[ +\t\n]*:[ +\t\n]*([^ ]+)[ +\t\n]*':[allow,'Allow'],r'[ +\t\n]*deny[ +\t\n]+([^ ]+)[ +\t\n]*:[ +\t\n]*([^ ]+)[ +\t\n]*':[deny,'Deny'],r'[ +\t\n]*rsc[ +\t\n]+([^\n \t]+)[ +\t\n]*':[rsc,'Replace Semicolon']}
 def parse(code):
 	code = code.replace('\\;','\\semi')
 	code = re.sub(r'\/\/[^/]*\/\/','',code,re.DOTALL)
@@ -946,3 +972,61 @@ def parse(code):
 				d['atcdat'] = []
 			else:
 				d['atcd'] += line+';'
+def console():
+	code = ''
+	ll = ''
+	while True:
+		try:
+			ic = input('>>> ')
+			if ic == 'rewrite_lastline':
+				code = code[::-1].replace(ll[::-1],'',1)[::-1]
+			elif ic == 'ccrll':
+				code = code[::-1].replace(ll[::-1],'',1)[::-1]
+			elif ic == 'ccexit':
+				print('')
+				return code
+			else:
+				if not re.match(r';[ +\t\n]*$',ic):
+					ic += ';'
+				ll = ic
+				code += ic
+		except KeyboardInterrupt:
+			print('')
+			return code
+def ic(asu=True):
+	if asu:
+		su()
+	gvar['@fn'] = {'type':'string','dt':bddir+'/pref/autoexec.bd','headers':{}}
+	gvar['@version'] = {'type':'string','dt':d['version'],'headers':{}}
+	gvar['@v'] = {'type':'string','dt':d['version'],'headers':{}}
+	gvar['@cf'] = {'type':'string','dt':'@main','headers':{}}
+	gvar['@license'] = {'type':'string','dt':open('LICENSE').read(),'headers':{}}
+	with open(bddir+'/pref/autoexec.bd') as data:
+		parse(data.read())
+	if len(sys.argv) >= 2:
+		fn = sys.argv[1]
+		d['cnt'] = 0
+		gvar['@fn'] = {'type':'string','dt':Path(fn).absolute(),'headers':{}}
+		parse(open(fn).read())
+	else:
+		d['cnt'] = 0
+		print(f'Bird Programming Language {d["version"]}\nCopyright (C) 2021\nType \'writeout(@license)\' to see license.')
+		gvar['@fn'] = {'type':'string','dt':'<input>','headers':{}}
+		parse(console())
+def replit(asu=True):
+	if asu:
+		su()
+	#1,000 Lines!!!!!!!! Bird is the BEST!!!
+	from os import chdir
+	print(f'Bird Programming Language {d["version"]}\nCopyright (C) 2021')
+	fn = input('Filename: ')
+	gvar['@fn'] = {'type':'string','dt':Path(fn).absolute(),'headers':{}}
+	gvar['@version'] = {'type':'string','dt':d['version'],'headers':{}}
+	gvar['@v'] = {'type':'string','dt':d['version'],'headers':{}}
+	gvar['@cf'] = {'type':'string','dt':'@main','headers':{}}
+	gvar['@license'] = {'type':'string','dt':open('LICENSE').read(),'headers':{}}
+	with open(bddir+'/pref/autoexec.bd') as data:
+		parse(data.read())
+	d['cnt'] = 0
+	chdir('tests/')
+	parse(open(fn).read())

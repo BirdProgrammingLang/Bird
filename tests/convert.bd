@@ -1,0 +1,9 @@
+create funct toString(data){
+	if(typeof(data) == 'number'){
+		pyparse `var['data']['type'] = 'string'
+var['data']['dt'] = str(var['data']['dt'])`;
+	};
+	return data;
+}[req_pyparse=true];
+allow toString: pyparse;
+writeout(typeof(toString(1)));

@@ -1,4 +1,5 @@
-from os import chdir
+from pathlib import Path
+'''from os import chdir
 from pathlib import Path
 from src.bird import parse,gvar,d
 global gvar
@@ -15,10 +16,13 @@ with open(bddir+'/pref/autoexec.bd') as data:
 	parse(data.read())
 d['cnt'] = 0
 chdir('tests/')
-parse(open(fn).read())
+parse(open(fn).read())'''
 '''gvar['@fn'] = {'type':'string','dt':''}
 var['dt'] = {'type':'class','dt':{'z':{'type':'string','dt':'v'}}}
 var['cls'] = {'type':'class','dt':{}}
 var = clsrec(['cls','a'],{'type':'string','dt':'test'},var)
 var = clsrec(['cls','z'],{'type':'number','dt':1},var)
 parse('using("stdio.bd");writeout(cls.a);writeout(cls.z)');'''
+from src.bird import replit,su
+su(str(Path.home()) + '/Bird-Lang')
+replit(False)

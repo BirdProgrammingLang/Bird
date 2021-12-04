@@ -1,0 +1,7 @@
+create funct wr(d,t){
+	writeout(d);
+	writeout(t);
+}[req_pyparse=true];
+allow wr: pyparse;
+writeout('a');
+writeout('b');

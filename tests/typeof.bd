@@ -1,5 +1,10 @@
 create funct typeof(item){
-	pyparse `var["data"] = {'type':'string','dt':var['item']['type']}`;
+	pyparse `var["data"] = {'type':'string','dt':var['item']['type'],'headers':{}}`;
 	return data;
-}[global=&pyparse=true];
-pyparse `print(gvar['typeof'])`
+}[global=&req_pyparse=true];
+allow typeof: pyparse;
+create funct output(){
+pyparse `print(gvar['typeof'])`;
+}[req_pyparse=true];
+allow output: pyparse;
+output();
