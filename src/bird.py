@@ -86,7 +86,7 @@ def su(home=str(Path.home())):
 	gvar['dirsarray'] = {'dt': {'bird': {'type': 'string', 'dt': bddir+'/'}, 'lib': {'type': 'string', 'dt': f'{bddir}/lib/'}, 'package': {'type': 'string', 'dt': f'{bddir}/package/'}}, 'type': 'associative','headers':{}}
 	var = gvar
 	classes = {}
-	d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{},'clsd':{},'fn':'@main','tb':[],'pyparse':False,'version':'1.1.0 Pre-Release'}
+	d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{},'clsd':{},'fn':'@main','tb':[],'pyparse':False,'version':'1.1.0'}
 def null(*args,**kwargs):
 	pass
 def error(n,t):
@@ -1000,7 +1000,7 @@ def ic(asu=True):
 	gvar['@version'] = {'type':'string','dt':d['version'],'headers':{}}
 	gvar['@v'] = {'type':'string','dt':d['version'],'headers':{}}
 	gvar['@cf'] = {'type':'string','dt':'@main','headers':{}}
-	gvar['@license'] = {'type':'string','dt':open('LICENSE').read(),'headers':{}}
+	gvar['@license'] = {'type':'string','dt':open(bddir+'/LICENSE').read(),'headers':{}}
 	with open(bddir+'/pref/autoexec.bd') as data:
 		parse(data.read())
 	if len(sys.argv) >= 2:
