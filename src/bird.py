@@ -1024,7 +1024,7 @@ def replit(asu=True):
 	gvar['@version'] = {'type':'string','dt':d['version'],'headers':{}}
 	gvar['@v'] = {'type':'string','dt':d['version'],'headers':{}}
 	gvar['@cf'] = {'type':'string','dt':'@main','headers':{}}
-	gvar['@license'] = {'type':'string','dt':open('LICENSE').read(),'headers':{}}
+	gvar['@license'] = {'type':'string','dt':open(bddir+'/LICENSE').read(),'headers':{}}
 	with open(bddir+'/pref/autoexec.bd') as data:
 		parse(data.read())
 	d['cnt'] = 0
