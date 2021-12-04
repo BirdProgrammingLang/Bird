@@ -608,6 +608,10 @@ def callfunct(regex):
 	d['pyparse'] = opyp
 	var = ov
 	try:
+		var[fn]['type'] = 'funct'
+	except: 
+		pass
+	try:
 		var[fn]['dt']['head']['pyparse'] = hp
 	except:
 		pass
@@ -638,8 +642,7 @@ def cfaatc(codedat='',data=[],tr=''):
 	else:
 		dat = var[fn]
 	if not dat['type'] == 'funct':
-		#error
-		pass
+		error('TypeError',f'Cannot call uncallable type: "{dat["type"]}".')
 	for i,n in dat['dt'].items():
 		dat[i] = n
 	att = {}
@@ -653,7 +656,7 @@ def cfaatc(codedat='',data=[],tr=''):
 		item = item.replace('\\comma',',')
 		item = typeify(item)
 		attl.append(item)
-	attl.append(['funct',{'attrib': {'': ['', '']}, 'code': codedat},{}])
+	attl.append(['funct',{'attrib': {'': ['', '']}, 'code': codedat,'head':{'cfa':True}},{}])
 	for i,n in att.items():
 		try:
 			attl[cnt]
@@ -679,8 +682,14 @@ def cfaatc(codedat='',data=[],tr=''):
 	var = nvar
 	opyp = d['pyparse']
 	if 'pyparse' in dat['head']:
+		hp = dat['head']['pyparse']
 		if dat['head']['pyparse'] == 'true':
 			d['pyparse'] = True
+		else:
+			d['pyparse'] = False
+	else:
+		d['pyparse'] = False
+		hp = 'false'
 	parse(dat['code'])
 	d['funct'] = odf
 	d['cnt'] = ocnt
@@ -689,6 +698,14 @@ def cfaatc(codedat='',data=[],tr=''):
 	gvar['@cf']['dt'] = d['fn']
 	d['pyparse'] = opyp
 	var = ov
+	'''try:
+		var[fn]['type'] = 'funct'
+	except: 
+		pass'''
+	try:
+		var[fn]['dt']['head']['pyparse'] = hp
+	except:
+		pass
 def callfuncta(regex):
 	d['ecnt'] = 1
 	d['atcdat'] = [regex,[]]

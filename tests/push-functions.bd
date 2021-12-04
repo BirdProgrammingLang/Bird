@@ -1,8 +1,9 @@
 using('stdio.bd');
 //Now Called Push Functions//
-create funct test(test,fn){
-	fn();
-};
+create funct test(tst,fdn){
+	fdn();
+}[req_pyparse=true];
+allow test:pyparse;
 test('YAY'){
 	writeout('YEET');
 };
