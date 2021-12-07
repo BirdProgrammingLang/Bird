@@ -14,6 +14,7 @@ cd tmp
 Then run the installer using `sudo sh bird.sh`.
 ### MacOS and anything else
 *Notice: I don't know if the linux method will work here. Try that before this. If it does, please let me know!*
+
 *To use Bird on these operating systems, you must have at least Python 3.6 installed.*
 
 1. Download the source code from [this link](https://github.com/mathstar13/Bird/releases/tag/v1.1.0) and extract it.
