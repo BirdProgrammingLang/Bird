@@ -5,7 +5,7 @@ Official repository for the Bird Programming Language.
 To install on Windows, download the exe from [here](https://github.com/mathstar13/Bird/releases/tag/v1.1.0).
 ### Linux
 To install on Linux, download bird-\[version (ex. 1.1.0)\]-linux.tar.gz from [here](https://github.com/mathstar13/Bird/releases/tag/v1.1.0).
-After downloading, unzip it using the folllowing commands following:
+After downloading, unzip it using the following commands:
 ```
 mkdir tmp
 tar -xzvf bird-\[version (ex. 1.1.0)\]-linux.tar.gz tmp/
