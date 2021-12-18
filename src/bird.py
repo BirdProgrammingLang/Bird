@@ -88,8 +88,8 @@ def su(home=str(Path.home())):
 	gvar['dirsarray'] = {'dt': {'bird': {'type': 'string', 'dt': bddir+'/'}, 'lib': {'type': 'string', 'dt': f'{bddir}/lib/'}, 'package': {'type': 'string', 'dt': f'{bddir}/package/'}}, 'type': 'associative','headers':{}}
 	var = gvar
 	classes = {}
-	typedef = {'[ +\n\t]*test[ +\n\t]+(one|two)[ +\n\t]*':['writeout("Test Type!");pyparse `d["ctype"] = {"type":"string","dt":"@{txt}","headers":{}}`','test']}
-	d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{},'clsd':{},'fn':'@main','tb':[],'pyparse':False,'version':'1.1.0','ctype':{'type':'null','dt':'null','headers':{}},'cfdat':0}
+	typedef = {}
+	d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{},'clsd':{},'fn':'@main','tb':[],'pyparse':False,'version':'1.1.1','ctype':{'type':'null','dt':'null','headers':{}},'cfdat':0}
 def null(*args,**kwargs):
 	pass
 def error(n,t):
