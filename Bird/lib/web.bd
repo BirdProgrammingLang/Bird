@@ -1,0 +1,13 @@
+create funct open(url,browser='defalt'){
+	if (browser == 'defalt'){
+		pyparse `if os.name == 'nt':
+	os.system('explorer @{url}')
+else:
+	os.system('open @{url}')`;
+	};
+}[req_pyparse=true];
+create funct read(url){
+	pyparse `dt = urllib3.PoolManager().request('GET', '''@{url}''')
+var['data'] = {'type':'string','dt':str(dt.data.decode('utf-8')),'headers':{}}`;
+	return data;
+}[req_pyparse=true];

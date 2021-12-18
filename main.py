@@ -1,4 +1,3 @@
-from pathlib import Path
 '''from os import chdir
 from pathlib import Path
 from src.bird import parse,gvar,d
@@ -23,6 +22,7 @@ var['cls'] = {'type':'class','dt':{}}
 var = clsrec(['cls','a'],{'type':'string','dt':'test'},var)
 var = clsrec(['cls','z'],{'type':'number','dt':1},var)
 parse('using("stdio.bd");writeout(cls.a);writeout(cls.z)');'''
+from pathlib import Path
 from src.bird import replit,su
 su(str(Path.home()) + '/Bird-Lang')
 replit(False)

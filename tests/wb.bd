@@ -1,0 +1,2 @@
+var web = using('web.bd',false);
+writeout(web.read('http://httpbin.org/robots.txt'));

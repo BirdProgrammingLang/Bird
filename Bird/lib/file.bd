@@ -1,5 +1,5 @@
 create funct dir_exists(dn){
-	pyparse `var['dt'] = {'type':'bool','dt':str(Path('@{dn}').is_dir())}`;
+	pyparse `var['dt'] = {'type':'bool','dt':str(Path('@{dn}').is_dir()),'headers':{}}`;
 	if(dt){
 		return B1;
 	};
@@ -8,7 +8,7 @@ create funct dir_exists(dn){
 	}
 }[global=&req_pyparse=true];
 create funct file_exists(name){
-	pyparse `var['dt'] = {'type':'bool','dt':str(Path('''@{name}''').is_file())}`;
+	pyparse `var['dt'] = {'type':'bool','dt':str(Path('''@{name}''').is_file()),'headers':{}}`;
 	if(dt){
 		return true;
 	};

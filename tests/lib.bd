@@ -1,0 +1,2 @@
+using('base64.bd');
+writeout(decode('dGVzdA=='));

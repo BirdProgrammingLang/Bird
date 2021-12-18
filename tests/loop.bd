@@ -1,18 +1,8 @@
 using('stdio.bd');
-using('math.bd');
 //loops tested: foreach, while, when//
-//create class test(static){
-	create funct yay(){
-		writeout('a');
-	};
-};
-foreach(n,item of test){
-	writeout(n);
-	item();
-};//
-create var n = 0;
-while(n<5){
-	create var n = math(`@{n}+1`);
+create var n = 'nope';
+while(n == 'nope'){
+	var n = writein('Text: ');
 	writeout(n);
 };
 //Proposed:

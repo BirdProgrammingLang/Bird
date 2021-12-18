@@ -1,0 +1,9 @@
+using('os.bd');
+using('timeing.bd');
+clear();
+var frames = {1:'a',2:'b',3:'ab'};
+foreach(item in frames){
+writeout(item);
+delay(1000);
+clear();
+};

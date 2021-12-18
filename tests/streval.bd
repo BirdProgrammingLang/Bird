@@ -2,7 +2,10 @@ create funct streval(string){
 	pyparse `tdt = typeify(""" @{string} """)
 var['dt'] = {"type":tdt[0],"dt":tdt[1],"headers":tdt[2]}`;
 	return dt;
-}[pyparse=true];
-using('stdio.bd');
-var d = streval(`"Hello"`);
-writeout(typeof(d));
+}[req_pyparse=true];
+allow streval: pyparse;
+create funct output(){
+pyparse `print(var['streval'])`;
+}[req_pyparse=true];
+allow output:pyparse;
+output();

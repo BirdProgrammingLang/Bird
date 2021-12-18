@@ -1,0 +1,11 @@
+//create type typ('[ +\n\t]*typ[ +\n\t]*(.*)[ +\n\t]*':@){
+writeout(@1);
+pyparse `d['ctype']['dt'] = ''`;
+};
+writeout(typ test);//
+// Syntax: 
+create type (type name)  ( (regex) ) {
+(code)
+};
+//
+create type 

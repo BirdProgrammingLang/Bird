@@ -1,0 +1,6 @@
+create funct delay(milliseconds){
+var milliseconds = milliseconds/1000;
+pyparse `import time
+time.sleep(@{milliseconds})`;
+return milliseconds*1000;
+}[req_pyparse=true];

@@ -1,8 +1,9 @@
-//using('string_encoding.bd');//
+//using('string_encoding.bd');
 using('stdio.bd');
-//create var dt binary_encode('Hello World!');
+create var dt binary_encode('Hello World!');
 writeout(dt);
-writeout(binary_decode(dt));//
-//Use string.encode('binary').//
+writeout(binary_decode(dt));
+Use string.encode('binary').
 writeout('test'.encode('binary'));
-//writeout('\ttest\n\tv\nyeet');//
+writeout('\ttest\n\tv\nyeet');//
+writeout('test'.encode('binary'));

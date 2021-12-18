@@ -1,4 +1,4 @@
-create class test (static){
+//create class test (static){
 	create var test 'yay';
 	create funct t(){
 		writeout('yeet');
@@ -7,4 +7,15 @@ create class test (static){
 		create var te = 'yay';
 	};
 };
-writeout(test.test)
+writeout(test.test)//
+create class ta(instance){
+	create funct fn(){
+		writeout(this.data);
+		var this.data = 'yay';
+	};
+	create funct initiate(){
+	var this.data = 'test';
+	};
+};
+var t = create ta();
+t.fn()
