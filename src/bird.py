@@ -5,9 +5,11 @@ import re
 from ast import literal_eval as le
 import threading
 import random
+import argparse
 import base64
 import os
 import urllib3
+import json
 def ap(text):
 	atc = False
 	txt = []
@@ -78,6 +80,7 @@ def su(home=str(Path.home())):
 	global bddir
 	global temp
 	global gvar
+	global opt
 	global var
 	global classes
 	global d
@@ -89,7 +92,7 @@ def su(home=str(Path.home())):
 	var = gvar
 	classes = {}
 	typedef = {}
-	d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{},'clsd':{},'fn':'@main','tb':[],'pyparse':False,'version':'1.1.1','ctype':{'type':'null','dt':'null','headers':{}},'cfdat':0}
+	d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{},'clsd':{},'fn':'@main','tb':[],'pyparse':False,'version':'1.1.1','ctype':{'type':'null','dt':'null','headers':{}},'cfdat':0,'c':[],'gp':False}
 def null(*args,**kwargs):
 	pass
 def error(n,t):
@@ -173,6 +176,20 @@ def set_interval(func,sec=0,reg=[]):
     t.start()
     d['interval'][idnt] = t
     return idnt
+def re_to_list(dat):
+	reml = []
+	cnt = 0
+	while True:
+		try:
+			reml.append(dat[cnt])
+		except:
+			break
+		cnt += 1
+	return reml
+def log(data):
+	opt = json.loads(open(f'{bddir}/pref/options.txt').read())
+	if opt['logging']['log']:
+		open(opt['logging']['logfile'],'a').write(data)
 def typeify(txt,qt=False,err=True,ignore=False):
 	txt = re.match(r'^[ +\n\t]*(.*)[ +\n\t]*$',txt,re.DOTALL)[1]
 	h = {}
@@ -572,7 +589,7 @@ def cfunct(regex):
 		gvar[regex[1]]['dt'] = {'attrib':args,'code':value,'head':head}
 		gvar[regex[1]]['type'] = 'funct'''
 def pyparse(regex):
-	if d['pyparse']:
+	if d['pyparse'] or d['gp']:
 		exec(typeify(regex[1],ignore=True)[1])
 	else:
 		error('PermissionError','Function does not have Pyparse Permissions.')
@@ -998,6 +1015,9 @@ def ccmd(regex):
 	d['atcdat'] = regex
 	d['atc'] = ccatc
 cl = {r'[ +\t\n]*(create[ +\t\n]+|)var(\[.*\]){0,1}[ +\t\n]*([a-zA-Z_&]+[^@|\n\t ]*)[ +\t\n]*[=]{0,1}[ +\t\n]*(.*)''':[cvar,'Create Var'],r'[ +\t\n]*create[ +\t\n]+funct[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\((.*)\)[ +\t\n]*\{[ +\t\n]*':[cfunct,'Create Function'],r'//.*//':[null,'Comment'],r'[ +\t\n]*pyparse[ +\t]+(.*)[ +\t\n]*':[pyparse,'Pyparse'],r'[ +\t\n]*([^@|\n\t (]*)[ +\t\n]*\((.*)\)[ +\t\n]*':[callfunct,'Call Function'],r'[ +\t\n]*return[ +\t\n]*([^\n]*)':[RETURN,'Return'],r'[ +\t\n]*(if|else[ +]if)[ +\t\n]*\((.*)\)[ +\t\n]*\{':[ifstate,'If Statement'],r'[ +\t\n]*else[ +\t\n]*\{':[els,'Else'],r'[ +\t\n]*foreach[ +\t\n]*\((.*)\)[ +\t\n]*\{':[foreach,'Foreach Loop'],r'[ +\t\n]*while[ +\t\n]*\((.*)\)[ +\t\n]*\{':[whileloop,'While Loop'],r'[ +\t\n]*when[ +\t\n]*\((.*)\)[ +\t\n]*\{':[when,'When Loop'],r"^[ +\t\n]*$":[null,'WhiteSpace'],r"[ +\t\n]*create[ +\t\n]+class[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\([ +\t\n]*(instance|static)[ +\t\n]*\)[ +\t\n]*\{":[cla,'Class'],r'[ +\t\n]*create ErrorHandler[ +\t\n]*\((.*)\)[ +\t\n]*\{':[errh,"Create Error Handler"],r'[ +\t\n]*global[ +\t\n]*(.*)[ +\t\n]*':[globalize,'Global'],r'[ +\t\n]*([^@|\n\t (]*)[ +\t\n]*\((.*)\)[ +\t\n]*\{[ +\t\n]*':[callfuncta,'Call Function With Attach'],r'[ +\t\n]*allow[ +\t\n]+([^ ]+)[ +\t\n]*:[ +\t\n]*([^ ]+)[ +\t\n]*':[allow,'Allow'],r'[ +\t\n]*deny[ +\t\n]+([^ ]+)[ +\t\n]*:[ +\t\n]*([^ ]+)[ +\t\n]*':[deny,'Deny'],r'[ +\t\n]*rsc[ +\t\n]+([^\n \t]+)[ +\t\n]*':[rsc,'Replace Semicolon'],r'[ +\n\t]*create[ +\n\t]+type[ +\n\t]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\n\t]*\((.*)\)[ +\n\t]*\{[ +\n\t]*':[ctype,'Custom Type Creator'],r'[ +\n\t]*create[ +\n\t]+command[ +\n\t]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\n\t]*\((.*)\)[ +\n\t]*\{[ +\n\t]*':[ccmd,'Custom Command Creator']}
+ccl = {}
+for item,dt in cl.items():
+	ccl[dt[1]] = dt[0]
 def parse(code):
 	code = code.replace('\\;','\\semi')
 	code = re.sub(r'\/\/[^/]*\/\/','',code,re.DOTALL)
@@ -1022,6 +1042,11 @@ def parse(code):
 								nels = True
 							if nels and not funct[1] == 'Else':
 								d['els'] = False
+							log(funct[1]+'\n')
+							if d['fn'] == '@main':
+								clvd = [funct[1]]
+								clvd.append(re_to_list(re.match('^'+reg+'$',line,re.DOTALL)))
+								d['c'].append(clvd)
 							if type(funct[0]) == str:
 								txt = line
 								fn = funct
@@ -1080,6 +1105,9 @@ def parse(code):
 				d['atcdat'] = []
 			else:
 				d['atcd'] += line+';'
+def uncompile(cc):
+	cc = le(str(cc))
+	
 def console():
 	code = ''
 	ll = ''
@@ -1102,25 +1130,46 @@ def console():
 			print('')
 			return code
 def ic(asu=True):
+	parser = argparse.ArgumentParser()
+	parser.add_argument('filename', type=str, nargs='?')
+	parser.add_argument('-a', action='store_true')
+	parser.add_argument('--autoexec', action='store_true')
+	parser.add_argument('-c', action='store_true')
+	parser.add_argument('-pp', action='store_true')
+	parser.add_argument('-p', action='store_true')
+	parser.add_argument('--pyparse', action='store_true')
+	parser.add_argument('--globalpyparse', action='store_true')
+	args = parser.parse_args()
 	if asu:
 		su()
-	gvar['@fn'] = {'type':'string','dt':bddir+'/pref/autoexec.bd','headers':{}}
-	gvar['@version'] = {'type':'string','dt':d['version'],'headers':{}}
-	gvar['@v'] = {'type':'string','dt':d['version'],'headers':{}}
-	gvar['@cf'] = {'type':'string','dt':'@main','headers':{}}
-	gvar['@license'] = {'type':'string','dt':open(bddir+'/LICENSE').read(),'headers':{}}
-	with open(bddir+'/pref/autoexec.bd') as data:
-		parse(data.read())
-	if len(sys.argv) >= 2:
-		fn = sys.argv[1]
+	if args.p or args.pyparse:
+		d['pyparse'] = True
+	if args.pp or args.globalpyparse:
+		d['gp'] = True
+	if not args.a and not args.autoexec:
+		gvar['@fn'] = {'type':'string','dt':bddir+'/pref/autoexec.bd','headers':{}}
+		gvar['@version'] = {'type':'string','dt':d['version'],'headers':{}}
+		gvar['@v'] = {'type':'string','dt':d['version'],'headers':{}}
+		gvar['@cf'] = {'type':'string','dt':'@main','headers':{}}
+		gvar['@license'] = {'type':'string','dt':open(bddir+'/LICENSE').read(),'headers':{}}
+		with open(bddir+'/pref/autoexec.bd') as data:
+			parse(data.read())
+	if not args.c:
+		if args.filename:
+			fn = args.filename
+			d['cnt'] = 0
+			gvar['@fn'] = {'type':'string','dt':Path(fn).absolute(),'headers':{}}
+			parse(open(fn).read())
+		else:
+			d['cnt'] = 0
+			print(f'Bird Programming Language {d["version"]}\nCopyright (C) 2021\nType \'writeout(@license)\' to see license.')
+			gvar['@fn'] = {'type':'string','dt':'<input>','headers':{}}
+			parse(console())
+	else:
+		fn = args.filename
 		d['cnt'] = 0
 		gvar['@fn'] = {'type':'string','dt':Path(fn).absolute(),'headers':{}}
-		parse(open(fn).read())
-	else:
-		d['cnt'] = 0
-		print(f'Bird Programming Language {d["version"]}\nCopyright (C) 2021\nType \'writeout(@license)\' to see license.')
-		gvar['@fn'] = {'type':'string','dt':'<input>','headers':{}}
-		parse(console())
+		uncompile(open(fn).read())
 def replit(asu=True):
 	if asu:
 		su()
@@ -1136,3 +1185,4 @@ def replit(asu=True):
 	d['cnt'] = 0
 	chdir('tests/')
 	parse(open(fn).read())
+	print(d['c'])

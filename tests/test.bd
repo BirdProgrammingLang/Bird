@@ -1,2 +1,5 @@
-using('stdio.bd');
-writeout(@fn);
+create funct t(){
+pyparse 'print("a")';
+};
+pyparse 'print("a")';
+t();

@@ -1,0 +1,6 @@
+{
+	"logging":
+	{
+		"log":false,"logfile":"bird.log"
+	}
+}

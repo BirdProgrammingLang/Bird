@@ -1,0 +1,4 @@
+create funct fn(){
+typeof('test');
+};
+fn();
