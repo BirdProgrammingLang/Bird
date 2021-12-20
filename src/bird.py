@@ -1139,9 +1139,13 @@ def ic(asu=True):
 	parser.add_argument('-p', action='store_true')
 	parser.add_argument('--pyparse', action='store_true')
 	parser.add_argument('--globalpyparse', action='store_true')
+	parser.add_argument('--bddir', type=str)
 	args = parser.parse_args()
 	if asu:
-		su()
+		if args.bddir:
+			su(args.bddir)
+		else:
+			su()
 	if args.p or args.pyparse:
 		d['pyparse'] = True
 	if args.pp or args.globalpyparse:
@@ -1185,4 +1189,3 @@ def replit(asu=True):
 	d['cnt'] = 0
 	chdir('tests/')
 	parse(open(fn).read())
-	print(d['c'])
