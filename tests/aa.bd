@@ -1,7 +1,8 @@
-//create funct output(d){
+create funct output(d){
 	using('stdio.bd');
 	writeout(d.item(1));
 }[req_pyparse=true];
 allow output: pyparse;
-output(['z',['b','c']]);//
-writeout(['a','b','c'])
+output(['z','b','c']);
+writeout(['a','b','c']);
+writeout({'a':['a','b']});

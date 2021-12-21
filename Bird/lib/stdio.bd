@@ -1,4 +1,5 @@
 create funct writeout(text,end='\n':@,sep=' ',flush='False'){
+	var text = \string\text;
 	pyparse `text = r'''@{text}'''.replace(r"\'\'\'","'''")
 print(text,end='@{end}',sep=r'@{sep}',flush=@{flush})`;
 }[req_pyparse=true];

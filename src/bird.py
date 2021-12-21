@@ -4,13 +4,14 @@ from pathlib import Path
 import re
 from ast import literal_eval as le
 import threading
+import importlib.util
 import random
 import argparse
 import base64
 import os
 import urllib3
 import json
-def ap(text):
+def ap(text,cchar=','):
 	atc = False
 	txt = []
 	for item in text:
@@ -70,7 +71,7 @@ def ap(text):
 				text += char
 			else:
 				text += char
-		elif char == ',' and atc:
+		elif char == cchar and atc:
 			text += '\\c'
 		else:
 			text += char
@@ -92,7 +93,7 @@ def su(home=str(Path.home())):
 	var = gvar
 	classes = {}
 	typedef = {}
-	d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{},'clsd':{},'fn':'@main','tb':[],'pyparse':False,'version':'1.1.1','ctype':{'type':'null','dt':'null','headers':{}},'cfdat':0,'c':[],'gp':False}
+	d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{},'clsd':{},'fn':'@main','tb':[],'pyparse':False,'version':'1.1.1','ctype':{'type':'null','dt':'null','headers':{}},'cfdat':0,'c':[],'gp':False,'bddir':bddir,'lcd':False}
 def null(*args,**kwargs):
 	pass
 def error(n,t):
@@ -122,8 +123,8 @@ def typedat(dt):
 		dat = str(dt[1]).replace(';','\;')
 		return {'code':{'type':'string','dt':dt[1]['code']},'allow':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'p': ['', '']}, 'code': "pyparse 'var['f'] = {'type':'"+dt[0]+"','dt':"+dat+",'headers':"+str(dt[2])+"}';if(p == 'pyparse'){;pyparse\t`if 'req_pyparse' in var['f']['dt']['head']:\n\tvar['f']['dt']['head']['pyparse'] = 'true'\n`;};return f", 'head': {'pyparse': 'true'}}}}
 	elif typ == 'array':
-		dat = dt[1].replace(";","\\;")
-		return {'item':{'type': 'funct', 'dt': {'attrib': {'cnt': ['', '']}, 'code': f'create var arr {dat};create var data \'notdefined\';pyparse `if var[\'arr\'][\'type\'] == \'associative\' or var[\'arr\'][\'type\'] == \'array\':\n    if var[\'cnt\'][\'type\'] == \'number\':\n        var[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n    var[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']][\'dt\']\nelse:\n\tif var[\'cnt\'][\'type\'] == \'number\':\n\t\tvar[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n\tvar[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']]`;return data', 'head': {'pyparse': 'true'}}},'length':{'type':'number','dt':len(dt[1])-1}}
+		dat = str(dt[1]).replace(";","\\;")
+		return {'item':{'type': 'funct', 'dt': {'attrib': {'cnt': ['', '']}, 'code': f'pyparse `var["arr"] = {{"type":"array","dt":{dat},"headers":{{}}}}`;create var data \'notdefined\';pyparse `if var[\'arr\'][\'type\'] == \'associative\' or var[\'arr\'][\'type\'] == \'array\':\n    if var[\'cnt\'][\'type\'] == \'number\':\n        var[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n    var[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']][\'dt\']\nelse:\n\tif var[\'cnt\'][\'type\'] == \'number\':\n\t\tvar[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n\tvar[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']]`;return data', 'head': {'pyparse': 'true'}}},'length':{'type':'number','dt':len(dt[1])-1}}
 	elif typ == 'associative':
 		tl = {'item':{'type': 'funct', 'dt': {'attrib': {'cnt': ['', ''],'arr':['associative',dt[1]]}, 'code': f'create var data \'notdefined\';pyparse `if var[\'arr\'][\'type\'] == \'associative\' or var[\'arr\'][\'type\'] == \'array\':\n    if var[\'cnt\'][\'type\'] == \'number\':\n        var[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n    var[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']][\'dt\']\nelse:\n\tif var[\'cnt\'][\'type\'] == \'number\':\n\t\tvar[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n\tvar[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']]`;return data', 'head': {'pyparse': 'true'}}}}
 		for n,v in dt[1].items():
@@ -306,12 +307,12 @@ def typeify(txt,qt=False,err=True,ignore=False):
 	elif re.match(r'^[ \t\n]*$',txt):
 		ty = 'null'
 		txt = 'null'
-		h = {}
+		h = {'null':'ws'}
 		return [ty,txt,{}]
 	elif re.match(r'^[ \t\n+]*null[ \t\n+]*$',txt,re.DOTALL):
 		ty = 'null'
 		txt = 'null'
-		h = {}
+		h = {'null':'null'}
 		return [ty,txt,h]
 	elif re.match(r'^[ \t\n+]*create[ \t\n+]+([a-zA-Z_]+[^@|\n\t (]*)[ \t\n+]*\((.*)\)',txt,re.DOTALL):
 		dat = re.match(r'^[ \t\n+]*create[ \t\n+]+([a-zA-Z_]+[^@|\n\t (]*)[ \t\n+]*\((.*)\)',txt,re.DOTALL)
@@ -345,14 +346,16 @@ def typeify(txt,qt=False,err=True,ignore=False):
 		else:
 			return ['bool','True',{}]
 	elif re.match(r'^[ +\t\n]*(\[.*\])[ +\t\n]*$',txt,re.DOTALL):
-		it = str(le(re.match(r'^[ +\t\n]*(\[.*\])[ +\t\n]*$',txt,re.DOTALL)[1])[0])
-		itd = ap(it.replace('[','',1)[::-1].replace(']','',1)[::-1])[::-1]+'['
-		it = itd[::-1]+']'
+		#it = str(le(re.match(r'^[ +\t\n]*(\[.*\])[ +\t\n]*$',txt,re.DOTALL)[1])[0])
+		it = txt
+		itd = ap(it.replace('[','',1)[::-1].replace(']','',1)[::-1])[::-1]
+		it = itd[::-1]
 		it = it.replace('\\c','\\comma')
 		l = []
-		for item in re.match(r'^[ +\t\n]*\[(.*)\][ +\t\n]*$',it,re.DOTALL)[1].split(','):
+		for item in re.split('[ +\t\n]*,[ +\t\n]*',it):
 			item = item.replace('\\comma',',')
-			l.append({'type':typeify(item)[0],'dt':typeify(item)[1]})
+			t = typeify(item)
+			l.append({'type':t[0],'dt':t[1],'headers':t[2]})
 		txt = l
 		ty = 'array'
 		return [ty,txt,h]
@@ -362,17 +365,18 @@ def typeify(txt,qt=False,err=True,ignore=False):
 		l = {}
 		for item in dt:
 			dat = re.match('(.*)[:$](.*)',item,re.DOTALL)
-			l[typeify(dat[1])[1]] = {'type':typeify(dat[2])[0],'dt':typeify(dat[2])[1]}
+			l[typeify(dat[1])[1]] = {'type':typeify(dat[2])[0],'dt':typeify(dat[2])[1],'headers':{}}
 		txt = l
 		ty = 'associative'
+		h = {}
 	elif re.match(r'^[ +\t\n]*{(.*)}[ +\t\n]*$',txt,re.DOTALL):
 		dt = re.match(r'^[ +\t\n]*{(.*)}[ +\t\n]*$',txt,re.DOTALL)
-		dat = dt[1].split(',')
-		dt = re.split(r'[ +\t\n]*[,][ +\t\n]*',dt[1])
+		dat = ap(dt[1]).replace('\\c','\\comma').split(',')
+		dt = re.split(r'[ +\t\n]*[,][ +\t\n]*',ap(dt[1]).replace('\\c','\\comma'))
 		l = {}
 		for item in dt:
 			dat = re.match('(.*)[:](.*)',item,re.DOTALL)
-			l[typeify(dat[1])[1]] = {'type':typeify(dat[2])[0],'dt':typeify(dat[2])[1],'headers':typeify(dat[2])[2]}
+			l[typeify(dat[1].replace('\\comma',','))[1]] = {'type':typeify(dat[2].replace('\\comma',','))[0],'dt':typeify(dat[2].replace('\\comma',','))[1],'headers':typeify(dat[2].replace('\\comma',','))[2]}
 		txt = l
 		ty = 'associative'
 		h = {}
@@ -417,12 +421,14 @@ def typeify(txt,qt=False,err=True,ignore=False):
 						txt.append({'type':'string','dt':char,'headers':{}})
 					ty = 'array'
 					h = {}
+			elif typ == 'storage':
+				return ['binary',binary_encode(str(dat[1])),{}]
 			else:
 				error('ConvertError',f'Unknown Type: {typ}')
-	elif re.match(r'^[ \t\n+]*(true|false|B1|B0)[ \t\n+]*$',txt):
-		dt = re.match(r'[ \t\n+]*(true|false|B1|B0)[ \t\n+]*',txt)
+	elif re.match(r'^[ \t\n+]*(true|false|B1|B0|True|False)[ \t\n+]*$',txt):
+		dt = re.match(r'[ \t\n+]*(true|false|B1|B0|True|False)[ \t\n+]*',txt)
 		ty = 'bool'
-		if dt[1] == 'true' or dt[1] == 'B1':
+		if dt[1].lower() == 'true' or dt[1] == 'B1':
 			txt = 'True'
 		else:
 			txt = 'False'
@@ -1107,8 +1113,86 @@ def parse(code):
 				d['atcd'] += line+';'
 def uncompile(cc):
 	cc = le(str(cc))
-	
-def console():
+	if d['ecnt'] == 0:
+			if not d['break']:
+				if d['run']:
+					d['ep'] = line
+					line = line.replace('\\semi',';')
+					for n,v in gvar.items():
+						if not n in var:
+							var[n] = v
+					fnd = False
+					for reg,funct in cl.items():
+						if re.match('^'+reg+'$',line,re.DOTALL):
+							if funct[1] == 'If Statement':
+								nels = True
+							if nels and not funct[1] == 'Else':
+								d['els'] = False
+							log(funct[1]+'\n')
+							'''if d['fn'] == '@main':
+								clvd = [funct[1]]
+								clvd.append(re_to_list(re.match('^'+reg+'$',line,re.DOTALL)))
+								d['c'].append(clvd)
+							if type(funct[0]) == str:
+								txt = line
+								fn = funct
+								dat = re.match('^'+reg+'$',txt,re.DOTALL)
+								reml = []
+								cnt = 0
+								while True:
+									try:
+										reml.append(dat[cnt])
+									except:
+										break
+									cnt += 1
+								name = fn[1]
+								fn = fn[0]
+								v = {'txt':{'type':'string','dt':txt,'headers':{}}}
+								cnt = 0
+								for item in reml:
+									v[f'@{str(cnt)}'] = {'type':'string','headers':{},'dt':item}
+									cnt += 1
+								ocfd = d['cfdat']
+								d['cfdat'] = 0
+								cf(fn,v,{'pyparse':'true'})
+								dat = d['cfdat']
+								d['cfdat'] = ocfd
+								if dat == 1:
+									return 'end'
+								fnd = True
+								break
+							else:
+								dat = funct[0](re.match('^'+reg+'$',line,re.DOTALL))
+								if dat == 'close':
+									return 'end'
+								fnd = True
+								break'''
+							
+					if not fnd:
+						error('SyntaxError',f'No Such Command, {line}.')
+					if not d['funct']:
+						for item in temp:
+							del var[item]
+				d['cnt'] += 1
+			else:
+				d['break'] = False
+				break
+		else:
+			d['ep'] = line
+			d['cnt'] += 1
+			line = line.replace('\\semi',';')
+			for sb in re.findall(r'{',line):
+				d['ecnt'] += 1
+			for eb in re.findall(r'}',line):
+				d['ecnt'] -= 1
+			if d['ecnt'] == 0:
+				d['atc'](d['atcd'][::-1].replace(';','',1)[::-1],d['atcdat'],line)
+				d['atcd'] = ''
+				d['atc'] = null
+				d['atcdat'] = []
+			else:
+				d['atcd'] += line+';'
+'''def console():
 	code = ''
 	ll = ''
 	while True:
@@ -1128,7 +1212,7 @@ def console():
 				code += ic
 		except KeyboardInterrupt:
 			print('')
-			return code
+			return code'''
 def ic(asu=True):
 	parser = argparse.ArgumentParser()
 	parser.add_argument('filename', type=str, nargs='?')
@@ -1142,6 +1226,7 @@ def ic(asu=True):
 	parser.add_argument('--bddir', type=str)
 	args = parser.parse_args()
 	if asu:
+		# Auto Setup
 		if args.bddir:
 			su(args.bddir)
 		else:
@@ -1165,10 +1250,13 @@ def ic(asu=True):
 			gvar['@fn'] = {'type':'string','dt':Path(fn).absolute(),'headers':{}}
 			parse(open(fn).read())
 		else:
+			spec = importlib.util.spec_from_file_location("console.console", bddir+'/build/console.cpython-38.pyc')
+			console = importlib.util.module_from_spec(spec)
+			spec.loader.exec_module(console)
 			d['cnt'] = 0
 			print(f'Bird Programming Language {d["version"]}\nCopyright (C) 2021\nType \'writeout(@license)\' to see license.')
 			gvar['@fn'] = {'type':'string','dt':'<input>','headers':{}}
-			parse(console())
+			parse(console.console())
 	else:
 		fn = args.filename
 		d['cnt'] = 0

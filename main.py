@@ -23,6 +23,7 @@ var = clsrec(['cls','a'],{'type':'string','dt':'test'},var)
 var = clsrec(['cls','z'],{'type':'number','dt':1},var)
 parse('using("stdio.bd");writeout(cls.a);writeout(cls.z)');'''
 from pathlib import Path
-from src.bird import replit,su
+import importlib.util
+from src.bird import su,replit
 su(str(Path.home()) + '/Bird-Lang')
 replit(False)
