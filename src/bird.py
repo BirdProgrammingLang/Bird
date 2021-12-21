@@ -1113,7 +1113,7 @@ def parse(code):
 				d['atcd'] += line+';'
 def uncompile(cc):
 	cc = le(str(cc))
-	if d['ecnt'] == 0:
+	'''if d['ecnt'] == 0:
 			if not d['break']:
 				if d['run']:
 					d['ep'] = line
@@ -1129,7 +1129,7 @@ def uncompile(cc):
 							if nels and not funct[1] == 'Else':
 								d['els'] = False
 							log(funct[1]+'\n')
-							'''if d['fn'] == '@main':
+							if d['fn'] == '@main':
 								clvd = [funct[1]]
 								clvd.append(re_to_list(re.match('^'+reg+'$',line,re.DOTALL)))
 								d['c'].append(clvd)
@@ -1166,7 +1166,7 @@ def uncompile(cc):
 								if dat == 'close':
 									return 'end'
 								fnd = True
-								break'''
+								break
 							
 					if not fnd:
 						error('SyntaxError',f'No Such Command, {line}.')
@@ -1192,7 +1192,9 @@ def uncompile(cc):
 				d['atcdat'] = []
 			else:
 				d['atcd'] += line+';'
-'''def console():
+'''
+'''
+def console():
 	code = ''
 	ll = ''
 	while True:

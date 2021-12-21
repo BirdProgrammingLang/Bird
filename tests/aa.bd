@@ -1,5 +1,4 @@
 create funct output(d){
-	using('stdio.bd');
 	writeout(d.item(1));
 }[req_pyparse=true];
 allow output: pyparse;
