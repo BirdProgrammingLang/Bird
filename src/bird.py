@@ -9,7 +9,6 @@ import random
 import argparse
 import base64
 import os
-import urllib3
 import json
 def ap(text,cchar=','):
 	atc = False
@@ -93,7 +92,7 @@ def su(home=str(Path.home())):
 	var = gvar
 	classes = {}
 	typedef = {}
-	d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{},'clsd':{},'fn':'@main','tb':[],'pyparse':False,'version':'1.1.1','ctype':{'type':'null','dt':'null','headers':{}},'cfdat':0,'c':[],'gp':False,'bddir':bddir,'lcd':False}
+	d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{},'clsd':{},'fn':'@main','tb':[],'pyparse':False,'version':'1.1.1','ctype':{'type':'null','dt':'null','headers':{}},'cfdat':0,'c':[],'gp':False,'bddir':bddir,'lcd':False,'swd':'','sw':False,'sdef':False}
 def null(*args,**kwargs):
 	pass
 def error(n,t):
@@ -1020,7 +1019,46 @@ def ccmd(regex):
 	d['ecnt'] = 1
 	d['atcdat'] = regex
 	d['atc'] = ccatc
-cl = {r'[ +\t\n]*(create[ +\t\n]+|)var(\[.*\]){0,1}[ +\t\n]*([a-zA-Z_&]+[^@|\n\t ]*)[ +\t\n]*[=]{0,1}[ +\t\n]*(.*)''':[cvar,'Create Var'],r'[ +\t\n]*create[ +\t\n]+funct[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\((.*)\)[ +\t\n]*\{[ +\t\n]*':[cfunct,'Create Function'],r'//.*//':[null,'Comment'],r'[ +\t\n]*pyparse[ +\t]+(.*)[ +\t\n]*':[pyparse,'Pyparse'],r'[ +\t\n]*([^@|\n\t (]*)[ +\t\n]*\((.*)\)[ +\t\n]*':[callfunct,'Call Function'],r'[ +\t\n]*return[ +\t\n]*([^\n]*)':[RETURN,'Return'],r'[ +\t\n]*(if|else[ +]if)[ +\t\n]*\((.*)\)[ +\t\n]*\{':[ifstate,'If Statement'],r'[ +\t\n]*else[ +\t\n]*\{':[els,'Else'],r'[ +\t\n]*foreach[ +\t\n]*\((.*)\)[ +\t\n]*\{':[foreach,'Foreach Loop'],r'[ +\t\n]*while[ +\t\n]*\((.*)\)[ +\t\n]*\{':[whileloop,'While Loop'],r'[ +\t\n]*when[ +\t\n]*\((.*)\)[ +\t\n]*\{':[when,'When Loop'],r"^[ +\t\n]*$":[null,'WhiteSpace'],r"[ +\t\n]*create[ +\t\n]+class[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\([ +\t\n]*(instance|static)[ +\t\n]*\)[ +\t\n]*\{":[cla,'Class'],r'[ +\t\n]*create ErrorHandler[ +\t\n]*\((.*)\)[ +\t\n]*\{':[errh,"Create Error Handler"],r'[ +\t\n]*global[ +\t\n]*(.*)[ +\t\n]*':[globalize,'Global'],r'[ +\t\n]*([^@|\n\t (]*)[ +\t\n]*\((.*)\)[ +\t\n]*\{[ +\t\n]*':[callfuncta,'Call Function With Attach'],r'[ +\t\n]*allow[ +\t\n]+([^ ]+)[ +\t\n]*:[ +\t\n]*([^ ]+)[ +\t\n]*':[allow,'Allow'],r'[ +\t\n]*deny[ +\t\n]+([^ ]+)[ +\t\n]*:[ +\t\n]*([^ ]+)[ +\t\n]*':[deny,'Deny'],r'[ +\t\n]*rsc[ +\t\n]+([^\n \t]+)[ +\t\n]*':[rsc,'Replace Semicolon'],r'[ +\n\t]*create[ +\n\t]+type[ +\n\t]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\n\t]*\((.*)\)[ +\n\t]*\{[ +\n\t]*':[ctype,'Custom Type Creator'],r'[ +\n\t]*create[ +\n\t]+command[ +\n\t]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\n\t]*\((.*)\)[ +\n\t]*\{[ +\n\t]*':[ccmd,'Custom Command Creator']}
+def swatc(dt='',data=[],tr=''):
+	oswd = d['swd']
+	osw = d['sw']
+	d['swd'] = data[1]
+	d['sw'] = True
+	parse(dt)
+	d['swd'] = oswd
+	d['sw'] = osw
+def switch(regex):
+	d['ecnt'] = 1
+	d['atcdat'] = regex
+	d['atc'] = swatc
+def caseatc(dt='',dat=[],tr=''):
+	data = dat[0]
+	if dat[1]:
+		if d['sdef']:
+			parse(dt)
+	else:
+		if data:
+			parse(dt)
+		else:
+			d['sdef'] = True
+def case(regex):
+	if not d['sw']:
+		error('SwitchError','Case called while not inside Switch block.')
+	defa = False
+	if re.match('^[ +\t\n]*$',regex[3]):
+		defa = True
+	hl = []
+	if regex[1]:
+		for char in regex[2]:
+			hl.append(char)
+	if '!' in hl:
+		dat = checkifs(f'{d["swd"]} != {regex[3]}')
+	else:
+		dat = checkifs(f'{d["swd"]} == {regex[3]}')
+	d['ecnt'] = 1
+	d['atcdat'] = [dat,defa]
+	d['atc'] = caseatc
+cl = {r'[ +\t\n]*(create[ +\t\n]+|)var(\[.*\]){0,1}[ +\t\n]*([a-zA-Z_&]+[^@|\n\t ]*)[ +\t\n]*[=]{0,1}[ +\t\n]*(.*)''':[cvar,'Create Var'],r'[ +\t\n]*create[ +\t\n]+funct[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\((.*)\)[ +\t\n]*\{[ +\t\n]*':[cfunct,'Create Function'],r'//.*//':[null,'Comment'],r'[ +\t\n]*pyparse[ +\t]+(.*)[ +\t\n]*':[pyparse,'Pyparse'],r'[ +\t\n]*([^@|\n\t (]*)[ +\t\n]*\((.*)\)[ +\t\n]*':[callfunct,'Call Function'],r'[ +\t\n]*return[ +\t\n]*([^\n]*)':[RETURN,'Return'],r'[ +\t\n]*(if|else[ +]if)[ +\t\n]*\((.*)\)[ +\t\n]*\{':[ifstate,'If Statement'],r'[ +\t\n]*else[ +\t\n]*\{':[els,'Else'],r'[ +\t\n]*foreach[ +\t\n]*\((.*)\)[ +\t\n]*\{':[foreach,'Foreach Loop'],r'[ +\t\n]*while[ +\t\n]*\((.*)\)[ +\t\n]*\{':[whileloop,'While Loop'],r'[ +\t\n]*when[ +\t\n]*\((.*)\)[ +\t\n]*\{':[when,'When Loop'],r"^[ +\t\n]*$":[null,'WhiteSpace'],r"[ +\t\n]*create[ +\t\n]+class[ +\t\n]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\t\n]*\([ +\t\n]*(instance|static)[ +\t\n]*\)[ +\t\n]*\{":[cla,'Class'],r'[ +\t\n]*create ErrorHandler[ +\t\n]*\((.*)\)[ +\t\n]*\{':[errh,"Create Error Handler"],r'[ +\t\n]*global[ +\t\n]*(.*)[ +\t\n]*':[globalize,'Global'],r'[ +\n\t]*switch[ +\n\t]*\((.*)\)[ +\n\t]*\{[ +\n\t]*':[switch,'Switch'],r'[ +\n\t]*case[ +\n\t]*(:([^(])){0,1}[ +\n\t]*\((.*)\)[ +\n\t]*\{[ +\n\t]*':[case,'Case'],r'[ +\t\n]*([^@|\n\t (]*)[ +\t\n]*\((.*)\)[ +\t\n]*\{[ +\t\n]*':[callfuncta,'Call Function With Attach'],r'[ +\t\n]*allow[ +\t\n]+([^ ]+)[ +\t\n]*:[ +\t\n]*([^ ]+)[ +\t\n]*':[allow,'Allow'],r'[ +\t\n]*deny[ +\t\n]+([^ ]+)[ +\t\n]*:[ +\t\n]*([^ ]+)[ +\t\n]*':[deny,'Deny'],r'[ +\t\n]*rsc[ +\t\n]+([^\n \t]+)[ +\t\n]*':[rsc,'Replace Semicolon'],r'[ +\n\t]*create[ +\n\t]+type[ +\n\t]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\n\t]*\((.*)\)[ +\n\t]*\{[ +\n\t]*':[ctype,'Custom Type Creator'],r'[ +\n\t]*create[ +\n\t]+command[ +\n\t]+([a-zA-Z_]+[^@|.\n\t ]*)[ +\n\t]*\((.*)\)[ +\n\t]*\{[ +\n\t]*':[ccmd,'Custom Command Creator']}
 ccl = {}
 for item,dt in cl.items():
 	ccl[dt[1]] = dt[0]
@@ -1105,10 +1143,13 @@ def parse(code):
 			for eb in re.findall(r'}',line):
 				d['ecnt'] -= 1
 			if d['ecnt'] == 0:
-				d['atc'](d['atcd'][::-1].replace(';','',1)[::-1],d['atcdat'],line)
+				od = d['atcd']
+				oa = d['atc']
+				oda = d['atcdat']
 				d['atcd'] = ''
 				d['atc'] = null
 				d['atcdat'] = []
+				oa(od[::-1].replace(';','',1)[::-1],oda,line)
 			else:
 				d['atcd'] += line+';'
 def uncompile(cc):
@@ -1249,7 +1290,7 @@ def ic(asu=True):
 		if args.filename:
 			fn = args.filename
 			d['cnt'] = 0
-			gvar['@fn'] = {'type':'string','dt':Path(fn).absolute(),'headers':{}}
+			gvar['@fn'] = {'type':'string','dt':str(Path(fn).absolute()).replace('\\','/'),'headers':{}}
 			parse(open(fn).read())
 		else:
 			spec = importlib.util.spec_from_file_location("console.console", bddir+'/build/console.cpython-38.pyc')
@@ -1269,7 +1310,7 @@ def replit(asu=True):
 		su()
 	print(f'Bird Programming Language {d["version"]}\nCopyright (C) 2021')
 	fn = input('Filename: ')
-	gvar['@fn'] = {'type':'string','dt':Path(fn).absolute(),'headers':{}}
+	gvar['@fn'] = {'type':'string','dt':str(Path(fn).absolute()).replace('\\','/'),'headers':{}}
 	gvar['@version'] = {'type':'string','dt':d['version'],'headers':{}}
 	gvar['@v'] = {'type':'string','dt':d['version'],'headers':{}}
 	gvar['@cf'] = {'type':'string','dt':'@main','headers':{}}

@@ -1,5 +1,5 @@
 create funct t(){
 pyparse 'print("a")';
-};
-pyparse 'print("a")';
+}[req_pyparse=true];
+allow t:pyparse;
 t();
