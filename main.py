@@ -23,7 +23,6 @@ var = clsrec(['cls','a'],{'type':'string','dt':'test'},var)
 var = clsrec(['cls','z'],{'type':'number','dt':1},var)
 parse('using("stdio.bd");writeout(cls.a);writeout(cls.z)');'''
 from pathlib import Path
-import importlib.util
 from src.bird import su,replit
-su(str(Path.home()) + '/Bird-Lang')
+su("C:/Users/alexa/Documents/coding/python/bird")
 replit(False)

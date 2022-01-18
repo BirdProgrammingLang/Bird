@@ -1,0 +1,6 @@
+var data = 'RANDOM_DATA';
+switch(data){
+    case:!('jadskg'){
+        writeout(B1);
+    };
+};
