@@ -1053,6 +1053,8 @@ def case(regex):
 			hl.append(char)
 	if '!' in hl:
 		dat = checkifs(f'{d["swd"]} != {regex[3]}')
+	if '=' in hl:
+		dat = checkifs(f'{d["swd"]} === {regex[3]}')
 	else:
 		dat = checkifs(f'{d["swd"]} == {regex[3]}')
 	d['ecnt'] = 1
