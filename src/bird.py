@@ -92,7 +92,7 @@ def su(home=str(Path.home())):
 	var = gvar
 	classes = {}
 	typedef = {}
-	d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{},'clsd':{},'fn':'@main','tb':[],'pyparse':False,'version':'1.1.1','ctype':{'type':'null','dt':'null','headers':{}},'cfdat':0,'c':[],'gp':False,'bddir':bddir,'lcd':False,'swd':'','sw':False,'sdef':False}
+	d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{},'clsd':{},'fn':'@main','tb':[],'pyparse':False,'version':'1.1.2 Pre Release','ctype':{'type':'null','dt':'null','headers':{}},'cfdat':0,'c':[],'gp':False,'bddir':bddir,'lcd':False,'swd':'','sw':False,'sdef':False}
 def null(*args,**kwargs):
 	pass
 def error(n,t):
@@ -1053,7 +1053,7 @@ def case(regex):
 			hl.append(char)
 	if '!' in hl:
 		dat = checkifs(f'{d["swd"]} != {regex[3]}')
-	if '=' in hl:
+	elif '=' in hl:
 		dat = checkifs(f'{d["swd"]} === {regex[3]}')
 	else:
 		dat = checkifs(f'{d["swd"]} == {regex[3]}')
