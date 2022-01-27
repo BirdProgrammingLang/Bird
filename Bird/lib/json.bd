@@ -1,8 +1,0 @@
-create funct load(string){
-	pyparse `tdt = typeify(''' @{string} ''')
-var['dt'] = {"type":tdt[0],"dt":tdt[1],"headers":tdt[2]}`;
-	return dt;
-}[req_pyparse=true];
-create funct dump(assoc){
-	
-}

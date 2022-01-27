@@ -1,0 +1,11 @@
+create funct using(file,global=B1,compile=B0){
+    CNCHEADER6 file;
+    CNCHEADER6 global;
+    CNCHEADER6 compile;
+    CNC6;
+};
+create funct output(){
+pyparse `print(gvar['using'])`;
+}[req_pyparse=true];
+create var output = output.allow('pyparse');
+output()

@@ -1,4 +1,4 @@
 from src.bird import ic,su
 from pathlib import Path
-su(str(Path.home()) + '/Bird-Lang')
+su("C:/Users/alexa/Documents/coding/python/bird")
 ic(False)

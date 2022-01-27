@@ -1,5 +1,4 @@
 using('base64.bd');
-using('stdio.bd');
-create var dt base64.encode('yay');
+var dt = encode('TestYay');
 writeout(dt);
-writeout(base64.decode(dt));
+writeout(decode(dt));

@@ -1,7 +1,2 @@
-using('stdio.bd');
-//writeout(@fn);
-if(`@{@fn} == "os.bd"`){
-	writeout(B1);
-};//
 using('os.bd');
-sys.clear();
+clear()

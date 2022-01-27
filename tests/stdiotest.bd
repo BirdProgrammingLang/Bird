@@ -1,5 +1,3 @@
-using('stdio.bd');
-create var i writein('YAY');
-pyparse `print(var['writeout'])`;
-writeout(i);
-writeout('a,b')
+writeout('_');
+var d = writein('Input: ');
+writeout(d);

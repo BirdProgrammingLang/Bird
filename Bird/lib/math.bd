@@ -1,5 +1,5 @@
 create funct squareroot(number){
-	pyparse `import math
-var['data'] = {'type':'number','dt':math.sqrt(@{number}),'headers':{}}`;
+	CNCHEADER12 number;
+	CNC12;
 	return data;
 }[req_pyparse=true];

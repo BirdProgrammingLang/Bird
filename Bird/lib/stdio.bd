@@ -1,9 +1,11 @@
-create funct writeout(text,end='\n':@,sep=' ',flush='False'){
-	var text = \string\text;
-	pyparse `text = r'''@{text}'''.replace(r"\'\'\'","'''")
-print(text,end='@{end}',sep=r'@{sep}',flush=@{flush})`;
+create funct writeout(text,end='\n',flush=false){
+	CNCHEADER3 text;
+	CNCHEADER3 end;
+	CNCHEADER3 flush;
+	CNC3;
 }[req_pyparse=true];
 create funct writein(text=''){
-	pyparse `var['data'] = {'type':'string','dt':input('@{text}'),'headers':{}}`;
+	CNCHEADER4 text;
+	CNC4;
 	return data;
 }[global=&req_pyparse=];

@@ -1,13 +1,11 @@
 create funct exec(txt){
-	pyparse `os.system('''@{txt}''')`;
+	CNCHEADER10 txt;
+	CNC10;
 }[global=&req_pyparse=true];
 create funct name(){
-	pyparse `var['dat'] = {'type':'string','dt'os.name','headers':{}}`
+	CNC9;
 	return dat;
 }[req_pyparse=true];
 create funct clear(){
-	pyparse `if os.name == 'nt':
-	os.system('cls')
-else:
-	os.system('clear')`;
+	CNC11;
 }[global=&req_pyparse=true];
