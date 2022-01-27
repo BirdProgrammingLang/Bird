@@ -1,7 +1,7 @@
 # Security Policy
 
 ## Supported Versions
-
+*Notice! All versions before 1.2.0 have the insecure `Pyparse`. Please be careful when using.*
 | Version | Supported          |
 | ------- | ------------------ |
 | 0.1.x   | ❌ |
