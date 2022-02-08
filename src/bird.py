@@ -433,7 +433,7 @@ def typeify(txt,qt=False,err=True,ignore=False):
 			txt = 'True'
 		else:
 			txt = 'False'
-	elif re.match(r'^[ \t\n+]*(.+)([ +\n\t]*[*/\-+%^][ +\n\t]*(.+))+[ \t\n+]*$',txt,re.DOTALL):
+	elif re.match(r'^[ \t\n+]*(.+)([ +\n\t]*[*/\-+%^][ +\n\t]*.+)+[ \t\n+]*$',txt,re.DOTALL):
 		return typeify(str(mathify(txt)))
 	else:
 		for reg,fn in typedef.items():
