@@ -1,3 +1,4 @@
+[![CodeQL](https://github.com/mathstar13/Bird/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/mathstar13/Bird/actions/workflows/codeql-analysis.yml)
 # Bird
 Official repository for the Bird Programming Language.
 ## Installation
