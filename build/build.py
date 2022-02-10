@@ -87,7 +87,7 @@ def su(home=str(Path.home())):
 	global typedef
 	bddir = open(home+'/bddir.txt').read()
 	temp = []
-	gvar = {'using':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'file': ['', ''], 'global': ['bool', 'True', {}], 'compile': ['bool', 'False', {}]}, 'code': 'CNCHEADER6 file;CNCHEADER6 global;CNCHEADER6 compile;CNC6', 'head': {}}}, 'array_item': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'file': ['', ''], 'global': ['bool', 'True', {}], 'compile': ['bool', 'False', {}]}, 'code': 'CNCHEADER6 file;CNCHEADER6 global;CNCHEADER6 compile;CNC6', 'head': {}}, 'attrib': {'file': ['', ''], 'global': ['bool', 'True', {}], 'compile': ['bool', 'False', {}]}, 'code': 'CNCHEADER6 file;CNCHEADER6 global;CNCHEADER6 compile;CNC6', 'head': {}}, 'eval': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'code': ['', '']}, 'code': 'CNCHEADER16 code;CNC16', 'head': {}}}, 'quit': {'type': 'funct', 'dt': {'attrib': {'status': ['number', 0.0]}, 'code': 'pyparse `quit(int(@{status}))`', 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb'}}}, 'dirsarray': {'dt': {'bird': {'type': 'string', 'dt': '/home/runner/Bird-Lang/Bird/'}, 'lib': {'type': 'string', 'dt': '/home/runner/Bird-Lang/Bird/lib/'}, 'package': {'type': 'string', 'dt': '/home/runner/Bird-Lang/Bird/package/'}}, 'type': 'associative'}, 'fread': {'dt': {'attrib': {'fn': ['', '']}, 'code': 'pyparse `var[\'data\'] = {\'type\':\'string\',\'dt\':open("@{fn}").read()}`;return data', 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': '', 'pyparse': 'true'}}, 'type': 'funct'}, 'fwrite': {'dt': {'attrib': {'fn': ['', ''], 'txt': ['', ''], 'm': ['string', 'a']}, 'code': 'pyparse `d = open("""@{fn}""","""@{m}""")\nd.write("""@{txt}""")\nd.close()`;return true', 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': '', 'pyparse': 'true'}}, 'type': 'funct'}, 'fdelete': {'dt': {'attrib': {'fn': ['', '']}, 'code': "pyparse `import os\nos.remove('''@{fn}''')`", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': '', 'pyparse': 'true'}}, 'type': 'funct'},'typeof':{'dt': {'attrib': {'item': ['', '']}, 'code': 'pyparse `var["data"] = {\'type\':\'string\',\'dt\':var[\'item\'][\'type\'],\'headers\':{}}`;return data', 'head': {'global': '', 'pyparse': 'true'}}, 'type': 'funct', 'headers': {}},'streval':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'string': ['', '']}, 'code': 'pyparse `tdt = typeify(""" @{string} """)\nvar[\'dt\'] = {"type":tdt[0],"dt":tdt[1],"headers":tdt[2]}`;return dt', 'head': {'pyparse': 'true'}}}}
+	gvar = {'using':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'file': ['', ''], 'global': ['bool', 'True', {}], 'compile': ['bool', 'False', {}]}, 'code': 'CNCHEADER6 file;CNCHEADER6 global;CNCHEADER6 compile;CNC6', 'head': {}}}, 'array_item': {'type': 'funct', 'dt': {'attrib': {'arr': ['', ''], 'cnt': ['', '']}, 'code': "\n\tcreate var data 'notdefined';\n\tpyparse `if var['cnt']['type'] == 'number':\n\tvar['cnt']['dt'] = int(var['cnt']['dt'])\nvar['data']['dt'] = var['arr']['dt'][var['cnt']['dt']]['dt']`;\n\treturn data\n", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': '','pyparse':'true'}}}, 'eval': {'type': 'funct', 'dt': {'attrib': {'code': ['', '']}, 'code': "pyparse `parse('''@{code}''')`", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb','pyparse':'true'}}}, 'quit': {'type': 'funct', 'dt': {'attrib': {'status': ['number', 0.0]}, 'code': 'pyparse `quit(int(@{status}))`', 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb'}}}, 'dirsarray': {'dt': {'bird': {'type': 'string', 'dt': '/home/runner/Bird-Lang/Bird/'}, 'lib': {'type': 'string', 'dt': '/home/runner/Bird-Lang/Bird/lib/'}, 'package': {'type': 'string', 'dt': '/home/runner/Bird-Lang/Bird/package/'}}, 'type': 'associative'}, 'fread': {'dt': {'attrib': {'fn': ['', '']}, 'code': 'pyparse `var[\'data\'] = {\'type\':\'string\',\'dt\':open("@{fn}").read()}`;return data', 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': '', 'pyparse': 'true'}}, 'type': 'funct'}, 'fwrite': {'dt': {'attrib': {'fn': ['', ''], 'txt': ['', ''], 'm': ['string', 'a']}, 'code': 'pyparse `d = open("""@{fn}""","""@{m}""")\nd.write("""@{txt}""")\nd.close()`;return true', 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': '', 'pyparse': 'true'}}, 'type': 'funct'}, 'fdelete': {'dt': {'attrib': {'fn': ['', '']}, 'code': "pyparse `import os\nos.remove('''@{fn}''')`", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': '', 'pyparse': 'true'}}, 'type': 'funct'},'typeof':{'dt': {'attrib': {'item': ['', '']}, 'code': 'pyparse `var["data"] = {\'type\':\'string\',\'dt\':var[\'item\'][\'type\'],\'headers\':{}}`;return data', 'head': {'global': '', 'pyparse': 'true'}}, 'type': 'funct', 'headers': {}},'streval':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'string': ['', '']}, 'code': 'pyparse `tdt = typeify(""" @{string} """)\nvar[\'dt\'] = {"type":tdt[0],"dt":tdt[1],"headers":tdt[2]}`;return dt', 'head': {'pyparse': 'true'}}}}
 	gvar['dirsarray'] = {'dt': {'bird': {'type': 'string', 'dt': bddir+'/'}, 'lib': {'type': 'string', 'dt': f'{bddir}/lib/'}, 'package': {'type': 'string', 'dt': f'{bddir}/package/'}}, 'type': 'associative','headers':{}}
 	var = gvar
 	classes = {}
@@ -1146,12 +1146,6 @@ def cnc(regex):
 		var["data"] = {"type":'string','dt':base64.b64encode(da).decode('utf-8'),'headers':{}}
 	elif number == 14:
 		var["data"] = {"type":'string','dt':base64.b64decode(str.encode(data[0])).decode('utf-8'),'headers':{}}
-	elif number == 15:
-		if var['cnt']['type'] == 'number':
-			var['cnt']['dt'] = int(var['cnt']['dt'])
-		var['data']['dt'] = var['arr']['dt'][var['cnt']['dt']]['dt']
-	elif number == 16:
-		parse(data[0])
 	d['cncheaders'][number] = []
 def cnch(regex):
 	n = int(regex[1])
@@ -1400,7 +1394,7 @@ def ic(asu=True):
 			parse(open(fn).read())
 		else:
 			d['cnt'] = 0
-			print(f'Bird Programming Language {d["version"]}\nCopyright (C) 2022\nType \'writeout(@license)\' to see license.')
+			print(f'Bird Programming Language {d["version"]}\nCopyright (C) 2021\nType \'writeout(@license)\' to see license.')
 			gvar['@fn'] = {'type':'string','dt':'<input>','headers':{}}
 			d['filename'] = '<input>'
 			parse(console())
@@ -1413,7 +1407,7 @@ def ic(asu=True):
 def replit(asu=True):
 	if asu:
 		su()
-	print(f'Bird Programming Language {d["version"]}\nCopyright (C) 2022')
+	print(f'Bird Programming Language {d["version"]}\nCopyright (C) 2021')
 	fn = input('Filename: ')
 	d['filename'] = fn
 	gvar['@fn'] = {'type':'string','dt':str(Path(fn).absolute()).replace('\\','/'),'headers':{}}
@@ -1425,3 +1419,4 @@ def replit(asu=True):
 	d['cnt'] = 0
 	chdir('tests/')
 	parse(open(fn).read())
+ic()
