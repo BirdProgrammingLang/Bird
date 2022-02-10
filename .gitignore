@@ -131,3 +131,4 @@ bddir.txt
 src/ob.py
 build-src/*
 backup/*
+exe/*

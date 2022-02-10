@@ -1,0 +1,9 @@
+create funct eval(code){
+    CNCHEADER16 code;
+    CNC16;
+};
+create funct output(){
+pyparse `print(gvar['eval'])`;
+}[req_pyparse=true];
+create var output = output.allow('pyparse');
+output()
