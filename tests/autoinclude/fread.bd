@@ -1,0 +1,6 @@
+create funct fread(filename){
+    CNCHEADER18 filename;
+    CNC18;
+    return data;
+};
+pyparse `print(gvar['fread'])`;

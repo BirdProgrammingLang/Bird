@@ -1,0 +1,8 @@
+create funct fwrite(fn,txt,overwite=false){
+    CNCHEADER19 fn;
+    CNCHEADER19 txt;
+    CNCHEADER19 overwite;
+    CNC19;
+    return true;
+};
+pyparse `print(gvar['fwrite'])`

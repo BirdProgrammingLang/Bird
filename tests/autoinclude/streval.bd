@@ -1,0 +1,6 @@
+create funct streval(txt){
+    CNCHEADER22 txt;
+    CNC22;
+    return dt;
+};
+pyparse `print(gvar['streval'])`

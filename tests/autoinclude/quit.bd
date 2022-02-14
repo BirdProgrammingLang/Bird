@@ -1,0 +1,5 @@
+create funct quit(code=0){
+    CNCHEADER17 code;
+    CNC17;
+};
+pyparse `print(var["quit"])`;

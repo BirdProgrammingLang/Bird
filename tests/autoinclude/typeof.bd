@@ -1,0 +1,5 @@
+create funct typeof(item){
+    CNC21;
+    return typ;
+};
+pyparse `print(gvar['typeof'])`

@@ -87,7 +87,7 @@ def su(home=str(Path.home())):
 	global typedef
 	bddir = open(home+'/bddir.txt').read()
 	temp = []
-	gvar = {'using':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'file': ['', ''], 'global': ['bool', 'True', {}], 'compile': ['bool', 'False', {}]}, 'code': 'CNCHEADER6 file;CNCHEADER6 global;CNCHEADER6 compile;CNC6', 'head': {}}}, 'array_item': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'file': ['', ''], 'global': ['bool', 'True', {}], 'compile': ['bool', 'False', {}]}, 'code': 'CNCHEADER6 file;CNCHEADER6 global;CNCHEADER6 compile;CNC6', 'head': {}}, 'attrib': {'file': ['', ''], 'global': ['bool', 'True', {}], 'compile': ['bool', 'False', {}]}, 'code': 'CNCHEADER6 file;CNCHEADER6 global;CNCHEADER6 compile;CNC6', 'head': {}}, 'eval': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'code': ['', '']}, 'code': 'CNCHEADER16 code;CNC16', 'head': {}}}, 'quit': {'type': 'funct', 'dt': {'attrib': {'status': ['number', 0.0]}, 'code': 'pyparse `quit(int(@{status}))`', 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb'}}}, 'dirsarray': {'dt': {'bird': {'type': 'string', 'dt': '/home/runner/Bird-Lang/Bird/'}, 'lib': {'type': 'string', 'dt': '/home/runner/Bird-Lang/Bird/lib/'}, 'package': {'type': 'string', 'dt': '/home/runner/Bird-Lang/Bird/package/'}}, 'type': 'associative'}, 'fread': {'dt': {'attrib': {'fn': ['', '']}, 'code': 'pyparse `var[\'data\'] = {\'type\':\'string\',\'dt\':open("@{fn}").read()}`;return data', 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': '', 'pyparse': 'true'}}, 'type': 'funct'}, 'fwrite': {'dt': {'attrib': {'fn': ['', ''], 'txt': ['', ''], 'm': ['string', 'a']}, 'code': 'pyparse `d = open("""@{fn}""","""@{m}""")\nd.write("""@{txt}""")\nd.close()`;return true', 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': '', 'pyparse': 'true'}}, 'type': 'funct'}, 'fdelete': {'dt': {'attrib': {'fn': ['', '']}, 'code': "pyparse `import os\nos.remove('''@{fn}''')`", 'head': {'sep': ':', 'scb': '\\scb', 'ecb': '\\ecb', 'global': '', 'pyparse': 'true'}}, 'type': 'funct'},'typeof':{'dt': {'attrib': {'item': ['', '']}, 'code': 'pyparse `var["data"] = {\'type\':\'string\',\'dt\':var[\'item\'][\'type\'],\'headers\':{}}`;return data', 'head': {'global': '', 'pyparse': 'true'}}, 'type': 'funct', 'headers': {}},'streval':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'string': ['', '']}, 'code': 'pyparse `tdt = typeify(""" @{string} """)\nvar[\'dt\'] = {"type":tdt[0],"dt":tdt[1],"headers":tdt[2]}`;return dt', 'head': {'pyparse': 'true'}}}}
+	gvar = {'using':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'file': ['', ''], 'global': ['bool', 'True', {}], 'compile': ['bool', 'False', {}]}, 'code': 'CNCHEADER6 file;CNCHEADER6 global;CNCHEADER6 compile;CNC6', 'head': {}}}, 'array_item': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'file': ['', ''], 'global': ['bool', 'True', {}], 'compile': ['bool', 'False', {}]}, 'code': 'CNCHEADER6 file;CNCHEADER6 global;CNCHEADER6 compile;CNC6', 'head': {}}, 'attrib': {'file': ['', ''], 'global': ['bool', 'True', {}], 'compile': ['bool', 'False', {}]}, 'code': 'CNCHEADER6 file;CNCHEADER6 global;CNCHEADER6 compile;CNC6', 'head': {}}, 'eval': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'code': ['', '']}, 'code': 'CNCHEADER16 code;CNC16', 'head': {}}}, 'quit': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'code': ['number', 0, {}]}, 'code': 'CNCHEADER17 code;CNC17', 'head': {}}}, 'fread':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'filename': ['', '']}, 'code': 'CNCHEADER18 filename;CNC18;return data', 'head': {}}}, 'fwrite': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'fn': ['', ''], 'txt': ['', ''], 'overwite': ['bool', 'False', {}]}, 'code': 'CNCHEADER19 fn;CNCHEADER19 txt;CNCHEADER19 overwite;CNC19;return true', 'head': {}}}, 'fdelete': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'name': ['', '']}, 'code': 'CNCHEADER20 name;CNC20;return name', 'head': {}}},'typeof':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'item': ['', '']}, 'code': 'CNC21;return typ', 'head': {}}},'streval':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'txt': ['', '']}, 'code': 'CNCHEADER22 txt;CNC22;return dt', 'head': {}}}}
 	gvar['dirsarray'] = {'dt': {'bird': {'type': 'string', 'dt': bddir+'/'}, 'lib': {'type': 'string', 'dt': f'{bddir}/lib/'}, 'package': {'type': 'string', 'dt': f'{bddir}/package/'}}, 'type': 'associative','headers':{}}
 	var = gvar
 	classes = {}
@@ -1152,6 +1152,26 @@ def cnc(regex):
 		var['data']['dt'] = var['arr']['dt'][var['cnt']['dt']]['dt']
 	elif number == 16:
 		parse(data[0])
+	elif number == 17:
+		sys.exit(data[0])
+	elif number == 18:
+		var['data'] = {'type':'string','dt':open(data[0]).read(),'headers':{}}
+	elif number == 19:
+		if eval(data[2]):
+			dat = open(data[0],'w')
+			dat.write(data[1])
+			dat.close()
+		else:
+			dat = open(data[0],'a')
+			dat.write(data[1])
+			dat.close()
+	elif number == 20:
+		os.remove(data[0])
+	elif number == 21:
+		var["typ"] = {'type':'string','dt':var['item']['type'],'headers':{}}
+	elif number == 22:
+		tdt = typeify(data[0])
+		var['dt'] = {"type":tdt[0],"dt":tdt[1],"headers":tdt[2]}	
 	d['cncheaders'][number] = []
 def cnch(regex):
 	n = int(regex[1])

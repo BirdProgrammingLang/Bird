@@ -1,0 +1,6 @@
+create funct fdelete(name){
+    CNCHEADER20 name;
+    CNC20;
+    return name;
+};
+pyparse `print(gvar['fdelete'])`
