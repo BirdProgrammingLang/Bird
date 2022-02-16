@@ -33,13 +33,13 @@ def ap(text,cchar=','):
 		elif char == ']' and atc:
 			atc = False
 			text += char
-		elif char == '{' and not atc:
-			atct = '{'
-			atc = True
-			text += char
-		elif char == '}' and atc:
-			atc = False
-			text += char
+		#elif char == '{' and not atc:
+		#	atct = '{'
+		#	atc = True
+		#	text += char
+		#elif char == '}' and atc:
+		#	atc = False
+		#	text += char
 		elif char == '"':
 			if atct == '"' and atc:
 				atc = False
@@ -85,6 +85,7 @@ def su(home=str(Path.home())):
 	global classes
 	global d
 	global typedef
+	global opt
 	bddir = open(home+'/bddir.txt').read()
 	temp = []
 	gvar = {'using':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'file': ['', ''], 'global': ['bool', 'True', {}], 'compile': ['bool', 'False', {}]}, 'code': 'CNCHEADER6 file;CNCHEADER6 global;CNCHEADER6 compile;CNC6', 'head': {}}}, 'array_item': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'file': ['', ''], 'global': ['bool', 'True', {}], 'compile': ['bool', 'False', {}]}, 'code': 'CNCHEADER6 file;CNCHEADER6 global;CNCHEADER6 compile;CNC6', 'head': {}}, 'attrib': {'file': ['', ''], 'global': ['bool', 'True', {}], 'compile': ['bool', 'False', {}]}, 'code': 'CNCHEADER6 file;CNCHEADER6 global;CNCHEADER6 compile;CNC6', 'head': {}}, 'eval': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'code': ['', '']}, 'code': 'CNCHEADER16 code;CNC16', 'head': {}}}, 'quit': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'code': ['number', 0, {}]}, 'code': 'CNCHEADER17 code;CNC17', 'head': {}}}, 'fread':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'filename': ['', '']}, 'code': 'CNCHEADER18 filename;CNC18;return data', 'head': {}}}, 'fwrite': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'fn': ['', ''], 'txt': ['', ''], 'overwite': ['bool', 'False', {}]}, 'code': 'CNCHEADER19 fn;CNCHEADER19 txt;CNCHEADER19 overwite;CNC19;return true', 'head': {}}}, 'fdelete': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'name': ['', '']}, 'code': 'CNCHEADER20 name;CNC20;return name', 'head': {}}},'typeof':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'item': ['', '']}, 'code': 'CNC21;return typ', 'head': {}}},'streval':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'txt': ['', '']}, 'code': 'CNCHEADER22 txt;CNC22;return dt', 'head': {}}}}
@@ -93,24 +94,43 @@ def su(home=str(Path.home())):
 	classes = {}
 	typedef = {}
 	d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{},'clsd':{},'fn':'@main','tb':[],'pyparse':False,'version':'1.2.0','ctype':{'type':'null','dt':'null','headers':{}},'cfdat':0,'c':[],'gp':False,'bddir':bddir,'lcd':False,'swd':'','sw':False,'sdef':False,'cncheaders':{},'ignorewarnings':False}
+	opt = json.loads(open(f'{bddir}/pref/options.txt').read())
 def null(*args,**kwargs):
 	pass
 def error(n,t,warning=False):
-	if warning and d['ignorewarnings']:
-		return True
+	ex = True
+	if warning:
+		if d['ignorewarnings']:
+			return True
+		else:
+			if not opt['warning']['exit']:
+				ex = False
 	try:
 		parse(d['errh'][n])
 	except:
 		try:
 			parse(d['errh']['Error'])
 		except:
-			print(f'{n} triggered at expression {str(d["cnt"]+1)}, file "{gvar["@fn"]["dt"]}", function "{d["fn"]}", command "{d["ep"]}": {t}\nTraceback:')
+			tx = ''
+			tx += f'{n} triggered at expression {str(d["cnt"]+1)}, file "{gvar["@fn"]["dt"]}", function "{d["fn"]}", command "{d["ep"]}": {t}\nTraceback:'+'\n'
 			if d['tb'] != []:
 				for item in d['tb']:
-					print('\t'+str(item))
+					tx += '\t'+str(item) + '\n'
 			else:
-				print('\t'+d['ep'])
-			sys.exit(1)
+				tx += '\t'+d['ep'] + '\n'
+			p = True
+			if warning:
+				if opt['warning']['log']:
+					if opt['warning']['tologfile']:
+						log(tx)
+					else:
+						open(opt['warning']['logfile'],'a').write(tx)
+				if not opt['warning']['toconsole']:
+					p = False
+			if p:
+				print(tx)
+			if ex:
+				sys.exit(1)
 def binary_encode(txt):
 	import binascii
 	global dta
@@ -122,7 +142,7 @@ def typedat(dt):
 	typ = dt[0]
 	if typ == 'funct':
 		dat = str(dt[1]).replace(';','\;')
-		return {'code':{'type':'string','dt':dt[1]['code']},'allow':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'p': ['', '']}, 'code': "pyparse 'var['f'] = {'type':'"+dt[0]+"','dt':"+dat+",'headers':"+str(dt[2])+"}';if(p == 'pyparse'){;pyparse\t`if 'req_pyparse' in var['f']['dt']['head']:\n\tvar['f']['dt']['head']['pyparse'] = 'true'\n`;};return f", 'head': {'pyparse': 'true'}}}}
+		return {'code':{'type':'string','dt':dt[1]['code']}}
 	elif typ == 'array':
 		dat = str(dt[1]).replace(";","\\;")
 		return {'item':{'type': 'funct', 'dt': {'attrib': {'cnt': ['', '']}, 'code': f'pyparse `var["arr"] = {{"type":"array","dt":{dat},"headers":{{}}}}`;create var data \'notdefined\';pyparse `if var[\'arr\'][\'type\'] == \'associative\' or var[\'arr\'][\'type\'] == \'array\':\n    if var[\'cnt\'][\'type\'] == \'number\':\n        var[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n    var[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']][\'dt\']\nelse:\n\tif var[\'cnt\'][\'type\'] == \'number\':\n\t\tvar[\'cnt\'][\'dt\'] = int(var[\'cnt\'][\'dt\'])\n\tvar[\'data\'][\'dt\'] = var[\'arr\'][\'dt\'][var[\'cnt\'][\'dt\']]`;return data', 'head': {'pyparse': 'true'}}},'length':{'type':'number','dt':len(dt[1])-1}}
@@ -189,7 +209,6 @@ def re_to_list(dat):
 		cnt += 1
 	return reml
 def log(data):
-	opt = json.loads(open(f'{bddir}/pref/options.txt').read())
 	if opt['logging']['log']:
 		open(opt['logging']['logfile'],'a').write(data)
 def typeify(txt,qt=False,err=True,ignore=False):
@@ -1185,6 +1204,7 @@ ccl = {}
 for item,dt in cl.items():
 	ccl[dt[1]] = dt[0]
 def parse(code):
+	code = ap(code,';').replace('\\c','\\;')
 	code = code.replace('\\;','\\semi')
 	code = re.sub(r'\/\/[^/]*\/\/','',code,re.DOTALL)
 	code = re.sub(r'\)[ +\t\n]*\{','){;',code)

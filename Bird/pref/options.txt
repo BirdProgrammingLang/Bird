@@ -1,6 +1,14 @@
 {
 	"logging":
 	{
-		"log":false,"logfile":"bird.log"
+		"log":false,
+		"logfile":"bird.log"
+	},
+	"warning":{
+		"exit":true,
+		"log":false,
+		"tologfile":true,
+		"logfile":"bird.warning.log",
+		"toconsole":true
 	}
 }
