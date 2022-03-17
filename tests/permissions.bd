@@ -8,8 +8,9 @@
 	return f;
 }[pyparse=true];
 pyparse `print(var['allow'])`;//
-create funct t(){
-	pyparse `print('yeet')`;
-}[req_pyparse=];
-create var t = t.allow('pyparse');
-t()
+create funct getpermissions(fn){
+	CNCHEADER23 fn;
+	CNC23;
+	return dat;
+};
+pyparse `print(var['getpermissions'])`

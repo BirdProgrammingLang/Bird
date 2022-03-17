@@ -1,7 +1,7 @@
 create funct test(){
-	pyparse `print('tshdfjsds')`;
-}[req_pyparse=];
-allow test: pyparse;
-test();
-deny test: pyparse;
+	writeout(a);
+}[req_gvar=];
+deny test:gvar;
+var a = 'b';
+writeout(getpermissions(test));
 test();

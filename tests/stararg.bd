@@ -1,0 +1,4 @@
+create funct test(){
+    writeout(array_item(a,0));
+}[stararg=a];
+test('a','b','c')

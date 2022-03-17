@@ -3,10 +3,11 @@ create funct array_item(arr,cnt){
     CNC15;
 return data;
 };
-var dat = ['a','b'];
+//var dat = ['a','b'];
 writeout(array_item(dat,1));
 create funct output(){
 pyparse `print(gvar['array_item'])`;
 }[req_pyparse=true];
 create var output = output.allow('pyparse');
-output()
+output()//
+pyparse `print(var['array_item'])`

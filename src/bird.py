@@ -82,16 +82,16 @@ def su(home=str(Path.home())):
 	global gvar
 	global opt
 	global var
-	global classes
 	global d
 	global typedef
 	global opt
+	global sgv
 	bddir = open(home+'/bddir.txt').read()
 	temp = []
-	gvar = {'using':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'file': ['', ''], 'global': ['bool', 'True', {}], 'compile': ['bool', 'False', {}]}, 'code': 'CNCHEADER6 file;CNCHEADER6 global;CNCHEADER6 compile;CNC6', 'head': {}}}, 'array_item': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'file': ['', ''], 'global': ['bool', 'True', {}], 'compile': ['bool', 'False', {}]}, 'code': 'CNCHEADER6 file;CNCHEADER6 global;CNCHEADER6 compile;CNC6', 'head': {}}, 'attrib': {'file': ['', ''], 'global': ['bool', 'True', {}], 'compile': ['bool', 'False', {}]}, 'code': 'CNCHEADER6 file;CNCHEADER6 global;CNCHEADER6 compile;CNC6', 'head': {}}, 'eval': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'code': ['', '']}, 'code': 'CNCHEADER16 code;CNC16', 'head': {}}}, 'quit': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'code': ['number', 0, {}]}, 'code': 'CNCHEADER17 code;CNC17', 'head': {}}}, 'fread':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'filename': ['', '']}, 'code': 'CNCHEADER18 filename;CNC18;return data', 'head': {}}}, 'fwrite': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'fn': ['', ''], 'txt': ['', ''], 'overwite': ['bool', 'False', {}]}, 'code': 'CNCHEADER19 fn;CNCHEADER19 txt;CNCHEADER19 overwite;CNC19;return true', 'head': {}}}, 'fdelete': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'name': ['', '']}, 'code': 'CNCHEADER20 name;CNC20;return name', 'head': {}}},'typeof':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'item': ['', '']}, 'code': 'CNC21;return typ', 'head': {}}},'streval':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'txt': ['', '']}, 'code': 'CNCHEADER22 txt;CNC22;return dt', 'head': {}}}}
-	gvar['dirsarray'] = {'dt': {'bird': {'type': 'string', 'dt': bddir+'/'}, 'lib': {'type': 'string', 'dt': f'{bddir}/lib/'}, 'package': {'type': 'string', 'dt': f'{bddir}/package/'}}, 'type': 'associative','headers':{}}
+	gvar = {'using':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'file': ['', ''], 'global': ['bool', 'True', {}], 'compile': ['bool', 'False', {}]}, 'code': 'CNCHEADER6 file;CNCHEADER6 global;CNCHEADER6 compile;CNC6', 'head': {}}}, 'array_item': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'arr': ['', ''], 'cnt': ['', '']}, 'code': 'var data = null;CNC15;return data', 'head': {'gvar': 'true'}}}, 'eval': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'code': ['', '']}, 'code': 'CNCHEADER16 code;CNC16', 'head': {}}}, 'quit': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'code': ['number', 0, {}]}, 'code': 'CNCHEADER17 code;CNC17', 'head': {}}}, 'fread':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'filename': ['', '']}, 'code': 'CNCHEADER18 filename;CNC18;return data', 'head': {}}}, 'fwrite': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'fn': ['', ''], 'txt': ['', ''], 'overwite': ['bool', 'False', {}]}, 'code': 'CNCHEADER19 fn;CNCHEADER19 txt;CNCHEADER19 overwite;CNC19;return true', 'head': {}}}, 'fdelete': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'name': ['', '']}, 'code': 'CNCHEADER20 name;CNC20;return name', 'head': {}}},'typeof':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'item': ['', '']}, 'code': 'CNC21;return typ', 'head': {}}},'streval':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'txt': ['', '']}, 'code': 'CNCHEADER22 txt;CNC22;return dt', 'head': {}}}}
+	gvar['dirsarray'] = {'dt': {'bird': {'type': 'string', 'dt': bddir+'/'}, 'lib': {'type': 'string', 'dt': f'{bddir}/lib/'}, 'package': {'type': 'string', 'dt': f'{bddir}/package/'}}, 'type': 'associative','headers':{},'getpermissions':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'fn': ['', '']}, 'code': 'CNCHEADER23 fn;CNC23;return dat', 'head': {'gvar': 'true'}}}}
+	sgv = gvar
 	var = gvar
-	classes = {}
 	typedef = {}
 	d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{},'clsd':{},'fn':'@main','tb':[],'pyparse':False,'version':'1.2.0','ctype':{'type':'null','dt':'null','headers':{}},'cfdat':0,'c':[],'gp':False,'bddir':bddir,'lcd':False,'swd':'','sw':False,'sdef':False,'cncheaders':{},'ignorewarnings':False}
 	opt = json.loads(open(f'{bddir}/pref/options.txt').read())
@@ -512,14 +512,6 @@ def typeify(txt,qt=False,err=True,ignore=False):
 					var[txt]['headers'] = {'had_no_headers':True}
 					h = {'had_no_headers':True}
 				txt = var[txt]['dt']
-			elif txt in gvar.keys():
-				ty = gvar[txt]['type']
-				try:
-					h = gvar[txt]['head']
-				except KeyError:
-					gvar[txt]['headers'] = {'had_no_headers':True}
-					h = {'had_no_headers':True}
-				txt = gvar[txt]['dt']
 			else:
 				if err:
 					#raise SyntaxError('')
@@ -579,6 +571,9 @@ def fatc(dt='',regex=[],tr=''): #Function ATC
 				head[item[0]] = item[1]
 		if 'pyparse' in head:
 			error('CreationError','Illegal header, pyparse.')
+		elif 'gvar' in head:
+			error('CreationError','Illegal header, gvar.')
+		head['gvar'] = 'true'
 		if d['class'] == '':
 			var[n]['dt'] = {'attrib':regex[2],'code':dt,'head':head}
 			var[n]['headers']  = {}
@@ -708,11 +703,23 @@ def callfunct(regex):
 		error('TypeError',f'Cannot call uncallable type: "{dat["type"]}".')
 	for i,n in dat['dt'].items():
 		dat[i] = n
+	try:
+		dat['head']['stararg']
+		star = True
+	except:
+		star = False
+	sal = {'type':'array','dt':[],'headers':{'stararg':'true'}}
 	att = {}
 	for i,n in dat['dt']['attrib'].items():
 		att[i] = n
 	cnt = 0
-	nvar = gvar
+	if 'gvar' in dat['head']:
+		if dat['head']['gvar'] == 'false':
+			nvar = sgv
+		else:
+			nvar = gvar
+	else:
+		nvar = gvar
 	attl = []
 	args = ap(args).replace('\\c','\\comma')
 	for item in args.split(','):
@@ -720,19 +727,23 @@ def callfunct(regex):
 		if item != '':
 			item = typeify(item)
 			attl.append(item)
-	for i,n in att.items():
-		try:
-			attl[cnt]
-		except IndexError:
-			break
-		nvar[i] = {'type':attl[cnt][0],'dt':attl[cnt][1],'headers':attl[cnt][2]}
-		cnt += 1
-	ncnt = 0
-	for item,v in dat['attrib'].items():
-		if ncnt >= cnt:
-			if v != ['','']:
-				nvar[item] = {'type':v[0],'dt':v[1],'headers':v[2]}
-		ncnt += 1
+	if star:
+		sal['st'] = attl
+		nvar[dat['head']['stararg']] = sal
+	else:
+		for i,n in att.items():
+			try:
+				attl[cnt]
+			except IndexError:
+				break
+			nvar[i] = {'type':attl[cnt][0],'dt':attl[cnt][1],'headers':attl[cnt][2]}
+			cnt += 1
+		ncnt = 0
+		for item,v in dat['attrib'].items():
+			if ncnt >= cnt:
+				if v != ['','']:
+					nvar[item] = {'type':v[0],'dt':v[1],'headers':v[2]}
+			ncnt += 1
 	cf(dat['code'],nvar,dat['head'],th)
 def cfaatc(codedat='',data=[],tr=''):
 	global var
@@ -778,7 +789,13 @@ def cfaatc(codedat='',data=[],tr=''):
 	for i,n in dat['dt']['attrib'].items():
 		att[i] = n
 	cnt = 0
-	nvar = gvar
+	if 'gvar' in dat['head']:
+		if dat['head']['gvar'] == 'false':
+			nvar = sgv
+		else:
+			nvar = gvar
+	else:
+		nvar = gvar
 	attl = []
 	args = args.replace('\\,','\\comma')
 	for item in args.split(','):
@@ -1017,6 +1034,8 @@ def allow(regex):
 	if p == 'pyparse':
 		if 'req_pyparse' in nd['dt']['head']:
 			var[n]['dt']['head']['pyparse'] = 'true'
+	elif p == 'gvar':
+		var[n]['dt']['head']['gvar'] = 'true'
 def deny(regex):
 	p = regex[2]
 	n = regex[1]
@@ -1025,6 +1044,8 @@ def deny(regex):
 		if 'req_pyparse' in nd['dt']['head']:
 			if 'pyparse' in nd['dt']['head']:
 				del var[n]['dt']['head']['pyparse']
+	elif p == 'gvar':
+		var[n]['dt']['head']['gvar'] = 'false'
 def rsc(regex):
 	n = regex[1]
 	nd = var[n]
@@ -1190,7 +1211,17 @@ def cnc(regex):
 		var["typ"] = {'type':'string','dt':var['item']['type'],'headers':{}}
 	elif number == 22:
 		tdt = typeify(data[0])
-		var['dt'] = {"type":tdt[0],"dt":tdt[1],"headers":tdt[2]}	
+		var['dt'] = {"type":tdt[0],"dt":tdt[1],"headers":tdt[2]}
+	elif number == 23:
+		data = data[0]['head']
+		dat = {}
+		if 'pyparse' in data:
+			dat['pyparse'] = data['pyparse']
+		if 'gvar' in data:
+			dat['gvar'] = data['gvar']
+		parse(f'var dat = {str(dat)}')
+	elif number == 24:
+		print(var)
 	d['cncheaders'][number] = []
 def cnch(regex):
 	n = int(regex[1])
@@ -1218,9 +1249,9 @@ def parse(code):
 				if d['run']:
 					d['ep'] = line
 					line = line.replace('\\semi',';')
-					for n,v in gvar.items():
-						if not n in var:
-							var[n] = v
+					#for n,v in gvar.items():
+					#	if not n in var:
+					#		var[n] = v
 					fnd = False
 					for reg,funct in cl.items():
 						if re.match('^'+reg+'$',line,re.DOTALL):
@@ -1411,6 +1442,7 @@ def ic(asu=True):
 	parser.add_argument('--warning', action='store_true')
 	parser.add_argument('--bddir', type=str)
 	args = parser.parse_args()
+
 	if asu:
 		# Auto Setup
 		if args.bddir:
