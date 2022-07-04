@@ -1,11 +1,11 @@
 create funct exec(txt){
 	CNCHEADER10 txt;
 	CNC10;
-}[global=&req_pyparse=true];
+};
 create funct name(){
 	CNC9;
 	return dat;
-}[req_pyparse=true];
+};
 create funct clear(){
 	CNC11;
-}[global=&req_pyparse=true];
+};

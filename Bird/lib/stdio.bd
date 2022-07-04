@@ -3,9 +3,9 @@ create funct writeout(text,end='\n',flush=false){
 	CNCHEADER3 end;
 	CNCHEADER3 flush;
 	CNC3;
-}[req_pyparse=true];
+};
 create funct writein(text=''){
 	CNCHEADER4 text;
 	CNC4;
 	return data;
-}[global=&req_pyparse=];
+};

@@ -3,4 +3,4 @@ var milliseconds = milliseconds/1000;
 CNCHEADER8 milliseconds;
 CNC8;
 return milliseconds*1000;
-}[req_pyparse=true];
+};

@@ -4,75 +4,32 @@ from pathlib import Path
 import re
 from ast import literal_eval as le
 import threading
-import importlib.util
 import random
 import argparse
 import base64
 import os
 import json
 def ap(text,cchar=','):
-	atc = False
+	latc = [False]
+	atct = []
 	txt = []
 	for item in text:
 		txt.append(item)
 	text = ''
 	cnt = 0
-	atct = ''
+	lc = {'(':')','[':']','"':'"',"'":"'",'`':'`'}
 	for char in txt:
-		if char == '(' and not atc:
-			atct = '('
-			atc = True
-			text += char
-		elif char == ')' and atc:
-			atc = False
-			text += ')'
-		elif char == '[' and not atc:
-			atct = '['
-			atc = True
-			text += char
-		elif char == ']' and atc:
-			atc = False
-			text += char
-		#elif char == '{' and not atc:
-		#	atct = '{'
-		#	atc = True
-		#	text += char
-		#elif char == '}' and atc:
-		#	atc = False
-		#	text += char
-		elif char == '"':
-			if atct == '"' and atc:
-				atc = False
-				text += char
-			elif not atc:
-				atc = True
-				atct = '"'
-				text += char
+		if latc[0]:
+			if lc[atct[0]] == char:
+				del latc[0]
+			if char == cchar:
+				text += '\\c'
 			else:
 				text += char
-		elif char == "'":
-			if atct == "'" and atc:
-				atc = False
-				text += char
-			elif not atc:
-				atc = True
-				atct = "'"
-				text += char
-			else:
-				text += char
-		elif char == "`":
-			if atct == "`" and atc:
-				atc = False
-				text += char
-			elif not atc:
-				atc = True
-				atct = "`"
-				text += char
-			else:
-				text += char
-		elif char == cchar and atc:
-			text += '\\c'
 		else:
+			if char in lc.keys():
+				latc.insert(0,True)
+				atct.insert(0,char)
 			text += char
 		cnt += 1
 	return text
@@ -88,12 +45,12 @@ def su(home=str(Path.home())):
 	global sgv
 	bddir = open(home+'/bddir.txt').read()
 	temp = []
-	gvar = {'using':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'file': ['', ''], 'global': ['bool', 'True', {}], 'compile': ['bool', 'False', {}]}, 'code': 'CNCHEADER6 file;CNCHEADER6 global;CNCHEADER6 compile;CNC6', 'head': {}}}, 'array_item': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'arr': ['', ''], 'cnt': ['', '']}, 'code': 'var data = null;CNC15;return data', 'head': {'gvar': 'true'}}}, 'eval': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'code': ['', '']}, 'code': 'CNCHEADER16 code;CNC16', 'head': {}}}, 'quit': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'code': ['number', 0, {}]}, 'code': 'CNCHEADER17 code;CNC17', 'head': {}}}, 'fread':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'filename': ['', '']}, 'code': 'CNCHEADER18 filename;CNC18;return data', 'head': {}}}, 'fwrite': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'fn': ['', ''], 'txt': ['', ''], 'overwite': ['bool', 'False', {}]}, 'code': 'CNCHEADER19 fn;CNCHEADER19 txt;CNCHEADER19 overwite;CNC19;return true', 'head': {}}}, 'fdelete': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'name': ['', '']}, 'code': 'CNCHEADER20 name;CNC20;return name', 'head': {}}},'typeof':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'item': ['', '']}, 'code': 'CNC21;return typ', 'head': {}}},'streval':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'txt': ['', '']}, 'code': 'CNCHEADER22 txt;CNC22;return dt', 'head': {}}}}
+	gvar = {'using':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'file': ['', ''], 'global': ['bool', 'True', {}], 'compile': ['bool', 'False', {}]}, 'code': 'CNCHEADER6 file;CNCHEADER6 global;CNCHEADER6 compile;CNC6', 'head': {}}}, 'array_item': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'arr': ['', ''], 'cnt': ['', '']}, 'code': 'var data = null;CNC15;return data', 'head': {'gvar': 'true'}}}, 'eval': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'code': ['', '']}, 'code': 'CNCHEADER16 code;CNC16', 'head': {}}}, 'quit': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'code': ['number', 0, {}]}, 'code': 'CNCHEADER17 code;CNC17', 'head': {}}}, 'fread':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'filename': ['', '']}, 'code': 'CNCHEADER18 filename;CNC18;return data', 'head': {}}}, 'fwrite': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'fn': ['', ''], 'txt': ['', ''], 'overwite': ['bool', 'False', {}]}, 'code': 'CNCHEADER19 fn;CNCHEADER19 txt;CNCHEADER19 overwite;CNC19;return true', 'head': {}}}, 'fdelete': {'type': 'funct', 'headers': {}, 'dt': {'attrib': {'name': ['', '']}, 'code': 'CNCHEADER20 name;CNC20;return name', 'head': {}}},'typeof':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'item': ['', '']}, 'code': 'CNC21;return typ', 'head': {}}},'streval':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'txt': ['', '']}, 'code': 'CNCHEADER22 txt;CNC22;return dt', 'head': {}}},"concat":{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'v1': ['', ''], 'v2': ['', '']}, 'code': 'CNCHEADER27 v1;CNCHEADER27 v2;CNC27;return dat', 'head': {'gvar': 'true'}}}}
 	gvar['dirsarray'] = {'dt': {'bird': {'type': 'string', 'dt': bddir+'/'}, 'lib': {'type': 'string', 'dt': f'{bddir}/lib/'}, 'package': {'type': 'string', 'dt': f'{bddir}/package/'}}, 'type': 'associative','headers':{},'getpermissions':{'type': 'funct', 'headers': {}, 'dt': {'attrib': {'fn': ['', '']}, 'code': 'CNCHEADER23 fn;CNC23;return dat', 'head': {'gvar': 'true'}}}}
 	sgv = gvar
 	var = gvar
 	typedef = {}
-	d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{},'clsd':{},'fn':'@main','tb':[],'pyparse':False,'version':'1.2.0','ctype':{'type':'null','dt':'null','headers':{}},'cfdat':0,'c':[],'gp':False,'bddir':bddir,'lcd':False,'swd':'','sw':False,'sdef':False,'cncheaders':{},'ignorewarnings':False}
+	d = {'cnt':0,'ep':'','retd':'','break':False,'funct':False,'run':True,'els':False,'lastif':0,'interval':{},'class':'','atc':null,'ecnt':0,'atcd':'','atcdat':[],'lt':0,'errh':{},'clsd':{},'fn':'@main','tb':[],'pyparse':False,'version':'1.2.1 Pre Release','ctype':{'type':'null','dt':'null','headers':{}},'cfdat':0,'c':[],'gp':False,'bddir':bddir,'lcd':False,'swd':'','sw':False,'sdef':False,'cncheaders':{},'ignorewarnings':False,"extraargs":[]}
 	opt = json.loads(open(f'{bddir}/pref/options.txt').read())
 def null(*args,**kwargs):
 	pass
@@ -376,6 +333,8 @@ def typeify(txt,qt=False,err=True,ignore=False):
 			item = item.replace('\\comma',',')
 			t = typeify(item)
 			l.append({'type':t[0],'dt':t[1],'headers':t[2]})
+		if l == [{'type': 'null', 'dt': 'null', 'headers': {}}]:
+			l = []
 		txt = l
 		ty = 'array'
 		return [ty,txt,h]
@@ -394,9 +353,10 @@ def typeify(txt,qt=False,err=True,ignore=False):
 		dat = ap(dt[1]).replace('\\c','\\comma').split(',')
 		dt = re.split(r'[ +\t\n]*[,][ +\t\n]*',ap(dt[1]).replace('\\c','\\comma'))
 		l = {}
-		for item in dt:
-			dat = re.match('(.*)[:](.*)',item,re.DOTALL)
-			l[typeify(dat[1].replace('\\comma',','))[1]] = {'type':typeify(dat[2].replace('\\comma',','))[0],'dt':typeify(dat[2].replace('\\comma',','))[1],'headers':typeify(dat[2].replace('\\comma',','))[2]}
+		if dt != [""]:
+			for item in dt:
+				dat = re.match('(.*)[:](.*)',item,re.DOTALL)
+				l[typeify(dat[1].replace('\\comma',','))[1]] = {'type':typeify(dat[2].replace('\\comma',','))[0],'dt':typeify(dat[2].replace('\\comma',','))[1],'headers':typeify(dat[2].replace('\\comma',','))[2]}
 		txt = l
 		ty = 'associative'
 		h = {}
@@ -423,7 +383,7 @@ def typeify(txt,qt=False,err=True,ignore=False):
 				elif dat[0] == 'class' or dat[0] == 'funct':
 					return ['binary',binary_encode(str(dat[1])),{}]
 				else:
-					return ['string',str(dat[1]),{}]
+					error('ConvertError',f'Cannot convert {dat[0]} to {typ}.')
 			elif typ == 'number':
 				if dat[0] == 'string':
 					ty = 'number'
@@ -434,6 +394,8 @@ def typeify(txt,qt=False,err=True,ignore=False):
 					except:
 						error('ConvertError','Cannot convert non-number to number.')
 					h = dat[2]
+				else:
+					error('ConvertError',f'Cannot convert {dat[0]} to {typ}.')
 			elif typ == 'array':
 				if dat[0] == 'string':
 					txt = []
@@ -441,6 +403,8 @@ def typeify(txt,qt=False,err=True,ignore=False):
 						txt.append({'type':'string','dt':char,'headers':{}})
 					ty = 'array'
 					h = {}
+				else:
+					error('ConvertError',f'Cannot convert {dat[0]} to {typ}.')
 			elif typ == 'storage':
 				return ['binary',binary_encode(str(dat[1])),{}]
 			else:
@@ -1222,6 +1186,26 @@ def cnc(regex):
 		parse(f'var dat = {str(dat)}')
 	elif number == 24:
 		print(var)
+	elif number == 25:
+		var['dt'] = {'type':'bool','dt':str(Path(data[0]).is_file()),'headers':{}}
+	elif number == 26:
+		par = data[0]
+		pars = argparse.ArgumentParser()
+		for item,v in par.items():
+			i = {}
+			if "nargs" in v['dt'].keys():
+				i["nargs"] = v["dt"]["nargs"]["dt"]
+			else:
+				i["nargs"] = 1
+			pars.add_argument(item,nargs=i["nargs"])
+		vd = vars(pars.parse_args(d["extraargs"]))
+		var["dat"] = {}
+		dta = typeify(str(vd))
+		var["dat"]["type"] = dta[0]
+		var["dat"]["dt"] = dta[1]
+		var["dat"]["headers"] = dta[2]
+	elif number == 27:
+		var['dat'] = {"type":"string","dt":data[0]+data[1],"headers":{}}
 	d['cncheaders'][number] = []
 def cnch(regex):
 	n = int(regex[1])
@@ -1441,8 +1425,8 @@ def ic(asu=True):
 	parser.add_argument('-w', action='store_true')
 	parser.add_argument('--warning', action='store_true')
 	parser.add_argument('--bddir', type=str)
+	parser.add_argument('extra',nargs='*')
 	args = parser.parse_args()
-
 	if asu:
 		# Auto Setup
 		if args.bddir:
@@ -1461,6 +1445,7 @@ def ic(asu=True):
 		gvar['@v'] = {'type':'string','dt':d['version'],'headers':{}}
 		gvar['@cf'] = {'type':'string','dt':'@main','headers':{}}
 		d['filename'] = bddir+'/pref/autoexec.bd'
+		d['extraargs'] = args.extra
 		with open(bddir+'/pref/autoexec.bd') as data:
 			parse(data.read())
 	if not args.c:

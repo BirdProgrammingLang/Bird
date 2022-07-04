@@ -2,9 +2,9 @@ create funct encode(txt){
 	CNCHEADER13 txt;
 	CNC13;
 	return data;
-}[global=&req_pyparse=true];
+};
 create funct decode(txt){
 	CNCHEADER14 txt;
 	CNC14;
 	return data;
-}[global=&req_pyparse=true];
+};

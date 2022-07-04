@@ -1,0 +1,9 @@
+using("argparser.bd");
+var a = {"nargs":"?"};
+var v = {"a":a};
+var v = array_item(argparse(v),"a");
+writeout(v);
+foreach(i in v){
+    writeout(i);
+};
+writeout("jfldjlakjf\\slkd.wgrw\\Scugi\\gfghw\\shmb\\sfdggggggggggggghdg");

@@ -1,1 +1,4 @@
-create funct test(){writeout(@cf);};test();
+create funct test(){
+    writeout(@cf);
+};
+test();

@@ -1,2 +1,0 @@
-using('temp.bd');
-tempstorage('dt','test');
