@@ -1,0 +1,5 @@
+create funct argparse(parser){
+    CNCHEADER26 parser;
+    CNC26;
+    return dat;
+};

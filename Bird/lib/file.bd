@@ -2,13 +2,9 @@ create funct dir_exists(dn){
 	CNCHEADER5 dn;
 	CNC5;
 	return dt;
-}[global=&req_pyparse=true];
+};
 create funct file_exists(name){
-	pyparse `var['dt'] = {'type':'bool','dt':str(Path('''@{name}''').is_file()),'headers':{}}`;
-	if(dt){
-		return true;
-	};
-	else{
-		return false;
-	};
-}[req_pyparse=true];
+	CNCHEADER25 name;
+	CNC25;
+	return dt;
+};

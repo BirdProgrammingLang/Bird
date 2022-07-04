@@ -2,4 +2,4 @@ create funct open(url,browser='defalt'){
 	CNCHEADER7 url;
 	CNCHEADER7 browser;
 	CNC7;
-}[req_pyparse=true];
+};

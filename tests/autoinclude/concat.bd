@@ -1,0 +1,7 @@
+create funct concat(v1,v2){
+    CNCHEADER27 v1;
+    CNCHEADER27 v2;
+    CNC27;
+    return dat;
+};
+pyparse `print(var["concat"])`

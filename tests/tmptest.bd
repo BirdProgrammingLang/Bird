@@ -1,0 +1,3 @@
+using("temp.bd");
+temp_store("a","HELLO");
+writeout(temp_get("a"));

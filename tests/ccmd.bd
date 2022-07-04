@@ -2,4 +2,5 @@ create command writeout('[ +\n\t]*writeout[ +\n\t]+(.*)[ +\n\t]*':@){
 var dt = streval(@1);
 writeout(dt);
 };
-writeout 'test'
+pyparse `print(cl)`;
+writeout("A");

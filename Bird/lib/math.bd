@@ -2,4 +2,4 @@ create funct squareroot(number){
 	CNCHEADER12 number;
 	CNC12;
 	return data;
-}[req_pyparse=true];
+};

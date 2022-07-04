@@ -1,0 +1,14 @@
+create funct temp_store(name,cdat){
+	create var bddir = array_item(dirsarray,"bird");
+	create var tempdir = concat(bddir,'data/temp/');
+	create var tempdir = concat(tempdir,name);
+	fwrite(concat(tempdir,'.tmp'),cdat);
+};
+create funct temp_get(name){
+	create var bddir = array_item(dirsarray,"bird");
+	create var tempdir = concat(bddir,'data/temp/');
+	create var tempdir = concat(tempdir,name);
+	create var v = fread(concat(tempdir,'.tmp'));
+	fdelete(concat(tempdir,'.tmp'));
+	return v;
+};
