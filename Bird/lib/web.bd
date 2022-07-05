@@ -3,3 +3,8 @@ create funct open(url,browser='defalt'){
 	CNCHEADER7 browser;
 	CNC7;
 };
+create funct get(url){
+	CNCHEADER28 url;
+	CNC28;
+	return dat;
+};

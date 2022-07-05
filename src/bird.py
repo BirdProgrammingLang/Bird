@@ -1206,6 +1206,14 @@ def cnc(regex):
 		var["dat"]["headers"] = dta[2]
 	elif number == 27:
 		var['dat'] = {"type":"string","dt":data[0]+data[1],"headers":{}}
+	elif number == 28:
+		import importlib.util
+		import sys
+		spec = importlib.util.spec_from_file_location("requests",f"{bddir}/lib/pylib/requests/__init__.py")
+		requests = importlib.util.module_from_spec(spec)
+		sys.modules["get"] = requests
+		spec.loader.exec_module(requests)
+		var['dat'] = {"type":"string","dt":requests.get(data[0]).text,"headers":{}}
 	d['cncheaders'][number] = []
 def cnch(regex):
 	n = int(regex[1])
